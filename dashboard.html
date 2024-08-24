@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard In-Out</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <style>
+        .text-green {
+            color: #00cf00;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .text-red {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .text-yellow {
+            color: rgb(239, 183, 15);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Hide Longitude, Latitude, and UserID columns */
+        .hidden-column {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 container mx-auto text-xs right-0 mt-5 w-full p-5">
+    <!-- Rows per page select -->
+    <div class="bg-white">
+        <div>
+            <main class="mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
+                    <h1 class="text-4xl font-bold tracking-tight text-gray-900">แดชบอร์ด</h1>
+                    <div class="flex items-center">
+                        <div class="relative inline-block text-left">
+                            <div class="flex justify-center mt-4">
+                                <div class="flex justify-center">
+                                    <button id="sortDescBtn"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-l focus:outline-none focus:shadow-outline">
+                                        เรียงจากล่าสุด
+                                    </button>
+                                    <button id="sortAscBtn"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline">
+                                        เรียงจากเก่าสุด
+                                    </button>
+                                </div>
+                                <label for="rowsPerPage" class="mr-5"></label>
+                                <select id="rowsPerPage"
+                                    class="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                                    <option value="15">15</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
+
+                <section aria-labelledby="products-heading" class="pb-24 pt-6">
+                    <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+                        <!-- Filters -->
+                        <div>
+                            <div class="col-span-full">
+                                <label for="filterName"
+                                    class="block text-sm font-medium leading-6 text-gray-900">ค้นหาชื่อ</label>
+                                <div class="mt-2">
+                                    <input type="text" id="filterName" autocomplete="off"
+                                        class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                </div>
+                            </div>
+                            <div class="col-span-full">
+                                <label for="filterEmployeeId"
+                                    class="block text-sm font-medium leading-6 text-gray-900">รหัสพนักงาน</label>
+                                <div class="mt-2">
+                                    <input type="text" id="filterEmployeeId" autocomplete="off"
+                                        class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                </div>
+                            </div>
+                            <div class="mt-5 space-y-5">
+                                <fieldset>
+                                    <legend class="text-sm font-semibold leading-6 text-gray-900">
+                                        บันทึก
+                                    </legend>
+                                    <div class="mt-3 space-y-6">
+                                        <div class="relative flex gap-x-3">
+                                            <div class="flex h-6 items-center">
+                                                <input id="filterIn" type="checkbox" value="เข้างาน"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    checked />
+                                            </div>
+                                            <div class="text-sm leading-6">
+                                                <label for="filterIn"
+                                                    class="font-medium text-gray-900">เข้างาน</label>
+                                            </div>
+                                        </div>
+                                        <div class="relative flex gap-x-3">
+                                            <div class="flex h-6 items-center">
+                                                <input id="filterDuring" type="checkbox" value="ระหว่างวัน"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    checked />
+                                            </div>
+                                            <div class="text-sm leading-6">
+                                                <label for="filterDuring"
+                                                    class="font-medium text-gray-900">ระหว่างวัน</label>
+                                            </div>
+                                        </div>
+                                        <div class="relative flex gap-x-3">
+                                            <div class="flex h-6 items-center">
+                                                <input id="filterOut" type="checkbox" value="ออกงาน"
+                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    checked />
+                                            </div>
+                                            <div class="text-sm leading-6">
+                                                <label for="filterOut"
+                                                    class="font-medium text-gray-900">ออกงาน</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="bg-gray-100 p-8 my-5">
+                                <div class="col-span-full">
+                                    <label for="startDate"
+                                        class="block text-sm font-medium leading-6 text-gray-900">วันที่เริ่มต้น</label>
+                                    <div class="mt-2">
+                                        <input type="date" id="startDate"
+                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    </div>
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="endDate"
+                                        class="block text-sm font-medium leading-6 text-gray-900">วันที่สิ้นสุด</label>
+                                    <div class="mt-2">
+                                        <input type="date" id="endDate"
+                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    </div>
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="startTime"
+                                        class="block text-sm font-medium leading-6 text-gray-900">เวลาเริ่มต้น</label>
+                                    <div class="mt-2">
+                                        <input type="time" id="startTime"
+                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    </div>
+                                </div>
+                                <div class="col-span-full">
+                                    <label for="endTime"
+                                        class="block text-sm font-medium leading-6 text-gray-900">เวลาสิ้นสุด</label>
+                                    <div class="mt-2">
+                                        <input type="time" id="endTime"
+                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- Export Options -->
+                <div class="flex flex-col space-y-2 my-4">
+                    <fieldset class="border p-4">
+                        <legend class="text-sm font-semibold leading-6 text-gray-900 mb-2">เลือกคอลัมน์ที่ต้องการส่งออก</legend>
+                        <div class="grid grid-cols-3 gap-4">
+                            <div>
+                                <input type="checkbox" id="colImage" checked />
+                                <label for="colImage">รูปภาพ</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colEmployeeId" checked />
+                                <label for="colEmployeeId">รหัสพนักงาน</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colName" checked />
+                                <label for="colName">ชื่อ</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colStatus" checked />
+                                <label for="colStatus">บันทึก</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colNote" checked />
+                                <label for="colNote">หมายเหตุ</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colDate" checked />
+                                <label for="colDate">วันที่</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colTime" checked />
+                                <label for="colTime">เวลา</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" id="colLocation" checked />
+                                <label for="colLocation">สถานที่</label>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="flex justify-end space-x-2">
+                        <button id="exportTxtBtn"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            ส่งออกเป็น .txt
+                        </button>
+                        <button id="exportCsvBtn"
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            ส่งออกเป็น .csv
+                        </button>
+                        <!-- <button id="exportPdfBtn"
+                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            ส่งออกเป็น .pdf
+                        </button> -->
+                    </div>
+                </div>
+                        </div>
+
+                        <!-- Product grid -->
+                        <div class="lg:col-span-3">
+                            <table class="min-w-full text-sm whitespace-no-wrap">
+                                <thead>
+                                    <tr class="border">
+                                        <th class="px-4 py-2">รูปภาพ</th>
+                                        <th class="px-4 py-2">รหัสพนักงาน</th>
+                                        <th class="px-4 py-2">ชื่อ</th>
+                                        <th class="px-4 py-2">บันทึก</th>
+                                        <th class="px-4 py-2">หมายเหตุ</th>
+                                        <th class="px-4 py-2">วันที่</th>
+                                        <th class="px-4 py-2">เวลา</th>
+                                        <th class="px-4 py-2">สถานที่</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTableBody" class="text-center"></tbody>
+                            </table>
+                            <div class="mt-4">
+                                <p id="rowsInfo" class="text-gray-600"></p>
+                                <div id="pagination" class="flex justify-center space-x-2">
+                                    <button id="prevPageBtn"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        ก่อนหน้า
+                                    </button>
+                                    <button id="nextPageBtn"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                                        ถัดไป
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+
+        async function fetchData() {
+            const response = await fetch('https://script.google.com/macros/s/AKfycbwn6da0wqpUIOL_M_oYlMV0n00_5NsjYBzJPMJmtZ2wzUNhHaDXDBMC1W2TThgiCFag/exec');
+            const data = await response.json();
+            return data;
+        }
+
+        function getStatusText(status) {
+            if (status === "สาย") return "เข้างานสาย";
+            if (status === "เกินเวลา") return "ออกงานเกินเวลา";
+            return "ไม่ทราบสถานะ";
+        }
+
+        function getStatusClass(status) {
+            if (status === "เข้างาน") return "text-green";
+            if (status === "ออกงาน") return "text-red";
+            if (status === "ระหว่างวัน") return "text-yellow";
+            return "";
+        }
+
+        function formatDateTime(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return {
+                date: `${day}/${month}/${year}`,
+                time: `${hours}:${minutes}`
+            };
+        }
+
+        function filterData(data) {
+            const nameFilter = document.getElementById('filterName').value.toLowerCase();
+            const employeeIdFilter = document.getElementById('filterEmployeeId').value.toLowerCase();
+            const inFilter = document.getElementById('filterIn').checked;
+            const duringFilter = document.getElementById('filterDuring').checked;
+            const outFilter = document.getElementById('filterOut').checked;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const startTime = document.getElementById('startTime').value;
+            const endTime = document.getElementById('endTime').value;
+
+            return data.filter((item) => {
+                const formattedDateTime = formatDateTime(item[0]);
+                const nameMatch = item[2].toLowerCase().includes(nameFilter);
+                const employeeIdMatch = item[3].toLowerCase().includes(employeeIdFilter);
+                const inMatch = inFilter && item[4] === "เข้างาน";
+                const duringMatch = duringFilter && item[4] === "ระหว่างวัน";
+                const outMatch = outFilter && item[4] === "ออกงาน";
+                const statusMatch = inMatch || duringMatch || outMatch;
+
+                const dateMatch =
+                    (!startDate || new Date(formattedDateTime.date.split('/').reverse().join('-')) >= new Date(startDate)) &&
+                    (!endDate || new Date(formattedDateTime.date.split('/').reverse().join('-')) <= new Date(endDate));
+
+                const timeMatch =
+                    (!startTime || formattedDateTime.time >= startTime) &&
+                    (!endTime || formattedDateTime.time <= endTime);
+
+                return nameMatch && employeeIdMatch && statusMatch && dateMatch && timeMatch;
+            });
+        }
+
+        function getSelectedColumns() {
+            const selectedColumns = [];
+            if (document.getElementById('colImage').checked) selectedColumns.push({ index: 1, label: 'รูปภาพ' });
+            if (document.getElementById('colName').checked) selectedColumns.push({ index: 2, label: 'ชื่อ' });
+            if (document.getElementById('colEmployeeId').checked) selectedColumns.push({ index: 3, label: 'รหัสพนักงาน' });
+            if (document.getElementById('colStatus').checked) selectedColumns.push({ index: 4, label: 'บันทึก' });
+            if (document.getElementById('colNote').checked) selectedColumns.push({ index: 5, label: 'หมายเหตุ' });
+            if (document.getElementById('colDate').checked) selectedColumns.push({ index: 0, label: 'วันที่' });
+            if (document.getElementById('colTime').checked) selectedColumns.push({ index: 0, label: 'เวลา' });
+            if (document.getElementById('colLocation').checked) selectedColumns.push({ index: 8, label: 'สถานที่' });
+            return selectedColumns;
+        }
+
+        function updateTable(data, sortAsc = true, rowsPerPage = 15) {
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '';
+
+            const filteredData = filterData(data.slice(1));
+            const sortedData = filteredData.sort((a, b) => sortAsc ? new Date(a[0]) - new Date(b[0]) : new Date(b[0]) - new Date(a[0]));
+
+            totalPages = Math.ceil(sortedData.length / rowsPerPage);
+            const paginatedData = sortedData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+
+            const selectedColumns = getSelectedColumns();
+
+            paginatedData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.classList.add('border');
+
+                const statusClass = getStatusClass(item[4]);
+                const formattedDateTime = formatDateTime(item[0]);
+
+                const rowContent = selectedColumns.map(col => {
+                    if (col.index === 0 && col.label === 'ลำดับ') {
+                        return `<td class="px-4 py-2">${(currentPage - 1) * rowsPerPage + index + 1}</td>`;
+                    }
+                    if (col.index === 1) {
+                        return `<td class="px-4 py-2"><img class="rounded" width="50" height="50" src="${item[col.index]}" /></td>`;
+                    }
+                    if (col.index === 0 && col.label === 'วันที่') {
+                        return `<td class="px-4 py-2">${formattedDateTime.date}</td>`;
+                    }
+                    if (col.index === 0 && col.label === 'เวลา') {
+                        return `<td class="px-4 py-2">${formattedDateTime.time}</td>`;
+                    }
+                    if (col.index === 4) {
+                        return `<td class="px-4 py-2 ${statusClass}">${item[col.index]}</td>`;
+                    }
+                    return `<td class="px-4 py-2">${item[col.index]}</td>`;
+                }).join('');
+
+                row.innerHTML = rowContent;
+                tableBody.appendChild(row);
+            });
+
+            document.getElementById('rowsInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevPageBtn').disabled = currentPage === 1;
+            document.getElementById('nextPageBtn').disabled = currentPage === totalPages;
+        }
+
+        function exportToTxt(filteredData, selectedColumns) {
+    const txtContent = filteredData.map(row => {
+        return selectedColumns.map(col => {
+            if (col.label === 'วันที่' || col.label === 'เวลา') {
+                const formattedDateTime = formatDateTime(row[0]);
+                if (col.label === 'วันที่') return formattedDateTime.date;
+                if (col.label === 'เวลา') return formattedDateTime.time;
+            }
+            return row[col.index];
+        }).join('\t');
+    }).join('\n');
+    downloadFile(txtContent, 'data.txt', 'text/plain;charset=utf-8');
+}
+
+function exportToCsv(filteredData, selectedColumns) {
+    const csvContent = [
+        selectedColumns.map(col => col.label).join(','), // Header
+        ...filteredData.map(row => {
+            return selectedColumns.map(col => {
+                if (col.label === 'วันที่' || col.label === 'เวลา') {
+                    const formattedDateTime = formatDateTime(row[0]);
+                    if (col.label === 'วันที่') return formattedDateTime.date;
+                    if (col.label === 'เวลา') return formattedDateTime.time;
+                }
+                return row[col.index];
+            }).join(',');
+        })
+    ].join('\n');
+    downloadFile(csvContent, 'data.csv', 'text/csv;charset=utf-8');
+}
+
+function exportToPdf(filteredData, selectedColumns) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    let yPos = 10;
+
+    const headers = selectedColumns.map(col => col.label).join(' ');
+    doc.text(headers, 10, yPos);
+    yPos += 10;
+
+    filteredData.forEach((row) => {
+        const rowContent = selectedColumns.map(col => {
+            if (col.label === 'วันที่' || col.label === 'เวลา') {
+                const formattedDateTime = formatDateTime(row[0]);
+                if (col.label === 'วันที่') return formattedDateTime.date;
+                if (col.label === 'เวลา') return formattedDateTime.time;
+            }
+            return row[col.index];
+        }).join(' ');
+        doc.text(rowContent, 10, yPos);
+        yPos += 10;
+    });
+
+    doc.save('data.pdf');
+}
+
+
+        function downloadFile(content, fileName, mimeType) {
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            let data = await fetchData();
+
+            updateTable(data);
+
+            document.getElementById('sortDescBtn').addEventListener('click', () => {
+                updateTable(data, false);
+            });
+
+            document.getElementById('sortAscBtn').addEventListener('click', () => {
+                updateTable(data, true);
+            });
+
+            document.getElementById('rowsPerPage').addEventListener('change', (event) => {
+                const rowsPerPage = parseInt(event.target.value, 10);
+                updateTable(data, true, rowsPerPage);
+            });
+
+            document.getElementById('filterName').addEventListener('input', () => updateTable(data));
+            document.getElementById('filterEmployeeId').addEventListener('input', () => updateTable(data));
+            document.getElementById('filterIn').addEventListener('change', () => updateTable(data));
+            document.getElementById('filterDuring').addEventListener('change', () => updateTable(data));
+            document.getElementById('filterOut').addEventListener('change', () => updateTable(data));
+            document.getElementById('startDate').addEventListener('change', () => updateTable(data));
+            document.getElementById('endDate').addEventListener('change', () => updateTable(data));
+            document.getElementById('startTime').addEventListener('change', () => updateTable(data));
+            document.getElementById('endTime').addEventListener('change', () => updateTable(data));
+
+            document.getElementById('prevPageBtn').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updateTable(data);
+                }
+            });
+
+            document.getElementById('nextPageBtn').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    updateTable(data);
+                }
+            });
+
+            document.getElementById('exportTxtBtn').addEventListener('click', () => {
+                const filteredData = filterData(data);
+                const selectedColumns = getSelectedColumns();
+                exportToTxt(filteredData, selectedColumns);
+            });
+
+            document.getElementById('exportCsvBtn').addEventListener('click', () => {
+                const filteredData = filterData(data);
+                const selectedColumns = getSelectedColumns();
+                exportToCsv(filteredData, selectedColumns);
+            });
+
+            document.getElementById('exportPdfBtn').addEventListener('click', () => {
+                const filteredData = filterData(data);
+                const selectedColumns = getSelectedColumns();
+                exportToPdf(filteredData, selectedColumns);
+            });
+        });
+    </script>
+</body>
+
+</html>
