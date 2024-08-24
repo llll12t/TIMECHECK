@@ -4,23 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data from Google Sheets</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-gray-100 p-6">
+<body class="bg-gray-300 p-6">
     <div class="max-w-5xl m-auto">
-        <table id="data-table" class="min-w-full bg-white border border-gray-200 mt-4 ">
+        <table id="data-table" class="min-w-full text-xs bg-white rounded-2xl">
             <thead>
-                <tr class="bg-gray-900 text-white text-sm mt-4">
+                <tr class="text-slate-800 text-sm mt-4">
                     <th class="py-2 px-4 border-b w-8">ID</th>
                     <th class="py-2 px-4 border-b w-16">รูปภาพ</th>
                     <th class="py-2 px-4 text-left border-b w-64">ชื่อพนักงาน</th>
                     <th class="py-2 px-4 text-left border-b">รหัสพนักงาน</th>
                     <th class="py-2 px-4 text-left border-b">แผนก</th>
                     <th class="py-2 px-4 border-b hidden">UserID</th>
-                    <th class="py-2 px-4 text-center  border-b">Action</th>
+                    <th class="py-2 px-4 text-center border-b">Action</th>
                 </tr>
             </thead>
             <tbody class="text-sm">
@@ -42,8 +42,12 @@
                     <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded">
                 </div>
                 <div class="mb-4">
-                    <label for="edit-imageUrl" class="block text-sm">รูปภาพ</label>
+                    <label for="edit-imageUrl" class="block text-sm">URL รูปภาพ</label>
                     <input type="text" id="edit-imageUrl" class="w-full border px-2 py-1 rounded">
+                </div>
+                <div class="mb-4">
+                    <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
+                    <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded">
                 </div>
                 <div class="mb-4">
                     <label for="edit-name" class="block text-sm">ชื่อพนักงาน</label>
@@ -68,202 +72,232 @@
     </div>
 
     <script>
-       const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbziHCeU0cNhTdX2Pj4FR_H3FuUmXATWds4j42uMoFopZwzinVeUbxwL-5-al0LpI8jT/exec'; 
-const rowsPerPage = 10;
-let currentPage = 1;
-let tableData = [];
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec'; 
+    const rowsPerPage = 10;
+    let currentPage = 1;
+    let tableData = [];
 
-async function fetchData() {
-    const response = await fetch(WEB_APP_URL);
-    const data = await response.json();
-    tableData = data.slice(1); // Skip the header row
-    displayPage(currentPage);
-    setupPagination();
-}
-
-function displayPage(page) {
-    const startIndex = (page - 1) * rowsPerPage;
-    const endIndex = startIndex + rowsPerPage;
-    const paginatedData = tableData.slice(startIndex, endIndex);
-
-    const tableBody = document.querySelector('#data-table tbody');
-    tableBody.innerHTML = ''; // Clear existing data
-
-    paginatedData.forEach(row => {
-        if (row.every(cell => cell === '')) return; // Skip empty rows
-
-        const tr = document.createElement('tr');
-
-        const idTd = document.createElement('td');
-        idTd.textContent = row[0];
-        idTd.className = 'py-2 px-4 border-b';
-        tr.appendChild(idTd);
-
-        const imgTd = document.createElement('td');
-        if (row[5]) {
-            const img = document.createElement('img');
-            img.src = row[5];
-            img.className = 'h-10 w-10 object-cover';
-            imgTd.innerHTML = '';
-            imgTd.appendChild(img);
-        } else {
-            imgTd.textContent = '';
-        }
-        imgTd.className = 'py-2 px-4 border-b';
-        tr.appendChild(imgTd);
-
-        const nameTd = document.createElement('td');
-        nameTd.textContent = row[2];
-        nameTd.className = 'py-2 px-4 border-b';
-        tr.appendChild(nameTd);
-
-        const employeeIDTd = document.createElement('td');
-        employeeIDTd.textContent = row[3];
-        employeeIDTd.className = 'py-2 px-4 border-b';
-        tr.appendChild(employeeIDTd);
-
-        const departmentTd = document.createElement('td');
-        departmentTd.textContent = row[4];
-        departmentTd.className = 'py-2 px-4 border-b';
-        tr.appendChild(departmentTd);
-
-        const userIDTd = document.createElement('td');
-        userIDTd.textContent = row[1];
-        userIDTd.className = 'py-2 px-4 border-b hidden';
-        tr.appendChild(userIDTd);
-
-        const actionTd = document.createElement('td');
-        actionTd.className = 'py-2 px-4 justify-center flex space-x-2';
-
-        const editButton = document.createElement('button');
-        editButton.textContent = 'Edit';
-        editButton.className = 'bg-yellow-500 text-white py-2 px-4 border-b rounded hover:bg-yellow-700';
-        editButton.onclick = () => openEditModal(row);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.textContent = 'Delete';
-        deleteButton.className = 'bg-red-500 text-white py-2 px-4 border-b rounded hover:bg-red-700';
-        deleteButton.onclick = () => confirmDelete(row[0]);
-
-        actionTd.appendChild(editButton);
-        actionTd.appendChild(deleteButton);
-        tr.appendChild(actionTd);
-
-        tableBody.appendChild(tr);
-    });
-}
-
-function setupPagination() {
-    const pageCount = Math.ceil(tableData.length / rowsPerPage);
-    const pagination = document.getElementById('pagination');
-    pagination.innerHTML = '';
-
-    for (let i = 1; i <= pageCount; i++) {
-        const pageButton = document.createElement('button');
-        pageButton.textContent = i;
-        pageButton.className = `py-2 px-4 rounded ${i === currentPage ? 'bg-blue-500 text-white' : 'bg-gray-300 text-gray-700'}`;
-        pageButton.onclick = () => {
-            currentPage = i;
-            displayPage(currentPage);
-            updatePaginationButtons();
-        };
-        pagination.appendChild(pageButton);
+    async function fetchData() {
+        const response = await fetch(WEB_APP_URL);
+        const data = await response.json();
+        tableData = data.slice(1); // Skip the header row
+        displayPage(currentPage);
+        setupPagination();
     }
-}
 
-function updatePaginationButtons() {
-    const pagination = document.getElementById('pagination');
-    const buttons = pagination.querySelectorAll('button');
+    function displayPage(page) {
+        const startIndex = (page - 1) * rowsPerPage;
+        const endIndex = startIndex + rowsPerPage;
+        const paginatedData = tableData.slice(startIndex, endIndex);
 
-    buttons.forEach((button, index) => {
-        if (index + 1 === currentPage) {
-            button.className = 'py-2 px-4 rounded bg-blue-500 text-white';
-        } else {
-            button.className = 'py-2 px-4 rounded bg-gray-300 text-gray-700';
+        const tableBody = document.querySelector('#data-table tbody');
+        tableBody.innerHTML = ''; // Clear existing data
+
+        paginatedData.forEach(row => {
+            if (row.every(cell => cell === '')) return; // Skip empty rows
+
+            const tr = document.createElement('tr');
+
+            const idTd = document.createElement('td');
+            idTd.textContent = row[0];
+            idTd.className = 'py-2 px-4 border-b';
+            tr.appendChild(idTd);
+
+            const imgTd = document.createElement('td');
+            if (row[5]) {
+                const img = document.createElement('img');
+                img.src = row[5];
+                img.className = 'h-10 w-10 object-cover';
+                imgTd.innerHTML = '';
+                imgTd.appendChild(img);
+            } else {
+                imgTd.textContent = '';
+            }
+            imgTd.className = 'py-2 px-4 border-b';
+            tr.appendChild(imgTd);
+
+            const nameTd = document.createElement('td');
+            nameTd.textContent = row[2];
+            nameTd.className = 'py-2 px-4 border-b';
+            tr.appendChild(nameTd);
+
+            const employeeIDTd = document.createElement('td');
+            employeeIDTd.textContent = row[3];
+            employeeIDTd.className = 'py-2 px-4 border-b';
+            tr.appendChild(employeeIDTd);
+
+            const departmentTd = document.createElement('td');
+            departmentTd.textContent = row[4];
+            departmentTd.className = 'py-2 px-4 border-b';
+            tr.appendChild(departmentTd);
+
+            const userIDTd = document.createElement('td');
+            userIDTd.textContent = row[1];
+            userIDTd.className = 'py-2 px-4 border-b hidden';
+            tr.appendChild(userIDTd);
+
+            const actionTd = document.createElement('td');
+            actionTd.className = 'py-2 px-4 border-b justify-center flex space-x-2';
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.className = 'bg-yellow-500 text-white py-2 px-4 border-b rounded-2xl hover:bg-yellow-700';
+            editButton.onclick = () => openEditModal(row);
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'bg-red-500 text-white py-2 px-4 border-b rounded-2xl hover:bg-red-700';
+            deleteButton.onclick = () => confirmDelete(row[0]);
+
+            actionTd.appendChild(editButton);
+            actionTd.appendChild(deleteButton);
+            tr.appendChild(actionTd);
+
+            tableBody.appendChild(tr);
+        });
+    }
+
+    function setupPagination() {
+        const pageCount = Math.ceil(tableData.length / rowsPerPage);
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        for (let i = 1; i <= pageCount; i++) {
+            const pageButton = document.createElement('button');
+            pageButton.textContent = i;
+            pageButton.className = `py-2 px-4 rounded-2xl ${i === currentPage ? 'bg-slate-500 text-white' : 'bg-gray-300 text-slate-800'}`;
+            pageButton.onclick = () => {
+                currentPage = i;
+                displayPage(currentPage);
+                updatePaginationButtons();
+            };
+            pagination.appendChild(pageButton);
         }
-    });
-}
+    }
 
-async function updateData(id, userID, name, employeeID, department, imageUrl) {
-    const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `method=update&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(imageUrl)}`
-    });
-    const result = await response.text();
-    Swal.fire({
-        title: 'Success',
-        text: result,
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-    fetchData(); // Reload the data to see the updated data
-}
+    function updatePaginationButtons() {
+        const pagination = document.getElementById('pagination');
+        const buttons = pagination.querySelectorAll('button');
 
-async function deleteData(id) {
-    const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `method=delete&id=${id}`
-    });
-    const result = await response.text();
-    Swal.fire({
-        title: 'Deleted',
-        text: result,
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-    fetchData(); // Reload the data to see the updated data
-}
+        buttons.forEach((button, index) => {
+            if (index + 1 === currentPage) {
+                button.className = 'py-2 px-4 rounded-2xl bg-slate-500 text-white';
+            } else {
+                button.className = 'py-2 px-4 rounded-2xl bg-slate-300 text-slate-800';
+            }
+        });
+    }
 
-function openEditModal(row) {
-    document.getElementById('edit-id').value = row[0];
-    document.getElementById('edit-userID').value = row[1];
-    document.getElementById('edit-name').value = row[2];
-    document.getElementById('edit-employeeID').value = row[3];
-    document.getElementById('edit-department').value = row[4];
-    document.getElementById('edit-imageUrl').value = row[5];
-    document.getElementById('edit-modal').classList.remove('hidden');
-}
+    async function updateData(id, userID, name, employeeID, department, base64Image) {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
+        });
+        const result = await response.text();
+        Swal.fire({
+            title: 'Success',
+            text: result,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+        fetchData(); // Reload the data to see the updated data
+    }
 
-function closeModal() {
-    document.getElementById('edit-modal').classList.add('hidden');
-}
+    async function deleteData(id) {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `method=deleteData&id=${id}`
+        });
+        const result = await response.text();
+        Swal.fire({
+            title: 'Deleted',
+            text: result,
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+        fetchData(); // Reload the data to see the updated data
+    }
 
-function confirmDelete(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            deleteData(id);
-        }
+    function openEditModal(row) {
+        document.getElementById('edit-id').value = row[0];
+        document.getElementById('edit-userID').value = row[1];
+        document.getElementById('edit-name').value = row[2];
+        document.getElementById('edit-employeeID').value = row[3];
+        document.getElementById('edit-department').value = row[4];
+        document.getElementById('edit-imageUrl').value = row[5];
+        document.getElementById('edit-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('edit-modal').classList.add('hidden');
+    }
+
+    function confirmDelete(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteData(id);
+            }
+        });
+    }
+
+    // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
+function getBase64(file) {
+    return new Promise((resolve, reject) => {
+        let reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
     });
 }
 
 document.getElementById('edit-form').addEventListener('submit', async function (e) {
     e.preventDefault();
+
     const id = document.getElementById('edit-id').value;
     const userID = document.getElementById('edit-userID').value;
     const name = document.getElementById('edit-name').value;
     const employeeID = document.getElementById('edit-employeeID').value;
     const department = document.getElementById('edit-department').value;
-    const imageUrl = document.getElementById('edit-imageUrl').value;
+    const imageFile = document.getElementById('edit-image').files[0];
+    
+    let imageUrl = document.getElementById('edit-imageUrl').value;
+    
+    if (imageFile) {
+        try {
+            const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
+            await updateData(id, userID, name, employeeID, department, base64Image);
+        } catch (error) {
+            console.error('Error converting image to Base64:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to upload image. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
+    } else {
+        await updateData(id, userID, name, employeeID, department, imageUrl);
+    }
 
-    updateData(id, userID, name, employeeID, department, imageUrl);
     closeModal();
 });
 
-window.onload = fetchData;
+
+    window.onload = fetchData;
 
     </script>
 </body>
