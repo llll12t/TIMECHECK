@@ -25,7 +25,7 @@
                     oninput="updateImagePreview()" disabled>
                 <img id="image-preview" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Image Preview" class="mt-2 max-h-24 rounded">
             </div>
-            <div class="mb-4">
+            <div class="mb-4 hidden" id="image-upload-section">
                 <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
                 <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
             </div>
@@ -64,6 +64,7 @@
             const inputs = document.querySelectorAll('#edit-form input');
             const saveButton = document.querySelector('#edit-form button[type="submit"]');
             const cancelButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
+            const imageUploadSection = document.getElementById('image-upload-section');
 
             inputs.forEach(input => {
                 input.disabled = !enable; // ปลดล็อก input
@@ -72,10 +73,12 @@
             if (enable) {
                 saveButton.classList.remove('hidden');
                 cancelButton.classList.remove('hidden');
+                imageUploadSection.classList.remove('hidden'); // แสดงส่วนอัปโหลดรูปภาพ
                 document.getElementById('edit-button').classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
             } else {
                 saveButton.classList.add('hidden');
                 cancelButton.classList.add('hidden');
+                imageUploadSection.classList.add('hidden'); // ซ่อนส่วนอัปโหลดรูปภาพ
                 document.getElementById('edit-button').classList.remove('hidden'); // แสดงปุ่ม Edit
             }
         }
@@ -129,7 +132,7 @@
 
         // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
         window.onload = async () => {
-             await initializeLiff(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
+            await initializeLiff(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
             toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
         };
 
