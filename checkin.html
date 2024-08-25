@@ -209,7 +209,7 @@ async function fetchData(userId) {
     showLoading(true); // แสดงหน้าต่างโหลด
     try {
         // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
-        const response = await fetch(`${WEB_APP_URL}`, {
+        const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
