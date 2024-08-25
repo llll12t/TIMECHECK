@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data </title>
+    <title>Data ฟกหก</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -188,7 +188,7 @@
                         icon: 'success',
                         confirmButtonText: 'OK'
                     });
-                    await searchDataByUserlineId(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                    await initializeLiff(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
                 } else {
                     throw new Error(result || 'Failed to save data');
                 }
