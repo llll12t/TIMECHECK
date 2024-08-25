@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from Google Sheets</title>
+    <title>Data </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -41,6 +41,7 @@
                 <input type="text" id="edit-department" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="flex justify-end">
+                <button type="button" id="edit-button" class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">Edit</button>
                 <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden" onclick="resetForm()">Reset</button>
                 <button type="submit" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">Save</button>
             </div>
@@ -55,7 +56,7 @@
         function toggleFormEditing(enable) {
             const inputs = document.querySelectorAll('#edit-form input');
             const saveButton = document.querySelector('#edit-form button[type="submit"]');
-            const resetButton = document.querySelector('#edit-form button[type="button"]');
+            const resetButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
 
             inputs.forEach(input => {
                 input.disabled = !enable; // ปลดล็อก input
@@ -140,7 +141,6 @@
 
         document.getElementById('edit-button').addEventListener('click', function() {
             toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
-            this.classList.add('hidden'); // ซ่อนปุ่มแก้ไขหลังจากปลดล็อกฟอร์ม
         });
 
         document.getElementById('edit-form').addEventListener('submit', async function (e) {
@@ -207,7 +207,6 @@
 
             updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
             toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-            document.getElementById('edit-button').classList.remove('hidden'); // แสดงปุ่มแก้ไขอีกครั้ง
         }
 
         // ฟังก์ชันอัปเดตข้อมูล
