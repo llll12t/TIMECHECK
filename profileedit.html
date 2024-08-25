@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from Google Sheets</title>
+    <title>Data</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -188,7 +188,7 @@
                         icon: 'success',
                         confirmButtonText: 'OK'
                     });
-                    await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                    await fetchData(); // โหลดข้อมูลใหม่ทั้งหมดหลังจากบันทึกข้อมูลสำเร็จ
                 } else {
                     throw new Error(result || 'Failed to save data');
                 }
@@ -201,71 +201,16 @@
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } finally {
-                resetForm();
             }
         });
-
-
-     // ฟังก์ชันรีเซ็ตฟอร์มและล็อกฟอร์มใหม่
-function resetForm() {
-    document.getElementById('edit-form').reset(); // รีเซ็ตฟอร์มทั้งหมด
-
-    // รีเซ็ตค่าของฟิลด์ไฟล์และพรีวิวรูปภาพ
-    document.getElementById('edit-image').value = ''; // รีเซ็ตฟิลด์อัปโหลดรูปภาพ
-    document.getElementById('image-preview').src = ''; // รีเซ็ตพรีวิวรูปภาพ
-
-    // รีเซ็ตค่าที่อัปเดตจากข้อมูลล่าสุด
-    document.getElementById('edit-id').value = latestData[0];
-    document.getElementById('edit-userID').value = latestData[1];
-    document.getElementById('edit-name').value = latestData[2];
-    document.getElementById('edit-employeeID').value = latestData[3];
-    document.getElementById('edit-department').value = latestData[4];
-    document.getElementById('edit-imageUrl').value = latestData[5];
-
-    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-    toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-}
-
-
-
-        async function updateData(id, userID, name, employeeID, department, base64Image) {
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
-            });
-            const result = await response.text();
-
-            // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
-            if (!result || result.trim() === '') {
-                throw new Error('Empty response from server');
-            }
-
-            return result;
-        }
-
-
-        // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                let reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        }
 
         async function fetchData() {
             try {
                 const response = await fetch(WEB_APP_URL + '?action=fetchData');
                 const data = await response.json();
                 
-                // นี่เป็นตัวอย่างการใช้ข้อมูลที่ดึงมาเพื่ออัปเดตฟอร์ม
+                // สมมติว่าเรากำลังอัปเดตฟอร์มตามข้อมูลที่ดึงมา
                 if (data && data.length > 0) {
-                    // สมมติว่าเรากำลังอัปเดตฟอร์มตามข้อมูลที่ดึงมา
                     const latestData = data[data.length - 1]; // ดึงข้อมูลรายการล่าสุด
                     document.getElementById('edit-id').value = latestData[0];
                     document.getElementById('edit-userID').value = latestData[1];
@@ -274,7 +219,7 @@ function resetForm() {
                     document.getElementById('edit-department').value = latestData[4];
                     document.getElementById('edit-imageUrl').value = latestData[5];
 
-                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพใหม่
                 } else {
                     console.log('No data found');
                 }
@@ -287,6 +232,16 @@ function resetForm() {
                     confirmButtonText: 'OK'
                 });
             }
+        }
+
+        // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
         }
 
     </script>
