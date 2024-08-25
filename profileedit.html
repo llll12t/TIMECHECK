@@ -10,8 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-gray-300 p-6">
-    <div class="max-w-lg m-auto bg-white p-6 rounded-xl shadow-md">
+<body class="bg-slate-800 flex items-center justify-center h-screen p-6">
+    <div class="max-w-lg bg-slate-100 p-6 rounded-xl shadow-md">
         <h2 class="text-xl mb-4">ข้อมูลพนักงาน</h2>
         <form id="edit-form">
             <input type="hidden" id="edit-id">
@@ -20,10 +20,10 @@
                 <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="mb-4">
-                <label for="edit-imageUrl" class="block text-sm">URL รูปภาพ</label>
-                <input type="text" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
+                <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
+                <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
                     oninput="updateImagePreview()" disabled>
-                <img id="image-preview" src="" alt="Image Preview" class="mt-2 max-h-40 rounded">
+                <img id="image-preview" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Image Preview" class="mt-2 max-h-24 rounded">
             </div>
             <div class="mb-4">
                 <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
@@ -45,22 +45,25 @@
                 <button type="button" id="edit-button"
                     class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">Edit</button>
                 <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden"
-                    onclick="resetForm()">Reset</button>
+                    onclick="cancelEdit()">ยกเลิก</button>
                 <button type="submit"
                     class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">Save</button>
             </div>
         </form>
     </div>
 
+
     <script>
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec';
+        const LIFF_ID = '2005732932-14NZGM4v'; // Liff ID
+
         let latestData = {};
 
         // ฟังก์ชันสำหรับล็อกหรือปลดล็อกฟอร์มและจัดการการแสดงผลปุ่ม
         function toggleFormEditing(enable) {
             const inputs = document.querySelectorAll('#edit-form input');
             const saveButton = document.querySelector('#edit-form button[type="submit"]');
-            const resetButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
+            const cancelButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
 
             inputs.forEach(input => {
                 input.disabled = !enable; // ปลดล็อก input
@@ -68,11 +71,11 @@
 
             if (enable) {
                 saveButton.classList.remove('hidden');
-                resetButton.classList.remove('hidden');
+                cancelButton.classList.remove('hidden');
                 document.getElementById('edit-button').classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
             } else {
                 saveButton.classList.add('hidden');
-                resetButton.classList.add('hidden');
+                cancelButton.classList.add('hidden');
                 document.getElementById('edit-button').classList.remove('hidden'); // แสดงปุ่ม Edit
             }
         }
@@ -126,13 +129,13 @@
 
         // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
         window.onload = async () => {
-            await initializeLiff(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
+             await initializeLiff(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
             toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
         };
 
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: '2005732932-14NZGM4v' }); // ใส่ LIFF ID ของคุณที่นี่
+                await liff.init({ liffId: `${LIFF_ID}` }); // ใส่ LIFF ID ของคุณที่นี่
                 if (liff.isLoggedIn()) {
                     const profile = await liff.getProfile();
                     const userlineId = profile.userId; // ดึง userId จากโปรไฟล์
@@ -202,13 +205,13 @@
                     confirmButtonText: 'OK'
                 });
             } finally {
-                resetForm();
+                cancelEdit();
             }
         });
 
 
-        // ฟังก์ชันรีเซ็ตฟอร์มและล็อกฟอร์มใหม่
-        function resetForm() {
+        // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
+        function cancelEdit() {
             document.getElementById('edit-form').reset();
             document.getElementById('edit-id').value = latestData[0];
             document.getElementById('edit-userID').value = latestData[1];
