@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from Google Sheets</title>
+    <title>Data from </title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -168,27 +168,32 @@
             });
 
             try {
+                let result;
                 if (imageFile) {
                     const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-                    await updateData(id, userID, name, employeeID, department, base64Image);
+                    result = await updateData(id, userID, name, employeeID, department, base64Image);
                 } else {
-                    await updateData(id, userID, name, employeeID, department, imageUrl);
+                    result = await updateData(id, userID, name, employeeID, department, imageUrl);
                 }
 
-                Swal.fire({
-                    title: 'Success',
-                    text: 'Data saved successfully!',
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                });
-
-                await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                // ตรวจสอบผลลัพธ์ที่ได้รับ
+                if (result.includes("success")) { // ตรวจสอบว่า response มีคำว่า "success" หรือไม่
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data saved successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                } else {
+                    throw new Error("Failed to save data");
+                }
 
             } catch (error) {
                 console.error('Error saving data:', error);
                 Swal.fire({
                     title: 'Error',
-                    text: 'Failed to save data. Please try again.',
+                    text: error.message || 'Failed to save data. Please try again.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
