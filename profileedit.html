@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from Google Sheets</title>
+    <title>Data ssgle Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -21,7 +21,8 @@
             </div>
             <div class="mb-4">
                 <label for="edit-imageUrl" class="block text-sm">URL รูปภาพ</label>
-                <input type="text" id="edit-imageUrl" class="w-full border px-2 py-1 rounded" oninput="updateImagePreview()" disabled>
+                <input type="text" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
+                    oninput="updateImagePreview()" disabled>
                 <img id="image-preview" src="" alt="Image Preview" class="mt-2 max-h-40 rounded">
             </div>
             <div class="mb-4">
@@ -41,9 +42,12 @@
                 <input type="text" id="edit-department" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="flex justify-end">
-                <button type="button" id="edit-button" class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">Edit</button>
-                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden" onclick="resetForm()">Reset</button>
-                <button type="submit" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">Save</button>
+                <button type="button" id="edit-button"
+                    class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">Edit</button>
+                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden"
+                    onclick="resetForm()">Reset</button>
+                <button type="submit"
+                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">Save</button>
             </div>
         </form>
     </div>
@@ -85,10 +89,10 @@
             try {
                 const response = await fetch(WEB_APP_URL);
                 const data = await response.json();
-                
+
                 // ค้นหาข้อมูลตาม userlineId
                 const filteredData = data.find(row => row[1] === userlineId);
-                
+
                 if (filteredData) {
                     latestData = filteredData;
 
@@ -141,66 +145,66 @@
             }
         }
 
-        document.getElementById('edit-button').addEventListener('click', function() {
+        document.getElementById('edit-button').addEventListener('click', function () {
             toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
         });
 
         document.getElementById('edit-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
+            e.preventDefault();
 
-    const id = document.getElementById('edit-id').value;
-    const userID = document.getElementById('edit-userID').value;
-    const name = document.getElementById('edit-name').value;
-    const employeeID = document.getElementById('edit-employeeID').value;
-    const department = document.getElementById('edit-department').value;
-    const imageFile = document.getElementById('edit-image').files[0];
+            const id = document.getElementById('edit-id').value;
+            const userID = document.getElementById('edit-userID').value;
+            const name = document.getElementById('edit-name').value;
+            const employeeID = document.getElementById('edit-employeeID').value;
+            const department = document.getElementById('edit-department').value;
+            const imageFile = document.getElementById('edit-image').files[0];
 
-    let imageUrl = document.getElementById('edit-imageUrl').value;
+            let imageUrl = document.getElementById('edit-imageUrl').value;
 
-    // แสดงผลการโหลด
-    Swal.fire({
-        title: 'Saving data...',
-        text: 'Please wait while we save your data.',
-        allowOutsideClick: false,
-        didOpen: () => {
-            Swal.showLoading(); // แสดง spinner
-        }
-    });
-
-    try {
-        let result;
-        if (imageFile) {
-            const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-            result = await updateData(id, userID, name, employeeID, department, base64Image);
-        } else {
-            result = await updateData(id, userID, name, employeeID, department, imageUrl);
-        }
-
-        // ตรวจสอบผลลัพธ์ที่ได้รับ
-        if (result && result.includes('Data updated')) {
+            // แสดงผลการโหลด
             Swal.fire({
-                title: 'Success',
-                text: 'Data saved successfully!',
-                icon: 'success',
-                confirmButtonText: 'OK'
+                title: 'Saving data...',
+                text: 'Please wait while we save your data.',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // แสดง spinner
+                }
             });
-            await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
-        } else {
-            throw new Error(result || 'Failed to save data');
-        }
 
-    } catch (error) {
-        console.error('Error saving data:', error);
-        Swal.fire({
-            title: 'Error',
-            text: error.message || 'Failed to save data. Please try again.',
-            icon: 'error',
-            confirmButtonText: 'OK'
+            try {
+                let result;
+                if (imageFile) {
+                    const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
+                    result = await updateData(id, userID, name, employeeID, department, base64Image);
+                } else {
+                    result = await updateData(id, userID, name, employeeID, department, imageUrl);
+                }
+
+                // ตรวจสอบผลลัพธ์ที่ได้รับ
+                if (result && result.includes('Data updated')) {
+                    Swal.fire({
+                        title: 'Success',
+                        text: 'Data saved successfully!',
+                        icon: 'success',
+                        confirmButtonText: 'OK'
+                    });
+                    await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+                } else {
+                    throw new Error(result || 'Failed to save data');
+                }
+
+            } catch (error) {
+                console.error('Error saving data:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'Failed to save data. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } finally {
+                resetForm();
+            }
         });
-    } finally {
-        resetForm();
-    }
-});
 
 
         // ฟังก์ชันรีเซ็ตฟอร์มและล็อกฟอร์มใหม่
@@ -218,22 +222,22 @@
         }
 
         async function updateData(id, userID, name, employeeID, department, base64Image) {
-    const response = await fetch(WEB_APP_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
-    });
-    const result = await response.text();
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
+            });
+            const result = await response.text();
 
-    // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
-    if (!result || result.trim() === '') {
-        throw new Error('Empty response from server');
-    }
+            // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
+            if (!result || result.trim() === '') {
+                throw new Error('Empty response from server');
+            }
 
-    return result;
-}
+            return result;
+        }
 
 
         // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
@@ -245,6 +249,38 @@
                 reader.readAsDataURL(file);
             });
         }
+
+        async function fetchData() {
+            try {
+                const response = await fetch(WEB_APP_URL + '?action=fetchData');
+                const data = await response.json();
+                
+                // นี่เป็นตัวอย่างการใช้ข้อมูลที่ดึงมาเพื่ออัปเดตฟอร์ม
+                if (data && data.length > 0) {
+                    // สมมติว่าเรากำลังอัปเดตฟอร์มตามข้อมูลที่ดึงมา
+                    const latestData = data[data.length - 1]; // ดึงข้อมูลรายการล่าสุด
+                    document.getElementById('edit-id').value = latestData[0];
+                    document.getElementById('edit-userID').value = latestData[1];
+                    document.getElementById('edit-name').value = latestData[2];
+                    document.getElementById('edit-employeeID').value = latestData[3];
+                    document.getElementById('edit-department').value = latestData[4];
+                    document.getElementById('edit-imageUrl').value = latestData[5];
+
+                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+                } else {
+                    console.log('No data found');
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to fetch data. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+
     </script>
 </body>
 
