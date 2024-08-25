@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from </title>
+    <title>Data from Google Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -146,61 +146,68 @@
         });
 
         document.getElementById('edit-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
+    e.preventDefault();
 
-            const id = document.getElementById('edit-id').value;
-            const userID = document.getElementById('edit-userID').value;
-            const name = document.getElementById('edit-name').value;
-            const employeeID = document.getElementById('edit-employeeID').value;
-            const department = document.getElementById('edit-department').value;
-            const imageFile = document.getElementById('edit-image').files[0];
+    const id = document.getElementById('edit-id').value;
+    const userID = document.getElementById('edit-userID').value;
+    const name = document.getElementById('edit-name').value;
+    const employeeID = document.getElementById('edit-employeeID').value;
+    const department = document.getElementById('edit-department').value;
+    const imageFile = document.getElementById('edit-image').files[0];
 
-            let imageUrl = document.getElementById('edit-imageUrl').value;
+    let imageUrl = document.getElementById('edit-imageUrl').value;
 
-            // แสดงผลการโหลด
-            Swal.fire({
-                title: 'Saving data...',
-                text: 'Please wait while we save your data.',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading(); // แสดง spinner
-                }
-            });
+    // แสดงผลการโหลด
+    Swal.fire({
+        title: 'Saving data...',
+        text: 'Please wait while we save your data.',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // แสดง spinner
+        }
+    });
 
-            try {
-                let result;
-                if (imageFile) {
-                    const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-                    result = await updateData(id, userID, name, employeeID, department, base64Image);
-                } else {
-                    result = await updateData(id, userID, name, employeeID, department, imageUrl);
-                }
+    try {
+        let result;
+        if (imageFile) {
+            const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
+            result = await updateData(id, userID, name, employeeID, department, base64Image);
+        } else {
+            result = await updateData(id, userID, name, employeeID, department, imageUrl);
+        }
 
-                // ตรวจสอบผลลัพธ์ที่ได้รับ
-                if (result.includes("success")) { // ตรวจสอบว่า response มีคำว่า "success" หรือไม่
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Data saved successfully!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                    await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
-                } else {
-                    throw new Error("Failed to save data");
-                }
-
-            } catch (error) {
-                console.error('Error saving data:', error);
+        // พยายามแปลงผลลัพธ์เป็น JSON
+        try {
+            const jsonResponse = JSON.parse(result);
+            if (jsonResponse.status === 'success') {
                 Swal.fire({
-                    title: 'Error',
-                    text: error.message || 'Failed to save data. Please try again.',
-                    icon: 'error',
+                    title: 'Success',
+                    text: 'Data saved successfully!',
+                    icon: 'success',
                     confirmButtonText: 'OK'
                 });
-            } finally {
-                resetForm();
+                await fetchData(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
+            } else {
+                throw new Error(jsonResponse.message || 'Failed to save data');
             }
+        } catch (jsonError) {
+            // หากผลลัพธ์ไม่สามารถแปลงเป็น JSON ได้ ให้ถือว่าเป็นความผิดพลาด
+            throw new Error('Unexpected response format');
+        }
+
+    } catch (error) {
+        console.error('Error saving data:', error);
+        Swal.fire({
+            title: 'Error',
+            text: error.message || 'Failed to save data. Please try again.',
+            icon: 'error',
+            confirmButtonText: 'OK'
         });
+    } finally {
+        resetForm();
+    }
+});
+
 
         // ฟังก์ชันรีเซ็ตฟอร์มและล็อกฟอร์มใหม่
         function resetForm() {
@@ -216,18 +223,23 @@
             toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
         }
 
-        // ฟังก์ชันอัปเดตข้อมูล
         async function updateData(id, userID, name, employeeID, department, base64Image) {
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
-            });
-            const result = await response.text();
-            return result;
-        }
+    const response = await fetch(WEB_APP_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
+    });
+    const result = await response.text();
+
+    // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
+    if (!result || result.trim() === '') {
+        throw new Error('Empty response from server');
+    }
+
+    return result;
+}
 
         // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
         function getBase64(file) {
