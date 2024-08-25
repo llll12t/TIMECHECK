@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data ฟกหก</title>
+    <title>Data from Google Sheets</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -201,25 +201,8 @@
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } finally {
-                resetForm();
-            }
+            } 
         });
-
-
-        // ฟังก์ชันรีเซ็ตฟอร์มและล็อกฟอร์มใหม่
-        function resetForm() {
-            document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = latestData[0];
-            document.getElementById('edit-userID').value = latestData[1];
-            document.getElementById('edit-name').value = latestData[2];
-            document.getElementById('edit-employeeID').value = latestData[3];
-            document.getElementById('edit-department').value = latestData[4];
-            document.getElementById('edit-imageUrl').value = latestData[5];
-
-            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-            toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-        }
 
         async function updateData(id, userID, name, employeeID, department, base64Image) {
             const response = await fetch(WEB_APP_URL, {
@@ -239,7 +222,6 @@
             return result;
         }
 
-
         // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
         function getBase64(file) {
             return new Promise((resolve, reject) => {
@@ -250,36 +232,7 @@
             });
         }
 
-        async function fetchData() {
-            try {
-                const response = await fetch(WEB_APP_URL + '?action=fetchData');
-                const data = await response.json();
-
-                // นี่เป็นตัวอย่างการใช้ข้อมูลที่ดึงมาเพื่ออัปเดตฟอร์ม
-                if (data && data.length > 0) {
-                    // สมมติว่าเรากำลังอัปเดตฟอร์มตามข้อมูลที่ดึงมา
-                    const latestData = data[data.length - 1]; // ดึงข้อมูลรายการล่าสุด
-                    document.getElementById('edit-id').value = latestData[0];
-                    document.getElementById('edit-userID').value = latestData[1];
-                    document.getElementById('edit-name').value = latestData[2];
-                    document.getElementById('edit-employeeID').value = latestData[3];
-                    document.getElementById('edit-department').value = latestData[4];
-                    document.getElementById('edit-imageUrl').value = latestData[5];
-
-                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-                } else {
-                    console.log('No data found');
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Failed to fetch data. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        }
+        
 
     </script>
 </body>
