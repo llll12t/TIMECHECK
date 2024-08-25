@@ -208,18 +208,24 @@
 
 
         // ฟังก์ชันรีเซ็ตฟอร์มและล็อกฟอร์มใหม่
-        function resetForm() {
-            document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = latestData[0];
-            document.getElementById('edit-userID').value = latestData[1];
-            document.getElementById('edit-name').value = latestData[2];
-            document.getElementById('edit-employeeID').value = latestData[3];
-            document.getElementById('edit-department').value = latestData[4];
-            document.getElementById('edit-imageUrl').value = latestData[5];
+function resetForm() {
+    document.getElementById('edit-form').reset(); // รีเซ็ตฟอร์มทั้งหมด
 
-            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-            toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-        }
+    // รีเซ็ตค่าของฟิลด์ไฟล์และพรีวิวรูปภาพ
+    document.getElementById('edit-image').value = ''; // รีเซ็ตฟิลด์อัปโหลดรูปภาพ
+    document.getElementById('image-preview').src = ''; // รีเซ็ตพรีวิวรูปภาพ
+
+    // รีเซ็ตค่าที่อัปเดตจากข้อมูลล่าสุด
+    document.getElementById('edit-id').value = latestData[0];
+    document.getElementById('edit-userID').value = latestData[1];
+    document.getElementById('edit-name').value = latestData[2];
+    document.getElementById('edit-employeeID').value = latestData[3];
+    document.getElementById('edit-department').value = latestData[4];
+    document.getElementById('edit-imageUrl').value = latestData[5];
+
+    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
+    toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
+}
 
         async function updateData(id, userID, name, employeeID, department, base64Image) {
             const response = await fetch(WEB_APP_URL, {
