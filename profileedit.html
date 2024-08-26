@@ -4,9 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from Google</title>
+    <title>แก้ไขโปรไฟล์</title>
+    <!-- นำเข้า Tailwind CSS สำหรับการออกแบบ -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script> <!-- LIFF SDK -->
+    <!-- นำเข้า LIFF SDK สำหรับการเชื่อมต่อกับ LINE -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <!-- นำเข้า SweetAlert2 สำหรับการแสดงการแจ้งเตือน -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
@@ -14,48 +17,52 @@
     <div class="max-w-lg bg-slate-100 p-6 rounded-xl shadow-md">
         <h2 class="text-xl mb-4">ข้อมูลพนักงาน</h2>
         <form id="edit-form">
+            <!-- ช่องสำหรับเก็บข้อมูล ID ซ่อนอยู่ -->
             <input type="hidden" id="edit-id">
             <div class="mb-4 hidden">
                 <label for="edit-userID" class="block text-sm">UserID</label>
                 <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
             </div>
             <div class="mb-4">
+                <!-- ช่องสำหรับแสดง URL รูปภาพ ซ่อนอยู่ -->
                 <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
-                <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded"
-                    oninput="updateImagePreview()" disabled>
+                <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded" oninput="updateImagePreview()" disabled>
+                <!-- แสดงภาพโปรไฟล์ -->
                 <img id="image-preview" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Image Preview" class="mt-2 max-h-24 rounded">
             </div>
+            <!-- ส่วนสำหรับอัปโหลดรูปภาพ -->
             <div class="mb-4 hidden" id="image-upload-section">
                 <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
                 <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded" disabled>
             </div>
+            <!-- ฟิลด์สำหรับกรอกชื่อพนักงาน -->
             <div class="mb-4">
                 <label for="edit-name" class="block text-sm">ชื่อพนักงาน</label>
                 <input type="text" id="edit-name" class="w-full border px-2 py-1 rounded" disabled>
             </div>
+            <!-- ฟิลด์สำหรับกรอกรหัสพนักงาน -->
             <div class="mb-4">
                 <label for="edit-employeeID" class="block text-sm">รหัสพนักงาน</label>
                 <input type="text" id="edit-employeeID" class="w-full border px-2 py-1 rounded" disabled>
             </div>
+            <!-- ฟิลด์สำหรับกรอกแผนก -->
             <div class="mb-4">
                 <label for="edit-department" class="block text-sm">แผนก</label>
                 <input type="text" id="edit-department" class="w-full border px-2 py-1 rounded" disabled>
             </div>
+            <!-- ปุ่มสำหรับแก้ไขข้อมูล ยกเลิก และบันทึก -->
             <div class="flex justify-end">
-                <button type="button" id="edit-button"
-                    class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">Edit</button>
-                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden"
-                    onclick="cancelEdit()">ยกเลิก</button>
-                <button type="submit"
-                    class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">Save</button>
+                <button type="button" id="edit-button" class="bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-700">Edit</button>
+                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2 hidden" onclick="cancelEdit()">ยกเลิก</button>
+                <button type="submit" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700 hidden">Save</button>
             </div>
         </form>
     </div>
 
-
     <script>
+        // URL ของ Web App และ LIFF ID
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec';
-        const LIFF_ID = '2005732932-14NZGM4v'; // Liff ID
+        const LIFF_ID = '2005732932-14NZGM4v'; // LIFF ID
 
         let latestData = {};
 
@@ -65,6 +72,7 @@
             toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
         };
 
+        // ฟังก์ชันสำหรับเริ่มต้น LIFF
         async function initializeLiff() {
             try {
                 await liff.init({ liffId: `${LIFF_ID}` }); // ใส่ LIFF ID ของคุณที่นี่
@@ -73,7 +81,7 @@
                     const userlineId = profile.userId; // ดึง userId จากโปรไฟล์
                     searchDataByUserlineId(userlineId); // ค้นหาข้อมูลตาม userId
                 } else {
-                    liff.login();
+                    liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้เข้าสู่ระบบ
                 }
             } catch (error) {
                 console.error('LIFF Initialization failed', error);
@@ -144,6 +152,7 @@
             }
         }
 
+        // เพิ่ม event listener สำหรับปุ่มแก้ไขข้อมูล
         document.getElementById('edit-button').addEventListener('click', function () {
             toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
         });
@@ -155,6 +164,7 @@
             imagePreview.src = imageUrl ? imageUrl : ''; // อัปเดต src ของรูปภาพ
         }
 
+        // ฟังก์ชันสำหรับส่งฟอร์มและบันทึกข้อมูล
         document.getElementById('edit-form').addEventListener('submit', async function (e) {
             e.preventDefault();
 
@@ -212,7 +222,6 @@
             }
         });
 
-
         // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
         function cancelEdit() {
             document.getElementById('edit-form').reset();
@@ -227,6 +236,7 @@
             toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
         }
 
+        // ฟังก์ชันสำหรับอัปเดตข้อมูลไปยังเซิร์ฟเวอร์
         async function updateData(id, userID, name, employeeID, department, base64Image) {
             const response = await fetch(WEB_APP_URL, {
                 method: 'POST',
