@@ -13,8 +13,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-slate-800 flex items-center justify-center h-screen p-6">
-    <div class="max-w-lg bg-slate-100 p-6 rounded-xl shadow-md">
+<body class="bg-slate-300 flex items-center justify-center h-screen p-6">
+    <div class="max-w-sm w-full bg-slate-800 text-white p-6 rounded-xl shadow-md">
         <h2 class="text-xl mb-4">ข้อมูลพนักงาน</h2>
         <form id="edit-form">
             <!-- ช่องสำหรับเก็บข้อมูล ID ซ่อนอยู่ -->
@@ -23,7 +23,7 @@
                 <label for="edit-userID" class="block text-sm">UserID</label>
                 <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded" disabled>
             </div>
-            <div class="mb-4">
+            <div class="mb-4 flex justify-center">
                 <!-- ช่องสำหรับแสดง URL รูปภาพ ซ่อนอยู่ -->
                 <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
                 <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded" oninput="updateImagePreview()" disabled>
@@ -38,17 +38,17 @@
             <!-- ฟิลด์สำหรับกรอกชื่อพนักงาน -->
             <div class="mb-4">
                 <label for="edit-name" class="block text-sm">ชื่อพนักงาน</label>
-                <input type="text" id="edit-name" class="w-full border px-2 py-1 rounded" disabled>
+                <input type="text" id="edit-name" class="w-full text-slate-800 border px-2 py-1 rounded" disabled>
             </div>
             <!-- ฟิลด์สำหรับกรอกรหัสพนักงาน -->
             <div class="mb-4">
                 <label for="edit-employeeID" class="block text-sm">รหัสพนักงาน</label>
-                <input type="text" id="edit-employeeID" class="w-full border px-2 py-1 rounded" disabled>
+                <input type="text" id="edit-employeeID" class="w-full text-slate-800 border px-2 py-1 rounded" disabled>
             </div>
             <!-- ฟิลด์สำหรับกรอกแผนก -->
             <div class="mb-4">
                 <label for="edit-department" class="block text-sm">แผนก</label>
-                <input type="text" id="edit-department" class="w-full border px-2 py-1 rounded" disabled>
+                <input type="text" id="edit-department" class="w-full text-slate-800 border px-2 py-1 rounded" disabled>
             </div>
             <!-- ปุ่มสำหรับแก้ไขข้อมูล ยกเลิก และบันทึก -->
             <div class="flex justify-end">
