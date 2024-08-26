@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard In-Out</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .text-green {
             color: #00cf00;
@@ -30,16 +30,64 @@
         .hidden-column {
             display: none;
         }
+
+        /* Popup background */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        /* Popup content */
+        .popup-content {
+            position: relative;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 90%;
+            max-height: 90%;
+            text-align: center;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Adjust image size */
+        .popup-content img {
+            max-width: 100%;
+            max-height: calc(100vh - 100px);
+            object-fit: contain;
+        }
+
+        /* Close button */
+        #closePopup {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            line-height: 1;
+        }
     </style>
 </head>
 
-<body class="bg-gray-100 container mx-auto text-xs right-0 mt-5 w-full p-5">
+<body class="bg-slate-100 container mx-auto text-xs right-0 mt-2 w-full p-5">
     <!-- Rows per page select -->
     <div class="bg-white">
         <div>
             <main class="mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-24">
-                    <h1 class="text-4xl font-bold tracking-tight text-gray-900">แดชบอร์ด</h1>
+                <div class="flex items-baseline justify-between border-b border-slate-200 pb-6 pt-14">
+                    <h1 class="text-2xl font-bold tracking-tight text-slate-900">Check In-Out</h1>
+                    
                     <div class="flex items-center">
                         <div class="relative inline-block text-left">
                             <div class="flex justify-center mt-4">
@@ -55,7 +103,7 @@
                                 </div>
                                 <label for="rowsPerPage" class="mr-5"></label>
                                 <select id="rowsPerPage"
-                                    class="block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
+                                    class="block appearance-none bg-white border border-slate-400 hover:border-slate-500 px-4 py-2 rounded shadow leading-tight focus:outline-none focus:shadow-outline">
                                     <option value="15">15</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
@@ -64,109 +112,107 @@
                         </div>
                     </div>
                 </div>
-
                
-
                 <section aria-labelledby="products-heading" class="pb-24 pt-6">
                     <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
                         <!-- Filters -->
                         <div>
                             <div class="col-span-full">
                                 <label for="filterName"
-                                    class="block text-sm font-medium leading-6 text-gray-900">ค้นหาชื่อ</label>
+                                    class="block text-sm font-medium leading-6 text-slate-900">ค้นหาชื่อ</label>
                                 <div class="mt-2">
                                     <input type="text" id="filterName" autocomplete="off"
-                                        class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                        class="block w-full rounded-md border-0 p-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div class="col-span-full">
                                 <label for="filterEmployeeId"
-                                    class="block text-sm font-medium leading-6 text-gray-900">รหัสพนักงาน</label>
+                                    class="block text-sm font-medium leading-6 text-slate-900">รหัสพนักงาน</label>
                                 <div class="mt-2">
                                     <input type="text" id="filterEmployeeId" autocomplete="off"
-                                        class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                        class="block w-full rounded-md border-0 p-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                 </div>
                             </div>
                             <div class="mt-5 space-y-5">
                                 <fieldset>
-                                    <legend class="text-sm font-semibold leading-6 text-gray-900">
+                                    <legend class="text-sm font-semibold leading-6 text-slate-900">
                                         บันทึก
                                     </legend>
                                     <div class="mt-3 space-y-6">
                                         <div class="relative flex gap-x-3">
                                             <div class="flex h-6 items-center">
                                                 <input id="filterIn" type="checkbox" value="เข้างาน"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
                                                     checked />
                                             </div>
                                             <div class="text-sm leading-6">
                                                 <label for="filterIn"
-                                                    class="font-medium text-gray-900">เข้างาน</label>
+                                                    class="font-medium text-slate-900">เข้างาน</label>
                                             </div>
                                         </div>
                                         <div class="relative flex gap-x-3">
                                             <div class="flex h-6 items-center">
                                                 <input id="filterDuring" type="checkbox" value="ระหว่างวัน"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
                                                     checked />
                                             </div>
                                             <div class="text-sm leading-6">
                                                 <label for="filterDuring"
-                                                    class="font-medium text-gray-900">ระหว่างวัน</label>
+                                                    class="font-medium text-slate-900">ระหว่างวัน</label>
                                             </div>
                                         </div>
                                         <div class="relative flex gap-x-3">
                                             <div class="flex h-6 items-center">
                                                 <input id="filterOut" type="checkbox" value="ออกงาน"
-                                                    class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                                    class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-600"
                                                     checked />
                                             </div>
                                             <div class="text-sm leading-6">
                                                 <label for="filterOut"
-                                                    class="font-medium text-gray-900">ออกงาน</label>
+                                                    class="font-medium text-slate-900">ออกงาน</label>
                                             </div>
                                         </div>
                                     </div>
                                 </fieldset>
                             </div>
-                            <div class="bg-gray-100 p-8 my-5">
+                            <div class="bg-slate-100 p-8 my-5">
                                 <div class="col-span-full">
                                     <label for="startDate"
-                                        class="block text-sm font-medium leading-6 text-gray-900">วันที่เริ่มต้น</label>
+                                        class="block text-sm font-medium leading-6 text-slate-900">วันที่เริ่มต้น</label>
                                     <div class="mt-2">
                                         <input type="date" id="startDate"
-                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            class="block w-full rounded-md border-0 p-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                     </div>
                                 </div>
                                 <div class="col-span-full">
                                     <label for="endDate"
-                                        class="block text-sm font-medium leading-6 text-gray-900">วันที่สิ้นสุด</label>
+                                        class="block text-sm font-medium leading-6 text-slate-900">วันที่สิ้นสุด</label>
                                     <div class="mt-2">
                                         <input type="date" id="endDate"
-                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            class="block w-full rounded-md border-0 p-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                     </div>
                                 </div>
                                 <div class="col-span-full">
                                     <label for="startTime"
-                                        class="block text-sm font-medium leading-6 text-gray-900">เวลาเริ่มต้น</label>
+                                        class="block text-sm font-medium leading-6 text-slate-900">เวลาเริ่มต้น</label>
                                     <div class="mt-2">
                                         <input type="time" id="startTime"
-                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            class="block w-full rounded-md border-0 p-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                     </div>
                                 </div>
                                 <div class="col-span-full">
                                     <label for="endTime"
-                                        class="block text-sm font-medium leading-6 text-gray-900">เวลาสิ้นสุด</label>
+                                        class="block text-sm font-medium leading-6 text-slate-900">เวลาสิ้นสุด</label>
                                     <div class="mt-2">
                                         <input type="time" id="endTime"
-                                            class="block w-full rounded-md border-0 p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                                            class="block w-full rounded-md border-0 p-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
                                     </div>
                                 </div>
                             </div>
                              <!-- Export Options -->
                 <div class="flex flex-col space-y-2 my-4">
                     <fieldset class="border p-4">
-                        <legend class="text-sm font-semibold leading-6 text-gray-900 mb-2">เลือกคอลัมน์ที่ต้องการส่งออก</legend>
+                        <legend class="text-sm font-semibold leading-6 text-slate-900 mb-2">เลือกคอลัมน์ที่ต้องการส่งออก</legend>
                         <div class="grid grid-cols-3 gap-4">
                             <div>
                                 <input type="checkbox" id="colImage" checked />
@@ -208,37 +254,37 @@
                             class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             ส่งออกเป็น .txt
                         </button>
+                        <button id="exportTxtCustomBtn"
+                            class="bg-indigo-500 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            ส่งออกเป็น .txt (รหัส-วัน/เวลา)
+                        </button>
                         <button id="exportCsvBtn"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                             ส่งออกเป็น .csv
                         </button>
-                        <!-- <button id="exportPdfBtn"
-                            class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                            ส่งออกเป็น .pdf
-                        </button> -->
                     </div>
                 </div>
                         </div>
 
                         <!-- Product grid -->
                         <div class="lg:col-span-3">
-                            <table class="min-w-full text-sm whitespace-no-wrap">
+                            <table class="min-w-full text-xs whitespace-no-wrap bg-slate-50">
                                 <thead>
                                     <tr class="border">
-                                        <th class="px-4 py-2">รูปภาพ</th>
-                                        <th class="px-4 py-2">รหัสพนักงาน</th>
-                                        <th class="px-4 py-2">ชื่อ</th>
-                                        <th class="px-4 py-2">บันทึก</th>
-                                        <th class="px-4 py-2">หมายเหตุ</th>
-                                        <th class="px-4 py-2">วันที่</th>
-                                        <th class="px-4 py-2">เวลา</th>
-                                        <th class="px-4 py-2">สถานที่</th>
+                                        <th class="w-20 px-4 py-2">รูปภาพ</th>
+                                        <th class="w-40 px-4 py-2">ชื่อ</th>
+                                        <th class="w-20 px-4 py-2">รหัสพนักงาน</th>
+                                        <th class="w-40 px-4 py-2">บันทึก</th>
+                                        <th class="w-20 px-4 py-2">หมายเหตุ</th>
+                                        <th class="w-40 px-4 py-2">วันที่</th>
+                                        <th class="w-20 px-4 py-2">เวลา</th>
+                                        <th class="w-40 px-4 py-2">สถานที่</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dataTableBody" class="text-center"></tbody>
                             </table>
                             <div class="mt-4">
-                                <p id="rowsInfo" class="text-gray-600"></p>
+                                <p id="rowsInfo" class="text-slate-600"></p>
                                 <div id="pagination" class="flex justify-center space-x-2">
                                     <button id="prevPageBtn"
                                         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
@@ -254,6 +300,14 @@
                     </div>
                 </section>
             </main>
+        </div>
+    </div>
+
+    <!-- Popup for Image -->
+    <div id="popup" class="popup-overlay">
+        <div class="popup-content">
+            <span id="closePopup" class="cursor-pointer">&times;</span>
+            <img id="popupImage" src="" alt="Image" class="object-cover w-full h-auto"/>
         </div>
     </div>
 
@@ -289,8 +343,8 @@
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
             return {
-                date: `${day}/${month}/${year}`,
-                time: `${hours}:${minutes}`
+                date: `${day}-${month}-${year}`,  // รูปแบบ DD-MM-YYYY
+                time: `${hours}:${minutes}`       // รูปแบบ HH:mm
             };
         }
 
@@ -315,8 +369,8 @@
                 const statusMatch = inMatch || duringMatch || outMatch;
 
                 const dateMatch =
-                    (!startDate || new Date(formattedDateTime.date.split('/').reverse().join('-')) >= new Date(startDate)) &&
-                    (!endDate || new Date(formattedDateTime.date.split('/').reverse().join('-')) <= new Date(endDate));
+                    (!startDate || new Date(formattedDateTime.date.split('-').reverse().join('-')) >= new Date(startDate)) &&
+                    (!endDate || new Date(formattedDateTime.date.split('-').reverse().join('-')) <= new Date(endDate));
 
                 const timeMatch =
                     (!startTime || formattedDateTime.time >= startTime) &&
@@ -363,7 +417,7 @@
                         return `<td class="px-4 py-2">${(currentPage - 1) * rowsPerPage + index + 1}</td>`;
                     }
                     if (col.index === 1) {
-                        return `<td class="px-4 py-2"><img class="rounded" width="50" height="50" src="${item[col.index]}" /></td>`;
+                        return `<td class="px-4 py-2"><img class="rounded cursor-pointer" width="50" height="50" src="${item[col.index]}" /></td>`;
                     }
                     if (col.index === 0 && col.label === 'วันที่') {
                         return `<td class="px-4 py-2">${formattedDateTime.date}</td>`;
@@ -387,61 +441,85 @@
         }
 
         function exportToTxt(filteredData, selectedColumns) {
-    const txtContent = filteredData.map(row => {
-        return selectedColumns.map(col => {
-            if (col.label === 'วันที่' || col.label === 'เวลา') {
-                const formattedDateTime = formatDateTime(row[0]);
-                if (col.label === 'วันที่') return formattedDateTime.date;
-                if (col.label === 'เวลา') return formattedDateTime.time;
-            }
-            return row[col.index];
-        }).join('\t');
+            const txtContent = filteredData.map(row => {
+                return selectedColumns.map(col => {
+                    if (col.label === 'วันที่' || col.label === 'เวลา') {
+                        const formattedDateTime = formatDateTime(row[0]);
+                        if (col.label === 'วันที่') return formattedDateTime.date;
+                        if (col.label === 'เวลา') return formattedDateTime.time;
+                    }
+                    return row[col.index];
+                }).join('\t');
+            }).join('\n');
+            downloadFile(txtContent, 'data.txt', 'text/plain;charset=utf-8');
+        }
+
+        function exportToTxtWithCustomFormat(filteredData) {
+    // Header ของไฟล์
+    const header = "รหัสที่เครื่อง\tวัน/เวลา\n";
+
+    // เนื้อหาของไฟล์
+    const content = filteredData.map(row => {
+        const formattedDateTime = formatDateTime(row[0]);
+        const employeeId = row[3];
+        const dateTime = `${formattedDateTime.date.split('-').join('/')} ${formattedDateTime.time}`;
+        return `${employeeId}\t${dateTime}`;
     }).join('\n');
-    downloadFile(txtContent, 'data.txt', 'text/plain;charset=utf-8');
+
+    // รวม header และ content เข้าด้วยกัน
+    const fullContent = header + content;
+
+    // กำหนดชื่อไฟล์ตามวันที่เริ่มต้นและสิ้นสุด
+    const startDate = document.getElementById('startDate').value.split('-').reverse().join('-');
+    const endDate = document.getElementById('endDate').value.split('-').reverse().join('-');
+    const fileName = `${startDate}_to_${endDate}.txt`;
+
+    // ดาวน์โหลดไฟล์
+    downloadFile(fullContent, fileName, 'text/plain;charset=utf-8');
 }
 
-function exportToCsv(filteredData, selectedColumns) {
-    const csvContent = [
-        selectedColumns.map(col => col.label).join(','), // Header
-        ...filteredData.map(row => {
-            return selectedColumns.map(col => {
-                if (col.label === 'วันที่' || col.label === 'เวลา') {
-                    const formattedDateTime = formatDateTime(row[0]);
-                    if (col.label === 'วันที่') return formattedDateTime.date;
-                    if (col.label === 'เวลา') return formattedDateTime.time;
-                }
-                return row[col.index];
-            }).join(',');
-        })
-    ].join('\n');
-    downloadFile(csvContent, 'data.csv', 'text/csv;charset=utf-8');
-}
 
-function exportToPdf(filteredData, selectedColumns) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    let yPos = 10;
+        function exportToCsv(filteredData, selectedColumns) {
+            const csvContent = [
+                selectedColumns.map(col => col.label).join(','), // Header
+                ...filteredData.map(row => {
+                    return selectedColumns.map(col => {
+                        if (col.label === 'วันที่' || col.label === 'เวลา') {
+                            const formattedDateTime = formatDateTime(row[0]);
+                            if (col.label === 'วันที่') return formattedDateTime.date;
+                            if (col.label === 'เวลา') return formattedDateTime.time;
+                        }
+                        return row[col.index];
+                    }).join(',');
+                })
+            ].join('\n');
+            downloadFile(csvContent, 'data.csv', 'text/csv;charset=utf-8');
+        }
 
-    const headers = selectedColumns.map(col => col.label).join(' ');
-    doc.text(headers, 10, yPos);
-    yPos += 10;
+        function exportToPdf(filteredData, selectedColumns) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let yPos = 10;
 
-    filteredData.forEach((row) => {
-        const rowContent = selectedColumns.map(col => {
-            if (col.label === 'วันที่' || col.label === 'เวลา') {
-                const formattedDateTime = formatDateTime(row[0]);
-                if (col.label === 'วันที่') return formattedDateTime.date;
-                if (col.label === 'เวลา') return formattedDateTime.time;
-            }
-            return row[col.index];
-        }).join(' ');
-        doc.text(rowContent, 10, yPos);
-        yPos += 10;
-    });
+            const headers = selectedColumns.map(col => col.label).join(' ');
+            doc.text(headers, 10, yPos);
+            yPos += 10;
 
-    doc.save('data.pdf');
-}
+            filteredData.forEach((row) => {
+                const rowContent = selectedColumns.map(col => {
+                    if (col.label === 'วันที่' || col.label === 'เวลา') {
+                        const formattedDateTime = formatDateTime(row[0]);
+                        if (col.label === 'วันที่') return formattedDateTime.date;
+                        if (col.label === 'เวลา') return formattedDateTime.time;
+                    }
+                    return row[col.index];
+                }).join(' ');
+                doc.text(rowContent, 10, yPos);
+                yPos += 10;
+            });
 
+            doc.save('data.pdf');
+        }
 
         function downloadFile(content, fileName, mimeType) {
             const blob = new Blob([content], { type: mimeType });
@@ -457,6 +535,27 @@ function exportToPdf(filteredData, selectedColumns) {
             let data = await fetchData();
 
             updateTable(data);
+
+            // เพิ่ม Event Listener สำหรับคลิกที่รูปภาพ
+            document.getElementById('dataTableBody').addEventListener('click', function(event) {
+                if (event.target.tagName === 'IMG') {
+                    const imgSrc = event.target.src;
+                    document.getElementById('popupImage').src = imgSrc;
+                    document.getElementById('popup').style.display = 'flex';
+                }
+            });
+
+            // ปิดป๊อปอัพเมื่อคลิกที่ปุ่มปิด
+            document.getElementById('closePopup').addEventListener('click', function() {
+                document.getElementById('popup').style.display = 'none';
+            });
+
+            // ปิดป๊อปอัพเมื่อคลิกที่พื้นหลังป๊อปอัพ
+            document.getElementById('popup').addEventListener('click', function(event) {
+                if (event.target === event.currentTarget) {
+                    document.getElementById('popup').style.display = 'none';
+                }
+            });
 
             document.getElementById('sortDescBtn').addEventListener('click', () => {
                 updateTable(data, false);
@@ -499,6 +598,11 @@ function exportToPdf(filteredData, selectedColumns) {
                 const filteredData = filterData(data);
                 const selectedColumns = getSelectedColumns();
                 exportToTxt(filteredData, selectedColumns);
+            });
+
+            document.getElementById('exportTxtCustomBtn').addEventListener('click', () => {
+                const filteredData = filterData(data);
+                exportToTxtWithCustomFormat(filteredData);
             });
 
             document.getElementById('exportCsvBtn').addEventListener('click', () => {
