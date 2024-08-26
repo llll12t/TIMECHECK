@@ -6,16 +6,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>บันทึกการเข้าออกงาน</title>
+    <!-- นำเข้า Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความแจ้งเตือน -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- นำเข้า LIFF SDK ของ LINE -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
-        
-        #loadingOverlay { display: none; position: absolute; top: 0; left: 0; width: 100%;
-            height: 100%; background-color: rgb(255 255 255 / 80%); align-items: center; justify-content: center; z-index: 1000; }
-        .loading-container { position: relative; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .blink { animation: blink 1s infinite; }
+        /* การตั้งค่าสำหรับ overlay ที่ใช้แสดงสถานะการโหลด */
+        #loadingOverlay { 
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgb(255 255 255 / 80%); 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000; 
+        }
+        /* การตั้งค่าสำหรับ container ของการโหลด */
+        .loading-container { 
+            position: relative; 
+        }
+        /* การตั้งค่าการกระพริบของข้อความ */
+        @keyframes blink { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.5; } 
+        }
+        .blink { 
+            animation: blink 1s infinite; 
+        }
     </style>
 </head>
 
@@ -41,11 +63,9 @@
         <div id="step1">
             <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
             <div class="loading-container bg-slate-100 p-4 rounded-lg">
-
                 <div id="loadingOverlay">
-                    <div class="text-center text-gray-800 ">ค้นหารายชื่อ..</div>
+                    <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
-
                 <!-- ส่วนสำหรับกรอกข้อมูลชื่อ, รหัสพนักงาน, และตำแหน่ง -->
                 <div class="flex items-center space-x-2 mb-2">
                     <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnBData"
@@ -62,7 +82,6 @@
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
                 <input type="hidden" id="columnAData" name="columnAData" />
-
             </div>
 
             <!-- กลุ่มปุ่มเลือกประเภทของงาน (เช่น เข้างาน, ระหว่างวัน, ออกงาน) -->
@@ -77,7 +96,7 @@
                 <div class="flex items-center space-x-2 w-full">
                     <input type="radio" id="radio-four" name="switch-job" value="ระหว่างวัน" class="hidden " />
                     <label for="radio-four"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg  w-full text-center">
+                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
                         ระหว่างวัน
                     </label>
                 </div>
@@ -91,11 +110,11 @@
             </div>
             <input type="hidden" id="jobInput" name="jobInput" required>
             <!-- หมายเหตุ -->
-            <textarea class="input-field w-full border border-gray-300 rounded-lg p-4 text-gray-700 " placeholder="Note"
+            <textarea class="input-field w-full border border-gray-300 rounded-lg p-4 text-gray-700" placeholder="Note"
                 id="noteInput"></textarea>
             <!-- ปุ่มสำหรับไปยังขั้นตอนถัดไป -->
             <div class="bg-slate-800 text-white text-center rounded-lg my-4">
-                <button class="p-4 w-full" onclick="nextStep()"> ถัดไป</button>
+                <button class="p-4 w-full" onclick="nextStep()">ถัดไป</button>
             </div>
         </div>
 
@@ -111,7 +130,7 @@
                 <div class="flex justify-center space-x-4 my-4 px-8">
                     <button class="w-full text-center py-2 px-4 rounded-lg bg-yellow-500 text-white "
                         id="start-camera-btn">เริ่มเปิดกล้อง</button>
-                    <button class="w-full text-center py-4 px-4 rounded-lg bg-green-500  text-white" id="capture-btn"
+                    <button class="w-full text-center py-4 px-4 rounded-lg bg-green-500 text-white" id="capture-btn"
                         disabled="">ถ่ายรูป</button>
                 </div>
             </div>
@@ -157,17 +176,14 @@
 </body>
 <script>
 
-
+    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
     const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec';
-   
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbySKd9ZARwWl7gxVyeqv1erpSoBz8DOWd868hz4xmqRUGLwRfCZFXuC1kAJYRG8I3Uq/exec';
     const LIFF_ID = '2005732932-l3BJMr8k'; // Liff ID
 
-
-
-// ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+    // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
     window.onload = async function () {
-          await initializeLiff();
+        await initializeLiff();
     };
 
     // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
@@ -258,7 +274,7 @@
         }
     }
 
-
+    // การตั้งค่าตัวแปรสำหรับการทำงานกับกล้องและการส่งข้อมูล
     const url = `${WEB_APP_URL}`;
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
@@ -331,8 +347,6 @@
                 });
         }
     });
-
-
 
     // ตรวจสอบว่าถ่ายรูปแล้วหรือยัง ก่อนที่จะไปยังขั้นตอนถัดไป
     function checkPictureAndNextStep() {
@@ -448,6 +462,8 @@
             liff.login();
         }
     }
+
+    // ฟังก์ชันสำหรับส่งข้อความ Flex Message ผ่าน LIFF
     async function sendFlexMessage() {
         let jobColor = '';
         if (jobInput.value === 'เข้างาน') {
@@ -630,38 +646,8 @@
         liff.closeWindow(); // Close the LIFF window
     }
 
-
-    function isLate(currentTime, scheduledTime) {
-        // สร้างอ็อบเจ็กต์ Date สำหรับเวลาปัจจุบันและเวลานัดหมาย
-        const current = new Date(`1970-01-01T${currentTime}:00Z`);
-        const scheduled = new Date(`1970-01-01T${scheduledTime}:00Z`);
-
-        // คำนวณความแตกต่างของเวลาในหน่วยนาที
-        const differenceInMinutes = (current - scheduled) / 1000 / 60;
-
-        // ตรวจสอบว่าความแตกต่างของเวลามากกว่า 15 นาทีหรือไม่ ถ้าใช่จะถือว่ามาสาย
-        return differenceInMinutes > 15;
-    }
-
-
-    function getLateDetails(currentTime, scheduledTime) {
-        // สร้างอ็อบเจ็กต์ Date สำหรับเวลาปัจจุบันและเวลานัดหมาย
-        const current = new Date(`1970-01-01T${currentTime}:00Z`);
-        const scheduled = new Date(`1970-01-01T${scheduledTime}:00Z`);
-
-        // คำนวณความแตกต่างของเวลาในหน่วยมิลลิวินาที
-        const differenceInMilliseconds = current - scheduled;
-
-        // แปลงความแตกต่างเป็นนาที และคำนวณจำนวนชั่วโมงและนาทีที่มาสาย
-        const differenceInMinutes = Math.floor(differenceInMilliseconds / 1000 / 60);
-        const hours = Math.floor(differenceInMinutes / 60);
-        const minutes = differenceInMinutes % 60;
-
-        // คืนค่าผลลัพธ์ในรูปแบบอ็อบเจ็กต์ที่มีจำนวนชั่วโมงและนาที
-        return { hours, minutes };
-    }
-
-
+    
+    // ฟังก์ชันสำหรับอัปเดตวันที่และเวลาในหน้าเว็บ
     function updateDateTime() {
         // ดึงอีลิเมนต์ HTML สำหรับแสดงวันที่และเวลา
         const dateElement = document.getElementById('date');
@@ -696,9 +682,8 @@
     setInterval(updateDateTime, 1000);
     updateDateTime();
 
-
+    // ฟังก์ชันสำหรับเปลี่ยนค่าของงานเมื่อเลือกประเภทงาน
     document.querySelectorAll('input[name="switch-job"]').forEach(function (radio) {
-        // เมื่อมีการเปลี่ยนแปลงการเลือกงาน
         radio.addEventListener('change', function () {
             // อัปเดตค่าของ input ที่ชื่อว่า jobInput ด้วยค่าที่เลือก
             document.getElementById('jobInput').value = this.value;
@@ -711,7 +696,7 @@
         });
     });
 
-
+    // ฟังก์ชันสำหรับดึงตำแหน่งที่ตั้งปัจจุบันของผู้ใช้
     function getLocation() {
         // ตรวจสอบว่าบราวเซอร์รองรับ Geolocation หรือไม่
         if (navigator.geolocation) {
@@ -722,6 +707,7 @@
         }
     }
 
+    // ฟังก์ชันสำหรับแสดงตำแหน่งที่ตั้งในหน้าเว็บ
     function displayLocation(position) {
         // ดึงข้อมูลละติจูดและลองจิจูดจากตำแหน่งที่ตั้ง
         const latitude = position.coords.latitude;
@@ -759,9 +745,8 @@
         document.getElementById("mapIframe").src = mapsUrl;
     }
 
-
+    // ฟังก์ชันสำหรับดึงเวลาปัจจุบันในกรุงเทพ
     function getCurrentTimeInBangkok() {
-        // ดึงเวลาปัจจุบันของกรุงเทพ
         const now = new Date();
         const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
 
@@ -774,22 +759,20 @@
     // ตั้งค่าเวลาปัจจุบันของกรุงเทพใน input ที่ชื่อว่า currentTime
     document.getElementById('currentTime').value = getCurrentTimeInBangkok();
 
-
+    // ฟังก์ชันสำหรับดึงวันที่ในรูปแบบที่กำหนด
     function getFormattedDate() {
-        // ดึงวันที่ปัจจุบัน
         const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
 
-        // แปลงวันที่เป็นรูปแบบ DD/MM/YYYY
-        return `${day}/ ${month}/ ${year}`;
+        return `${day}/${month}/${year}`;
     }
 
     // ตั้งค่าวันที่ปัจจุบันใน input ที่ชื่อว่า todayInput
     document.getElementById('todayInput').value = getFormattedDate();
 
-
+    // ฟังก์ชันสำหรับจัดการขั้นตอนการทำงาน
     let currentStep = 1;
     function nextStep() {
         // ไปยังขั้นตอนถัดไป
