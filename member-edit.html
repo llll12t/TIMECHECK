@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data from Google Sheets</title>
+    <title>แก้ไขโปรไฟล์</title>
+    <!-- นำเข้า Tailwind CSS สำหรับการออกแบบ -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- นำเข้า jQuery สำหรับการทำงานร่วมกับ DOM -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- นำเข้า SweetAlert2 สำหรับการแสดงการแจ้งเตือน -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-gray-300 p-6">
     <div class="max-w-5xl m-auto">
+        <!-- ตารางแสดงข้อมูลที่ดึงจาก Google Sheets -->
         <table id="data-table" class="min-w-full text-xs bg-white rounded-2xl">
             <thead>
                 <tr class="text-slate-800 text-sm mt-4">
@@ -24,18 +28,20 @@
                 </tr>
             </thead>
             <tbody class="text-sm">
-                <!-- Data will be appended here -->
+                <!-- ข้อมูลจะถูกเพิ่มที่นี่โดย JavaScript -->
             </tbody>
         </table>
         <div id="pagination" class="mt-4 flex justify-center space-x-2">
-            <!-- Pagination buttons will be added here -->
+            <!-- ปุ่มเปลี่ยนหน้า Pagination จะถูกเพิ่มที่นี่ -->
         </div>
     </div>
 
+    <!-- โมดอลสำหรับแก้ไขข้อมูล -->
     <div id="edit-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
         <div class="bg-white p-4 rounded-lg w-1/3">
             <h2 class="text-xl mb-4">Edit Data</h2>
             <form id="edit-form">
+                <!-- ฟิลด์ซ่อนสำหรับเก็บ ID -->
                 <input type="hidden" id="edit-id">
                 <div class="mb-4 hidden">
                     <label for="edit-userID" class="block text-sm">UserID</label>
@@ -62,39 +68,42 @@
                     <input type="text" id="edit-department" class="w-full border px-2 py-1 rounded">
                 </div>
                 <div class="flex justify-end">
-                    <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2"
-                        onclick="closeModal()">Cancel</button>
-                    <button type="submit"
-                        class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700">Save</button>
+                    <!-- ปุ่มยกเลิกการแก้ไข -->
+                    <button type="button" class="bg-red-500 text-white py-1 px-3 rounded hover:bg-red-700 mr-2" onclick="closeModal()">Cancel</button>
+                    <!-- ปุ่มบันทึกการแก้ไข -->
+                    <button type="submit" class="bg-blue-500 text-white py-1 px-3 rounded hover:bg-blue-700">Save</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
+    // URL ของ Web App ที่ใช้สำหรับดึงข้อมูลจาก Google Sheets
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec'; 
-    const rowsPerPage = 10;
-    let currentPage = 1;
-    let tableData = [];
+    const rowsPerPage = 10; // จำนวนแถวต่อหน้า
+    let currentPage = 1; // หน้าปัจจุบัน
+    let tableData = []; // ข้อมูลทั้งหมด
 
+    // ฟังก์ชันดึงข้อมูลจาก Google Sheets
     async function fetchData() {
         const response = await fetch(WEB_APP_URL);
         const data = await response.json();
-        tableData = data.slice(1); // Skip the header row
-        displayPage(currentPage);
-        setupPagination();
+        tableData = data.slice(1); // ลบแถวหัวข้อ
+        displayPage(currentPage); // แสดงข้อมูลตามหน้าที่เลือก
+        setupPagination(); // สร้างปุ่ม pagination
     }
 
+    // ฟังก์ชันแสดงข้อมูลตามหน้าที่เลือก
     function displayPage(page) {
         const startIndex = (page - 1) * rowsPerPage;
         const endIndex = startIndex + rowsPerPage;
         const paginatedData = tableData.slice(startIndex, endIndex);
 
         const tableBody = document.querySelector('#data-table tbody');
-        tableBody.innerHTML = ''; // Clear existing data
+        tableBody.innerHTML = ''; // ลบข้อมูลที่มีอยู่
 
         paginatedData.forEach(row => {
-            if (row.every(cell => cell === '')) return; // Skip empty rows
+            if (row.every(cell => cell === '')) return; // ข้ามแถวที่ว่างเปล่า
 
             const tr = document.createElement('tr');
 
@@ -157,6 +166,7 @@
         });
     }
 
+    // ฟังก์ชันสร้างปุ่ม pagination
     function setupPagination() {
         const pageCount = Math.ceil(tableData.length / rowsPerPage);
         const pagination = document.getElementById('pagination');
@@ -175,6 +185,7 @@
         }
     }
 
+    // ฟังก์ชันอัปเดตสีของปุ่ม pagination ตามหน้าที่เลือก
     function updatePaginationButtons() {
         const pagination = document.getElementById('pagination');
         const buttons = pagination.querySelectorAll('button');
@@ -188,6 +199,7 @@
         });
     }
 
+    // ฟังก์ชันอัปเดตข้อมูลใน Google Sheets
     async function updateData(id, userID, name, employeeID, department, base64Image) {
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
@@ -203,9 +215,10 @@
             icon: 'success',
             confirmButtonText: 'OK'
         });
-        fetchData(); // Reload the data to see the updated data
+        fetchData(); // ดึงข้อมูลใหม่หลังจากอัปเดต
     }
 
+    // ฟังก์ชันลบข้อมูลใน Google Sheets
     async function deleteData(id) {
         const response = await fetch(WEB_APP_URL, {
             method: 'POST',
@@ -221,9 +234,10 @@
             icon: 'success',
             confirmButtonText: 'OK'
         });
-        fetchData(); // Reload the data to see the updated data
+        fetchData(); // ดึงข้อมูลใหม่หลังจากลบ
     }
 
+    // ฟังก์ชันเปิดโมดอลสำหรับแก้ไขข้อมูล
     function openEditModal(row) {
         document.getElementById('edit-id').value = row[0];
         document.getElementById('edit-userID').value = row[1];
@@ -234,10 +248,12 @@
         document.getElementById('edit-modal').classList.remove('hidden');
     }
 
+    // ฟังก์ชันปิดโมดอล
     function closeModal() {
         document.getElementById('edit-modal').classList.add('hidden');
     }
 
+    // ฟังก์ชันยืนยันการลบข้อมูล
     function confirmDelete(id) {
         Swal.fire({
             title: 'Are you sure?',
@@ -254,49 +270,50 @@
         });
     }
 
-    // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-    });
-}
-
-document.getElementById('edit-form').addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    const id = document.getElementById('edit-id').value;
-    const userID = document.getElementById('edit-userID').value;
-    const name = document.getElementById('edit-name').value;
-    const employeeID = document.getElementById('edit-employeeID').value;
-    const department = document.getElementById('edit-department').value;
-    const imageFile = document.getElementById('edit-image').files[0];
-    
-    let imageUrl = document.getElementById('edit-imageUrl').value;
-    
-    if (imageFile) {
-        try {
-            const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-            await updateData(id, userID, name, employeeID, department, base64Image);
-        } catch (error) {
-            console.error('Error converting image to Base64:', error);
-            Swal.fire({
-                title: 'Error',
-                text: 'Failed to upload image. Please try again.',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-    } else {
-        await updateData(id, userID, name, employeeID, department, imageUrl);
+    // ฟังก์ชันแปลงไฟล์เป็น Base64
+    function getBase64(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = error => reject(error);
+            reader.readAsDataURL(file);
+        });
     }
 
-    closeModal();
-});
+    // ฟังก์ชันบันทึกการแก้ไขข้อมูล
+    document.getElementById('edit-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
 
+        const id = document.getElementById('edit-id').value;
+        const userID = document.getElementById('edit-userID').value;
+        const name = document.getElementById('edit-name').value;
+        const employeeID = document.getElementById('edit-employeeID').value;
+        const department = document.getElementById('edit-department').value;
+        const imageFile = document.getElementById('edit-image').files[0];
+        
+        let imageUrl = document.getElementById('edit-imageUrl').value;
+        
+        if (imageFile) {
+            try {
+                const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
+                await updateData(id, userID, name, employeeID, department, base64Image);
+            } catch (error) {
+                console.error('Error converting image to Base64:', error);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to upload image. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        } else {
+            await updateData(id, userID, name, employeeID, department, imageUrl);
+        }
 
+        closeModal();
+    });
+
+    // เรียกใช้ฟังก์ชัน fetchData เมื่อโหลดหน้าเว็บ
     window.onload = fetchData;
 
     </script>
