@@ -65,26 +65,11 @@
                         </div>
                     </div>
 
-                    <div class="pt-4 border rounded-lg">
+                    <div class="p-4 ">
                         <div class="flex justify-between">
-                            <div>
-                                <h1 class="font-light text-white text-center text-sm">ลาพักร้อน</h1>
-                                <input type="text"
-                                       class="input-field text-md bg-white text-white text-bold text-center bg-opacity-0 py-1 w-full"
-                                       id="columnGData" placeholder="0" name="columnGData" readonly>
-                            </div>
-                            <div>
-                                <h1 class="font-light text-white text-center text-sm">ลากิจ</h1>
-                                <input type="text"
-                                       class="input-field text-md bg-white text-white text-bold text-center bg-opacity-0 py-1 w-full"
-                                       id="columnHData" placeholder="0" name="columnHData" readonly>
-                            </div>
-                            <div>
-                                <h1 class="font-light text-white text-center text-sm">ลาป่วย</h1>
-                                <input type="text"
-                                       class="input-field text-md bg-white text-white text-bold text-center bg-opacity-0 py-1 w-full"
-                                       id="columnIData" placeholder="0" name="columnIData" readonly>
-                            </div>
+                            <h1 class="font-light text-white text-center text-sm">โอที</h1>
+                            <input type="text" class="input-field text-md bg-white text-white text-bold bg-opacity-0  "
+                                    id="columnKData" placeholder="0" name="columnKData" readonly>
                         </div>
                     </div>
                     <input type="hidden" id="userId" name="userId">
@@ -95,17 +80,21 @@
         <div class="max-w-md mx-auto py-4">
             <form>
                 <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
+
+                    <div class="flex justify-between">
                     <div class="mt-4 flex justify-between mb-5">
-                        <input type="date" id="otDate" name="otDate" class="w-1/2 mr-2 p-2 rounded-lg">
+                        <input type="date" id="otDate" name="otDate" class="mr-2 p-2 rounded-lg">
                     </div>
+
+                    <div class="mt-4 mb-5">
+                        <input type="text" id="totalTime" name="totalTime" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
+                    </div>
+                 </div>
                     <div class="mt-4 flex justify-between mb-5">
                         <input type="time" id="startTime" name="startTime" class="w-1/2 mr-2 p-2 rounded-lg">
                         <input type="time" id="endTime" name="endTime" class="w-1/2 ml-2 p-2 rounded-lg">
                     </div>
-                    <div class="mt-4 mb-5">
-                        <label for="totalTime" class="block text-gray-700">จำนวนชั่วโมง-นาทีที่ทำโอที:</label>
-                        <input type="text" id="totalTime" name="totalTime" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
-                    </div>
+             
                     <div class="mt-6 mb-5">
                         <input type="text" id="otTitle" name="otTitle" placeholder="หัวข้อเรื่อง"
                                class="w-full p-2 border rounded-lg">
@@ -199,6 +188,8 @@
             document.getElementById('columnGData').value = row[7] || '';
             document.getElementById('columnHData').value = row[8] || '';
             document.getElementById('columnIData').value = row[9] || '';
+            document.getElementById('columnKData').value = row[10] || '';
+
         }
 
         // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
