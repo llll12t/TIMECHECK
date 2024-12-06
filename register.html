@@ -4,84 +4,91 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียน</title>
+    <title>ลงทะเบียน2</title>
     <!-- นำเข้า Tailwind CSS สำหรับการออกแบบ -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <!-- นำเข้า SweetAlert2 สำหรับการแสดงการแจ้งเตือน -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- นำเข้า LIFF SDK สำหรับการเชื่อมต่อกับ LINE -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body class="bg-slate-100 min-h-screen">
-    <div class="max-w-md m-auto p-2">
+    <div class="max-w-md m-auto p-4">
         <form>
-            <div class="bg-white rounded-lg p-10">    
-                <div class="mb-5 text-center">
-                    <!-- ลบส่วนการแสดงภาพโปรไฟล์และปุ่มอัปโหลดออก -->
+            <div class="bg-white rounded-lg p-6 shadow-md">
+                <h1 class="text-2xl font-semibold mb-4 text-center">ลงทะเบียน</h1>
+                
+                <!-- ฟิลด์ต่างๆ -->
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่ Line ID -->
+                    <input type="text" class="input-field w-full bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="Line ID" name="userlineId" readonly>
                 </div>
-                <div class="flex flex-col">
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่ Line ID -->
-                        <input type="text" class="input-field w-full bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="Line ID" name="userlineId" readonly>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่ชื่อ-สกุล -->
-                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="nameSurname" placeholder="ชื่อ-สกุล" name="nameSurname" required>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่เลขประจำตัวผู้ป่วย -->
-                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="patientId" placeholder="เลขประจำตัวผู้ป่วย" name="patientId" required>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับเลือกเพศ -->
-                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="gender" name="gender" required>
-                            <option value="" disabled selected>เลือกเพศ</option>
-                            <option value="ชาย">ชาย</option>
-                            <option value="หญิง">หญิง</option>
-                            <option value="ไม่ระบุ">ไม่ระบุ</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่วันเกิด -->
-                        <input type="date" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="birthdate" name="birthdate" required>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่ที่อยู่ -->
-                        <textarea class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="address" placeholder="ที่อยู่" name="address" required></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่เบอร์โทร -->
-                        <input type="tel" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="phoneNumber" placeholder="เบอร์โทร" name="phoneNumber" required>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่ระดับการศึกษา -->
-                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="educationLevel" placeholder="ระดับการศึกษา" name="educationLevel" required>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่อาชีพ -->
-                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="occupation" placeholder="อาชีพ" name="occupation" required>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่สถานภาพสมรส -->
-                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="maritalStatus" name="maritalStatus" required>
-                            <option value="" disabled selected>เลือกสถานภาพสมรส</option>
-                            <option value="โสด">โสด</option>
-                            <option value="สมรส">สมรส</option>
-                            <option value="หย่าร้าง">หย่าร้าง</option>
-                            <option value="อื่นๆ">อื่นๆ</option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <!-- ฟิลด์สำหรับใส่สิทธิการรักษา -->
-                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="healthcareRights" placeholder="สิทธิการรักษา" name="healthcareRights" required>
-                    </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่ชื่อ-สกุล -->
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="nameSurname" placeholder="ชื่อ-สกุล" name="nameSurname" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่เลขประจำตัวผู้ป่วย -->
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="patientId" placeholder="เลขประจำตัวผู้ป่วย" name="patientId" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับเลือกเพศ -->
+                    <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="gender" name="gender" required>
+                        <option value="" disabled selected>เลือกเพศ</option>
+                        <option value="ชาย">ชาย</option>
+                        <option value="หญิง">หญิง</option>
+                        <option value="ไม่ระบุ">ไม่ระบุ</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่วันเกิด -->
+                    <input type="date" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="birthdate" name="birthdate" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่ที่อยู่ -->
+                    <textarea class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="address" placeholder="ที่อยู่" name="address" required></textarea>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่เบอร์โทร -->
+                    <input type="tel" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="phoneNumber" placeholder="เบอร์โทร" name="phoneNumber" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่ระดับการศึกษา -->
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="educationLevel" placeholder="ระดับการศึกษา" name="educationLevel" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่อาชีพ -->
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="occupation" placeholder="อาชีพ" name="occupation" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่สถานภาพสมรส -->
+                    <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="maritalStatus" name="maritalStatus" required>
+                        <option value="" disabled selected>เลือกสถานภาพสมรส</option>
+                        <option value="โสด">โสด</option>
+                        <option value="สมรส">สมรส</option>
+                        <option value="หย่าร้าง">หย่าร้าง</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับใส่สิทธิการรักษา -->
+                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="healthcareRights" placeholder="สิทธิการรักษา" name="healthcareRights" required>
+                </div>
+                <div class="mb-4">
+                    <!-- ฟิลด์สำหรับอัปโหลดรูปภาพ -->
+                    <label for="file" class="block text-sm font-medium text-gray-600">อัพโหลดรูปภาพ</label>
+                    <input type="file" id="file" name="file" accept="image/*" class="mt-1 p-2 border rounded-md w-full">
+                </div>
+                <div class="mb-4">
+                    <!-- แสดงภาพที่อัพโหลด -->
+                    <img src="https://via.placeholder.com/100" alt="รูปภาพ" id="preview" class="mt-2 w-24 h-24 object-cover rounded-md">
                 </div>
                 <!-- ปุ่มสำหรับบันทึกข้อมูล -->
-                <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">บันทึกข้อมูล</button>
+                <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-2 px-4 rounded-lg hover:bg-blue-700">บันทึกข้อมูล</button>
             </div>
         </form>
     </div>
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    
     <script>
         // URL ของ Web App ที่ใช้ในการลงทะเบียน
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec'; 
@@ -193,6 +200,28 @@
                                         ]
                                     },
                                     // เพิ่มกล่องข้อมูลอื่นๆ ตามต้องการ
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'เลขประจำตัวผู้ป่วย',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('patientId').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    // เพิ่มฟิลด์อื่นๆ ตามต้องการ
                                 ]
                             }
                         ]
@@ -238,7 +267,21 @@
         let occupationInput = document.getElementById("occupation");
         let maritalStatusInput = document.getElementById("maritalStatus");
         let healthcareRightsInput = document.getElementById("healthcareRights");
+        let fileInput = document.getElementById("file");
+        let previewImg = document.getElementById("preview");
         let submitBtn = document.getElementById("submitBtn");
+
+        // ฟังก์ชันสำหรับแสดงภาพที่อัปโหลด
+        fileInput.addEventListener('change', () => {
+            const file = fileInput.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
 
         // ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
         function validateForm() {
@@ -253,6 +296,7 @@
             const occupation = occupationInput.value.trim();
             const maritalStatus = maritalStatusInput.value.trim();
             const healthcareRights = healthcareRightsInput.value.trim();
+            const file = fileInput.files[0];
 
             if (
                 userlineId === '' || 
@@ -265,7 +309,8 @@
                 educationLevel === '' || 
                 occupation === '' || 
                 maritalStatus === '' || 
-                healthcareRights === ''
+                healthcareRights === '' ||
+                !file
             ) {
                 return false;
             }
@@ -281,7 +326,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Validation Error',
-                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็นและอัปโหลดรูปภาพ.',
                 });
                 return;
             }
@@ -292,62 +337,75 @@
                 submitBtn.disabled = true;
 
                 try {
-                    const obj = {
-                        lineId: userlineIdInput.value,
-                        nameSurname: nameSurnameInput.value,
-                        patientId: patientIdInput.value,
-                        gender: genderInput.value,
-                        birthdate: birthdateInput.value,
-                        address: addressInput.value,
-                        phoneNumber: phoneNumberInput.value,
-                        educationLevel: educationLevelInput.value,
-                        occupation: occupationInput.value,
-                        maritalStatus: maritalStatusInput.value,
-                        healthcareRights: healthcareRightsInput.value
-                    };
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
 
-                    Swal.fire({
-                        title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
-                        allowOutsideClick: false,
-                        showConfirmButton: false,
-                        html: '<div class="swal2-loading"></div>',
-                        didOpen: () => {
-                            Swal.showLoading();
-                        }
-                    });
+                    reader.onloadend = async () => {
+                        const base64 = reader.result.split("base64,")[1];
 
-                    let response = await fetch(url, {
-                        method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(obj) // ส่งข้อมูลในรูปแบบ JSON ไปยัง Web App
-                    });
+                        const obj = {
+                            lineId: userlineIdInput.value,
+                            nameSurname: nameSurnameInput.value,
+                            patientId: patientIdInput.value,
+                            gender: genderInput.value,
+                            birthdate: birthdateInput.value,
+                            address: addressInput.value,
+                            phoneNumber: phoneNumberInput.value,
+                            educationLevel: educationLevelInput.value,
+                            occupation: occupationInput.value,
+                            maritalStatus: maritalStatusInput.value,
+                            healthcareRights: healthcareRightsInput.value,
+                            base64: base64,
+                            type: file.type,
+                            name: file.name
+                        };
 
-                    let data = await response.text();
-
-                    if (response.ok) {
                         Swal.fire({
-                            title: 'สำเร็จ!',
-                            text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
-                            icon: 'success',
-                            confirmButtonText: 'ปิด',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
-                                liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
+                            title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                            allowOutsideClick: false,
+                            showConfirmButton: false,
+                            html: '<div class="swal2-loading"></div>',
+                            didOpen: () => {
+                                Swal.showLoading();
                             }
                         });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: `เกิดข้อผิดพลาดขณะส่งข้อมูล: ${data}`,
-                        });
-                        console.error('Response not OK:', data);
-                    }
 
-                    console.log(data);
+                        let response = await fetch(url, {
+                            method: "POST",
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(obj) // ส่งข้อมูลในรูปแบบ JSON ไปยัง Web App
+                        });
+
+                        let data = await response.text();
+
+                        if (response.ok) {
+                            Swal.fire({
+                                title: 'สำเร็จ!',
+                                text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                                icon: 'success',
+                                confirmButtonText: 'ปิด',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
+                                    liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: `เกิดข้อผิดพลาดขณะส่งข้อมูล: ${data}`,
+                            });
+                            console.error('Response not OK:', data);
+                        }
+
+                        console.log(data);
+                        submitBtn.disabled = false;
+                    };
+
+                    reader.readAsDataURL(file);
                 } catch (error) {
                     Swal.fire({
                         icon: 'error',
@@ -356,7 +414,6 @@
                     });
 
                     console.error(error);
-                } finally {
                     submitBtn.disabled = false;
                 }
             } else {
