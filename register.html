@@ -17,7 +17,11 @@
         <form>
             <div class="bg-white rounded-lg p-10">    
                 <div class="mb-5 text-center">
-                    <!-- ลบส่วนการแสดงภาพโปรไฟล์และปุ่มอัปโหลดออก -->
+                    <!-- แสดงภาพโปรไฟล์ที่อัพโหลด -->
+                    <div class="mx-auto w-32 h-32 mb-2 border rounded-lg relative bg-slate-100 mb-4 shadow-inset">
+                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
+                    </div>
+                    <!-- ปุ่มสำหรับอัพโหลดรูปภาพ (ลบออกแล้ว) -->
                 </div>
                 <div class="flex flex-col">
                     <div class="mb-4">
@@ -382,172 +386,173 @@
                                     }
                                 ]
                             }
-                        },
-                        footer: {
-                            type: 'box',
-                            layout: 'vertical',
-                            contents: [
-                                {
-                                    type: 'text',
-                                    text: 'ยินดีต้อนรับ!',
-                                    size: 'sm',
-                                    color: '#aaaaaa',
-                                    align: 'center'
-                                }
-                            ]
-                        }
+                        ]
+                    },
+                    footer: {
+                        type: 'box',
+                        layout: 'vertical',
+                        contents: [
+                            {
+                                type: 'text',
+                                text: 'ยินดีต้อนรับ!',
+                                size: 'sm',
+                                color: '#aaaaaa',
+                                align: 'center'
+                            }
+                        ]
                     }
-                };
+                }
+            };
+
+            try {
+                await liff.sendMessages([flexMessage]); // ส่งข้อความ Flex ผ่าน LIFF
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการส่ง Flex Message:', error);
+            }
+        }
+
+        // กำหนดตัวแปรสำหรับใช้ในฟังก์ชันต่างๆ
+        let url = `${WEB_APP_URL}`;
+        let userlineIdInput = document.getElementById("userlineId");
+        let nameSurnameInput = document.getElementById("nameSurname");
+        let patientIdInput = document.getElementById("patientId");
+        let genderInput = document.getElementById("gender");
+        let birthdateInput = document.getElementById("birthdate");
+        let addressInput = document.getElementById("address");
+        let phoneNumberInput = document.getElementById("phoneNumber");
+        let educationLevelInput = document.getElementById("educationLevel");
+        let occupationInput = document.getElementById("occupation");
+        let maritalStatusInput = document.getElementById("maritalStatus");
+        let healthcareRightsInput = document.getElementById("healthcareRights");
+        let submitBtn = document.getElementById("submitBtn");
+
+        // ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
+        function validateForm() {
+            const userlineId = userlineIdInput.value.trim();
+            const nameSurname = nameSurnameInput.value.trim();
+            const patientId = patientIdInput.value.trim();
+            const gender = genderInput.value.trim();
+            const birthdate = birthdateInput.value.trim();
+            const address = addressInput.value.trim();
+            const phoneNumber = phoneNumberInput.value.trim();
+            const educationLevel = educationLevelInput.value.trim();
+            const occupation = occupationInput.value.trim();
+            const maritalStatus = maritalStatusInput.value.trim();
+            const healthcareRights = healthcareRightsInput.value.trim();
+
+            if (
+                userlineId === '' || 
+                nameSurname === '' || 
+                patientId === '' || 
+                gender === '' || 
+                birthdate === '' || 
+                address === '' || 
+                phoneNumber === '' || 
+                educationLevel === '' || 
+                occupation === '' || 
+                maritalStatus === '' || 
+                healthcareRights === ''
+            ) {
+                return false;
+            }
+
+            return true;
+        }
+
+        // เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
+        submitBtn.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            if (!validateForm()) { // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+                });
+                return;
+            }
+
+            const isConfirmed = await showConfirmationDialog(); // แสดงกล่องยืนยันก่อนบันทึกข้อมูล
+
+            if (isConfirmed) {
+                submitBtn.disabled = true;
 
                 try {
-                    await liff.sendMessages([flexMessage]); // ส่งข้อความ Flex ผ่าน LIFF
+                    const obj = {
+                        lineId: userlineIdInput.value,
+                        nameSurname: nameSurnameInput.value,
+                        patientId: patientIdInput.value,
+                        gender: genderInput.value,
+                        birthdate: birthdateInput.value,
+                        address: addressInput.value,
+                        phoneNumber: phoneNumberInput.value,
+                        educationLevel: educationLevelInput.value,
+                        occupation: occupationInput.value,
+                        maritalStatus: maritalStatusInput.value,
+                        healthcareRights: healthcareRightsInput.value
+                    };
+
+                    Swal.fire({
+                        title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        html: '<div class="swal2-loading"></div>',
+                        onBeforeOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    let response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(obj) // ส่งข้อมูลในรูปแบบ JSON ไปยัง Web App
+                    });
+
+                    let data = await response.text();
+
+                    Swal.fire({
+                        title: 'สำเร็จ!',
+                        text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                        icon: 'success',
+                        confirmButtonText: 'ปิด',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
+                        }
+                    });
+                    sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
+                    console.log(data);
                 } catch (error) {
-                    console.error('เกิดข้อผิดพลาดในการส่ง Flex Message:', error);
-                }
-            }
-
-            // กำหนดตัวแปรสำหรับใช้ในฟังก์ชันต่างๆ
-            let url = `${WEB_APP_URL}`;
-            let userlineIdInput = document.getElementById("userlineId");
-            let nameSurnameInput = document.getElementById("nameSurname");
-            let patientIdInput = document.getElementById("patientId");
-            let genderInput = document.getElementById("gender");
-            let birthdateInput = document.getElementById("birthdate");
-            let addressInput = document.getElementById("address");
-            let phoneNumberInput = document.getElementById("phoneNumber");
-            let educationLevelInput = document.getElementById("educationLevel");
-            let occupationInput = document.getElementById("occupation");
-            let maritalStatusInput = document.getElementById("maritalStatus");
-            let healthcareRightsInput = document.getElementById("healthcareRights");
-            let submitBtn = document.getElementById("submitBtn");
-
-            // ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
-            function validateForm() {
-                const userlineId = userlineIdInput.value.trim();
-                const nameSurname = nameSurnameInput.value.trim();
-                const patientId = patientIdInput.value.trim();
-                const gender = genderInput.value.trim();
-                const birthdate = birthdateInput.value.trim();
-                const address = addressInput.value.trim();
-                const phoneNumber = phoneNumberInput.value.trim();
-                const educationLevel = educationLevelInput.value.trim();
-                const occupation = occupationInput.value.trim();
-                const maritalStatus = maritalStatusInput.value.trim();
-                const healthcareRights = healthcareRightsInput.value.trim();
-
-                if (
-                    userlineId === '' || 
-                    nameSurname === '' || 
-                    patientId === '' || 
-                    gender === '' || 
-                    birthdate === '' || 
-                    address === '' || 
-                    phoneNumber === '' || 
-                    educationLevel === '' || 
-                    occupation === '' || 
-                    maritalStatus === '' || 
-                    healthcareRights === ''
-                ) {
-                    return false;
-                }
-
-                return true;
-            }
-
-            // เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
-            submitBtn.addEventListener('click', async (event) => {
-                event.preventDefault();
-
-                if (!validateForm()) { // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
                     Swal.fire({
                         icon: 'error',
-                        title: 'Validation Error',
-                        text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+                        title: 'Error',
+                        text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
                     });
-                    return;
+
+                    console.error(error);
+                } finally {
+                    submitBtn.disabled = false;
                 }
+            } else {
+                Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info'); // แสดงข้อความถ้ายกเลิกการส่งข้อมูล
+            }
+        });
 
-                const isConfirmed = await showConfirmationDialog(); // แสดงกล่องยืนยันก่อนบันทึกข้อมูล
-
-                if (isConfirmed) {
-                    submitBtn.disabled = true;
-
-                    try {
-                        const obj = {
-                            lineId: userlineIdInput.value,
-                            nameSurname: nameSurnameInput.value,
-                            patientId: patientIdInput.value,
-                            gender: genderInput.value,
-                            birthdate: birthdateInput.value,
-                            address: addressInput.value,
-                            phoneNumber: phoneNumberInput.value,
-                            educationLevel: educationLevelInput.value,
-                            occupation: occupationInput.value,
-                            maritalStatus: maritalStatusInput.value,
-                            healthcareRights: healthcareRightsInput.value
-                        };
-
-                        Swal.fire({
-                            title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
-                            allowOutsideClick: false,
-                            showConfirmButton: false,
-                            html: '<div class="swal2-loading"></div>',
-                            onBeforeOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-
-                        let response = await fetch(url, {
-                            method: "POST",
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify(obj) // ส่งข้อมูลในรูปแบบ JSON ไปยัง Web App
-                        });
-
-                        let data = await response.text();
-
-                        Swal.fire({
-                            title: 'สำเร็จ!',
-                            text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
-                            icon: 'success',
-                            confirmButtonText: 'ปิด',
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
-                            }
-                        });
-                        sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
-                        console.log(data);
-                    } catch (error) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
-                        });
-
-                        console.error(error);
-                    } finally {
-                        submitBtn.disabled = false;
-                    }
-                } else {
-                    Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info'); // แสดงข้อความถ้ายกเลิกการส่งข้อมูล
-                }
+        // ฟังก์ชันสำหรับแสดงกล่องยืนยันก่อนส่งข้อมูล
+        async function showConfirmationDialog() {
+            const confirmation = await Swal.fire({
+                title: 'ยืนยันการส่งข้อมูล',
+                text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ส่งข้อมูล!',
+                cancelButtonText: 'ไม่, ยกเลิก'
             });
 
-            // ฟังก์ชันสำหรับแสดงกล่องยืนยันก่อนส่งข้อมูล
-            async function showConfirmationDialog() {
-                const confirmation = await Swal.fire({
-                    title: 'ยืนยันการส่งข้อมูล',
-                    text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'ใช่, ส่งข้อมูล!',
-                    cancelButtonText: 'ไม่, ยกเลิก'
-                });
-
-                return confirmation.isConfirmed;
-            }
+            return confirmation.isConfirmed;
+        }
     </script>
 </body>
 </html>
