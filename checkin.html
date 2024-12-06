@@ -66,18 +66,22 @@
                 <div id="loadingOverlay">
                     <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
-                <!-- ส่วนสำหรับกรอกข้อมูลชื่อ, รหัสพนักงาน, และตำแหน่ง -->
+                <!-- ส่วนสำหรับกรอกข้อมูลชื่อ, เลขประจำตัวผู้ป่วย, และตำแหน่ง -->
+                <div class="flex items-center space-x-2 mb-2">
+                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnAData"
+                        placeholder="เลขประจำตัวผู้ป่วย" name="columnAData" required>
+                </div>
                 <div class="flex items-center space-x-2 mb-2">
                     <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnBData"
                         placeholder="ชื่อ-สกุล" name="columnBData" required>
                 </div>
                 <div class="flex items-center space-x-2 mb-2">
                     <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnCData"
-                        placeholder="รหัสพนักงาน" name="columnCData" required>
+                        placeholder="เบอร์ติดต่อ" name="columnCData" required>
                 </div>
                 <div class="flex items-center space-x-2 mb-2">
                     <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnDData"
-                        placeholder="ตำแหน่ง" name="columnDData" required>
+                        placeholder="สิทธิการรักษา" name="columnDData" required>
                 </div>
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
