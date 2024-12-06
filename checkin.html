@@ -294,6 +294,7 @@
     const url = `${WEB_APP_URL}`;
     const video = document.getElementById('video');
     const canvas = document.getElementById('canvas');
+    const patientId = document.querySelector("#columnAData");
     const columnBData = document.querySelector("#columnBData");
     const columnCData = document.querySelector("#columnCData");
     const jobInput = document.querySelector("#jobInput");
@@ -418,6 +419,7 @@
                 let spt = preview.src.split("base64,")[1];
                 let obj = {
                     base64: spt,
+                    patientId: columnAData.value,
                     name: columnBData.value,
                     role: columnCData.value,
                     job: jobInput.value,
