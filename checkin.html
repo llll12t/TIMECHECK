@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -14,38 +14,29 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
         /* การตั้งค่าสำหรับ overlay ที่ใช้แสดงสถานะการโหลด */
-        #loadingOverlay {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(255 255 255 / 80%);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
+        #loadingOverlay { 
+            display: none; 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgb(255 255 255 / 80%); 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 1000; 
         }
-
         /* การตั้งค่าสำหรับ container ของการโหลด */
-        .loading-container {
-            position: relative;
+        .loading-container { 
+            position: relative; 
         }
-
         /* การตั้งค่าการกระพริบของข้อความ */
-        @keyframes blink {
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
+        @keyframes blink { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0.5; } 
         }
-
-        .blink {
-            animation: blink 1s infinite;
+        .blink { 
+            animation: blink 1s infinite; 
         }
     </style>
 </head>
@@ -56,13 +47,13 @@
         <!-- ส่วนนี้แสดงข้อความต้อนรับและชื่อผู้ใช้ -->
         <div class="p-2">
             <span>👋🏻 สวัสดี </span>
-            <input type="text" id="displayName" name="displayName" class="border-slate-500 px-2 py-1 rounded" readonly>
+            <input type="text" id="displayName" name="displayName">
         </div>
         <!-- กล่องแสดงวันที่และเวลา -->
         <div class="bg-slate-800 border rounded-lg text-white text-center my-4 py-8 px-4">
             <div class="daytime">
                 <div id="date"></div>
-                <div class="text-5xl font-bold" id="time"></div>
+                <div class="text-5xl text-bold" id="time"></div>
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับรับค่า วันที่ และ เวลา -->
                 <input type="date" id="todayInput" name="todayInput" class="hidden">
                 <input type="time" id="currentTime" name="currentTime" class="hidden">
@@ -72,65 +63,64 @@
         <div id="step1">
             <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
             <div class="loading-container bg-slate-100 p-4 rounded-lg">
-                <div id="loadingOverlay" class="flex">
+                <div id="loadingOverlay">
                     <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
-                <!-- เลขประจำตัวผู้ป่วย -->
+               <!-- เลขประจำตัวผู้ป่วย -->
                 <div class="input flex flex-col w-full static mb-2">
-                    <label for="patientId"
+                    <label for="columnAData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         เลขประจำตัวผู้ป่วย:
                     </label>
-                    <input id="patientId" type="text" placeholder="กรอกเลขประจำตัวผู้ป่วย" name="patientId" required
-                        class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                    <input id="columnAData" type="text" placeholder="กรอกเลขประจำตัวผู้ป่วย" name="columnAData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
 
                 <!-- ชื่อ-สกุล -->
                 <div class="input flex flex-col w-full static mb-2">
-                    <label for="name"
+                    <label for="columnBData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         ชื่อ-สกุล:
                     </label>
-                    <input id="name" type="text" placeholder="กรอกชื่อ-สกุล" name="name" required
-                        class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                    <input id="columnBData" type="text" placeholder="กรอกชื่อ-สกุล" name="columnBData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
 
                 <!-- เบอร์ติดต่อ -->
                 <div class="input flex flex-col w-full static mb-2">
-                    <label for="phone"
+                    <label for="columnCData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         เบอร์ติดต่อ:
                     </label>
-                    <input id="phone" type="text" placeholder="กรอกเบอร์ติดต่อ" name="phone" required
-                        class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                    <input id="columnCData" type="text" placeholder="กรอกเบอร์ติดต่อ" name="columnCData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
 
                 <!-- สิทธิการรักษา -->
                 <div class="input flex flex-col w-full static mb-2">
-                    <label for="medicalRights"
+                    <label for="columnDData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         สิทธิการรักษา:
                     </label>
-                    <input id="medicalRights" type="text" placeholder="กรอกสิทธิการรักษา" name="medicalRights" required
-                        class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                    <input id="columnDData" type="text" placeholder="กรอกสิทธิการรักษา" name="columnDData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-
+  
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
+                <input type="hidden" id="columnAData" name="columnAData" />
             </div>
             <!-- กลุ่มปุ่มเลือกประเภทของงาน (เช่น เข้างาน, ระหว่างวัน, ออกงาน) -->
             <div class="switch-field mt-4 mb-4 space-y-2">
                 <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-three" name="switch-job" value="ลงเวลาทานยา(ปกติ)"
-                        class="hidden " />
+                    <input type="radio" id="radio-three" name="switch-job" value="ลงเวลาทานยา(ปกติ)" class="hidden " />
                     <label for="radio-three"
                         class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
                         ลงเวลาทานยา(ปกติ)
                     </label>
                 </div>
                 <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-four" name="switch-job" value="ลงเวลาทานยา(ผิดเวลา)"
-                        class="hidden " />
+                    <input type="radio" id="radio-four" name="switch-job" value="ลงเวลาทานยา(ผิดเวลา)" class="hidden " />
                     <label for="radio-four"
                         class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
                         ลงเวลาทานยา(หลัง หรือ ล่วงหน้า)
@@ -139,10 +129,10 @@
             </div>
             <input type="hidden" id="jobInput" name="jobInput" required>
             <textarea class="input-field w-full border border-gray-300 rounded-lg p-4 text-gray-700" placeholder="Note"
-                id="noteInput" name="noteInput"></textarea>
+                id="noteInput"></textarea>
             <!-- ปุ่มสำหรับไปยังขั้นตอนถัดไป -->
             <div class="bg-slate-800 text-white text-center rounded-lg my-4">
-                <button type="button" class="p-4 w-full" onclick="nextStep()">ถัดไป</button>
+                <button class="p-4 w-full" onclick="nextStep()">ถัดไป</button>
             </div>
         </div>
 
@@ -203,7 +193,8 @@
     </div>
 </body>
 <script>
-    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
+
+     // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
     const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
     const LIFF_ID = '2005732932-l3BJMr8k'; // Liff ID
@@ -255,17 +246,14 @@
             // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
             const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
                 body: JSON.stringify({ action: 'fetchData', userId: userId })
             });
             const data = await response.json();
-            // กรองแถวที่มี lineId ตรงกับที่ต้องการ (สมมติว่า lineId อยู่ใน field 'ไอดีไลน์')
-            const userRows = data.filter(row => row['ไอดีไลน์'] === userId);
+            // กรองแถวที่มี userId ตรงกับที่ต้องการ
+            const userRows = data.filter(row => row.userlineId === userId);
             if (userRows.length > 0) {
-                // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ใน field 'เวลาบันทึก') จากล่าสุดไปเก่าสุด
-                userRows.sort((a, b) => new Date(b['เวลาบันทึก']) - new Date(a['เวลาบันทึก']));
+                // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 13) จากล่าสุดไปเก่าสุด
+                userRows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                 displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
             } else {
                 // ถ้าไม่มีข้อมูลที่ตรงกับ userId จะแสดงข้อความในคอนโซล
@@ -281,16 +269,16 @@
 
     // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
     function displayData(row) {
-        document.getElementById('patientId').value = row['เลขประจำตัวผู้ป่วย'] || '';
-        document.getElementById('name').value = row['ชื่อ-สกุล'] || '';
-        document.getElementById('phone').value = row['เบอร์โทร'] || '';
-        document.getElementById('medicalRights').value = row['สิทธิการรักษา'] || '';
+        document.getElementById('columnAData').value = row.patientId || '';
+        document.getElementById('columnBData').value = row.name || '';
+        document.getElementById('columnCData').value = row.phone || '';
+        document.getElementById('columnDData').value = row.medicalRights || '';
     }
 
     // ฟังก์ชันนี้ใช้ในการแสดงหรือซ่อนหน้าต่างโหลด
     function showLoading(isLoading) {
         const overlay = document.getElementById('loadingOverlay');
-        const inputs = document.querySelectorAll('.input-field, #patientId, #name, #phone, #medicalRights');
+        const inputs = document.querySelectorAll('.input-field');
         if (isLoading) {
             // แสดงหน้าต่างโหลดและปิดการใช้งานฟิลด์ input
             overlay.style.display = 'flex';
@@ -304,10 +292,10 @@
 
     // การตั้งค่าตัวแปรสำหรับการทำงานกับกล้องและการส่งข้อมูล
     const url = `${WEB_APP_URL}`;
-    const patientId = document.querySelector("#patientId");
-    const nameField = document.querySelector("#name");
-    const phone = document.querySelector("#phone");
-    const medicalRights = document.querySelector("#medicalRights");
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const columnBData = document.querySelector("#columnBData");
+    const columnCData = document.querySelector("#columnCData");
     const jobInput = document.querySelector("#jobInput");
     const noteInput = document.querySelector("#noteInput");
     const todayInput = document.querySelector("#todayInput");
@@ -323,6 +311,7 @@
         const startCameraBtn = document.getElementById("start-camera-btn");
         const captureBtn = document.getElementById("capture-btn");
         const previewImage = document.getElementById("preview");
+        const dataForm = document.getElementById("data-form");
         let stream;
 
         // เริ่มเปิดกล้องเมื่อคลิกปุ่ม
@@ -342,8 +331,22 @@
             previewImage.src = canvas.toDataURL("image/png");
             // ซ่อนกล้อง
             video.style.display = "none";
-            captureBtn.disabled = true;
-            startCameraBtn.disabled = false;
+        });
+
+        // บันทึกข้อมูลเมื่อ submit form
+        dataForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const formData = new FormData(dataForm);
+            const capturedImage = previewImage.src;
+            // เพิ่มข้อมูลรูปถ่ายลงใน FormData
+            formData.append("capturedImage", capturedImage);
+            // สามารถทำการส่งข้อมูลไปที่เซิร์ฟเวอร์หรือประมวลผลต่อไปได้ที่นี่
+            // ตัวอย่างการแสดงข้อมูลที่ console
+            for (const [key, value] of formData.entries()) {
+                console.log(key, value);
+            }
+            // ซ่อนกล้องหลังจากที่ถ่ายรูป
+            video.style.display = "none";
         });
 
         // ฟังก์ชันเปิดกล้อง
@@ -354,27 +357,11 @@
                     video.srcObject = videoStream;
                     captureBtn.disabled = false; // ปลดล็อกปุ่มถ่ายรูป
                     video.style.display = "block"; // แสดงกล้อง
-                    startCameraBtn.disabled = true;
                 })
                 .catch(function (error) {
                     console.error("Error accessing the camera: ", error);
                 });
         }
-
-        // ฟังก์ชันหยุดกล้อง
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                video.style.display = "none";
-                startCameraBtn.disabled = false;
-                captureBtn.disabled = true;
-            }
-        }
-
-        // เมื่อเปลี่ยนหน้าไปยังขั้นตอนอื่น ให้หยุดกล้อง
-        window.addEventListener('beforeunload', function () {
-            stopCamera();
-        });
     });
 
     // ตรวจสอบว่าถ่ายรูปแล้วหรือยัง ก่อนที่จะไปยังขั้นตอนถัดไป
@@ -397,7 +384,7 @@
     // ฟังก์ชันสำหรับส่งข้อมูลในฟอร์ม
     function submitForm() {
         // ตรวจสอบว่ากรอกข้อมูลที่จำเป็นครบถ้วนหรือไม่
-        if (!patientId.value || !nameField.value || !phone.value || !medicalRights.value || !jobInput.value || !latitudeInput.value || !longitudeInput.value) {
+        if (!columnBData.value || !columnCData.value || !jobInput.value || !latitudeInput.value || !longitudeInput.value) {
             Swal.fire({
                 title: 'แจ้งเตือน!',
                 text: 'กรุณากรอกข้อมูลที่จำเป็น (*) ให้ครบถ้วน',
@@ -424,17 +411,15 @@
                     text: 'กรุณารอสักครู่...',
                     showConfirmButton: false,
                     allowOutsideClick: false,
-                    didOpen: () => {
+                    onBeforeOpen: () => {
                         Swal.showLoading();
                     }
                 });
                 let spt = preview.src.split("base64,")[1];
                 let obj = {
                     base64: spt,
-                    patientId: patientId.value,
-                    name: nameField.value,
-                    phone: phone.value,
-                    medicalRights: medicalRights.value,
+                    name: columnBData.value,
+                    role: columnCData.value,
                     job: jobInput.value,
                     note: noteInput.value,
                     today: todayInput.value,
@@ -446,9 +431,6 @@
                 };
                 fetch(url, {
                     method: "POST",
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify(obj),
                 })
                     .then(response => response.text())
@@ -463,7 +445,7 @@
                             confirmButtonText: 'ปิด',
                         }).then(() => {
                             // ปิด LIFF (Line Front-end Framework)
-                            liff.closeWindow();
+                            sendFlexMessage();
                             console.log(data);
                         });
                     })
@@ -486,6 +468,20 @@
         });
     }
 
+    // เริ่มการทำงานของ LIFF (Line Front-end Framework)
+    async function initializeLiff() {
+        await liff.init({ liffId: `${LIFF_ID}` });
+
+        if (liff.isLoggedIn()) {
+            getUserProfile();
+        } else {
+            liff.login();
+        }
+    }
+
+    
+
+    
     // ฟังก์ชันสำหรับอัปเดตวันที่และเวลาในหน้าเว็บ
     function updateDateTime() {
         // ดึงอีลิเมนต์ HTML สำหรับแสดงวันที่และเวลา
@@ -630,6 +626,7 @@
             document.getElementById(`step${currentStep}`).style.display = 'block';
         }
     }
+
 </script>
 
 </html>
