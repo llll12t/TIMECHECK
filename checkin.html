@@ -629,7 +629,199 @@ function getFormattedDate() {
             document.getElementById(`step${currentStep}`).style.display = 'block';
         }
     }
+ // ฟังก์ชันสำหรับส่งข้อความ Flex Message ผ่าน LIFF
+    async function sendFlexMessage() {
+        let jobColor = '';
+        if (jobInput.value === 'ลงเวลาทานยา(ปกติ)') {
+            jobColor = '#0D9608FF'; // Green color
+        } else if (jobInput.value === 'ลงเวลาทานยา(ผิดเวลา)') {
+            jobColor = '#EF2F14FF'; // Red color
+        } else {
+            jobColor = '#000000FF'; // Default color if neither "เข้างาน" nor "ออกงาน"
+        }
 
+        const flexMessage = {
+            type: 'flex',
+            altText: 'จดบันทึกเวลางาน',
+            contents: {
+                type: 'bubble',
+                direction: 'ltr',
+                body: {
+                    type: 'box',
+                    layout: 'vertical',
+                    spacing: 'md',
+                    contents: [
+                        {
+                            type: 'box',
+                            layout: 'horizontal',
+                            contents: [
+                                {
+                                    type: 'text',
+                                    text: 'บันทึกเวลางาน',
+                                    weight: 'bold',
+                                    size: 'md',
+                                    align: 'start',
+                                    margin: 'sm',
+                                    contents: [],
+                                },
+                                {
+                                    type: 'text',
+                                    text: ` ${jobInput.value}`,
+                                    weight: 'bold',
+                                    size: 'md',
+                                    color: jobColor, // Dynamic color
+                                    align: 'end',
+                                    contents: [],
+                                },
+                            ],
+                        },
+                        {
+                            type: 'separator',
+                        },
+                        {
+                            type: 'box',
+                            layout: 'vertical',
+                            spacing: 'sm',
+                            contents: [
+                                {
+                                    type: 'box',
+                                    layout: 'baseline',
+                                    contents: [
+                                        {
+                                            type: 'text',
+                                            text: 'ชื่อพนักงาน',
+                                            weight: 'bold',
+                                            size: 'sm',
+                                            margin: 'sm',
+                                            contents: [],
+                                        },
+                                        {
+                                            type: 'text',
+                                            text: `${columnBData.value}`,
+                                            size: 'sm',
+                                            color: '#000000FF',
+                                            align: 'end',
+                                            contents: [],
+                                        },
+                                    ],
+                                },
+                                {
+                                    type: 'box',
+                                    layout: 'baseline',
+                                    contents: [
+                                        {
+                                            type: 'text',
+                                            text: 'รหัสพนักงาน',
+                                            weight: 'bold',
+                                            size: 'sm',
+                                            flex: 0,
+                                            margin: 'sm',
+                                            contents: [],
+                                        },
+                                        {
+                                            type: 'text',
+                                            text: `${columnAData.value}`,
+                                            size: 'sm',
+                                            color: '#000000FF',
+                                            align: 'end',
+                                            contents: [],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            type: 'separator',
+                        },
+                        {
+                            type: 'box',
+                            layout: 'vertical',
+                            contents: [
+                                {
+                                    type: 'box',
+                                    layout: 'baseline',
+                                    contents: [
+                                        {
+                                            type: 'text',
+                                            text: 'วันที่',
+                                            weight: 'bold',
+                                            contents: [],
+                                        },
+                                        {
+                                            type: 'text',
+                                            text: `${todayInput.value}`,
+                                            weight: 'bold',
+                                            align: 'end',
+                                            contents: [],
+                                        },
+                                    ],
+                                },
+                                {
+                                    type: 'box',
+                                    layout: 'baseline',
+                                    contents: [
+                                        {
+                                            type: 'text',
+                                            text: 'เวลา',
+                                            weight: 'bold',
+                                            contents: [],
+                                        },
+                                        {
+                                            type: 'text',
+                                            text: `${currentTime.value}`,
+                                            weight: 'bold',
+                                            size: 'xl',
+                                            color: '#EF2F14FF',
+                                            align: 'end',
+                                            contents: [],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            type: 'separator',
+                        },
+                        {
+                            type: 'box',
+                            layout: 'vertical',
+                            spacing: 'xs',
+                            margin: 'sm',
+                            contents: [
+                                {
+                                    type: 'text',
+                                    text: 'สถานที่',
+                                    weight: 'bold',
+                                    size: 'sm',
+                                    margin: 'md',
+                                    contents: [],
+                                },
+                                {
+                                    type: 'text',
+                                    text: fullAddressInput.value ? `${fullAddressInput.value}` : 'ข้อมูลไม่พร้อมแสดง แต่เราเก็บพิกัดของคุณเรียบร้อย',
+                                    wrap: true,
+                                    contents: [],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        };
+
+        try {
+            await liff.sendMessages([flexMessage]);
+            liff.closeWindow(); // Close the LIFF window
+        } catch (error) {
+            console.error('Error sending Flex Message:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to send Flex Message.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+        }
+    }
 </script>
 
 </html>
