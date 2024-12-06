@@ -17,11 +17,7 @@
         <form>
             <div class="bg-white rounded-lg p-10">    
                 <div class="mb-5 text-center">
-                    <!-- แสดงภาพโปรไฟล์ที่อัพโหลด -->
-                    <div class="mx-auto w-32 h-32 mb-2 border rounded-lg relative bg-slate-100 mb-4 shadow-inset">
-                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
-                    </div>
-                    <!-- ปุ่มสำหรับอัพโหลดรูปภาพ (ลบออกแล้ว) -->
+                    <!-- ลบส่วนการแสดงภาพโปรไฟล์และปุ่มอัปโหลดออก -->
                 </div>
                 <div class="flex flex-col">
                     <div class="mb-4">
@@ -408,6 +404,11 @@
                 await liff.sendMessages([flexMessage]); // ส่งข้อความ Flex ผ่าน LIFF
             } catch (error) {
                 console.error('เกิดข้อผิดพลาดในการส่ง Flex Message:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ส่งข้อความไม่สำเร็จ',
+                    text: 'เกิดข้อผิดพลาดในการส่งข้อความ Flex Message.',
+                });
             }
         }
 
@@ -497,7 +498,7 @@
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         html: '<div class="swal2-loading"></div>',
-                        onBeforeOpen: () => {
+                        didOpen: () => {
                             Swal.showLoading();
                         }
                     });
@@ -512,17 +513,27 @@
 
                     let data = await response.text();
 
-                    Swal.fire({
-                        title: 'สำเร็จ!',
-                        text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
-                        icon: 'success',
-                        confirmButtonText: 'ปิด',
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
-                        }
-                    });
-                    sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
+                    if (response.ok) {
+                        Swal.fire({
+                            title: 'สำเร็จ!',
+                            text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                            icon: 'success',
+                            confirmButtonText: 'ปิด',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
+                                liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: `เกิดข้อผิดพลาดขณะส่งข้อมูล: ${data}`,
+                        });
+                        console.error('Response not OK:', data);
+                    }
+
                     console.log(data);
                 } catch (error) {
                     Swal.fire({
