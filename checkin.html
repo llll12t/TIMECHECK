@@ -232,10 +232,10 @@
             });
             const data = await response.json();
             // กรองแถวที่มี userId ตรงกับที่ต้องการ
-            const userRows = data.filter(row => row[11] === userId);
+            const userRows = data.filter(row => row[10] === userId);
             if (userRows.length > 0) {
                 // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 5) จากล่าสุดไปเก่าสุด
-                userRows.sort((a, b) => new Date(b[12]) - new Date(a[12]));
+                userRows.sort((a, b) => new Date(b[11]) - new Date(a[11]));
                 displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
             } else {
                 // ถ้าไม่มีข้อมูลที่ตรงกับ userId จะแสดงข้อความในคอนโซล
