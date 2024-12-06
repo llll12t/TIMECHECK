@@ -66,39 +66,61 @@
                 <div id="loadingOverlay">
                     <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
-                <!-- ส่วนสำหรับกรอกข้อมูลชื่อ, เลขประจำตัวผู้ป่วย, และตำแหน่ง -->
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnAData"
-                        placeholder="เลขประจำตัวผู้ป่วย" name="columnAData" required>
+               <!-- เลขประจำตัวผู้ป่วย -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnAData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        เลขประจำตัวผู้ป่วย:
+                    </label>
+                    <input id="columnAData" type="text" placeholder="กรอกเลขประจำตัวผู้ป่วย" name="columnAData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnBData"
-                        placeholder="ชื่อ-สกุล" name="columnBData" required>
+
+                <!-- ชื่อ-สกุล -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnBData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        ชื่อ-สกุล:
+                    </label>
+                    <input id="columnBData" type="text" placeholder="กรอกชื่อ-สกุล" name="columnBData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnCData"
-                        placeholder="เบอร์ติดต่อ" name="columnCData" required>
+
+                <!-- เบอร์ติดต่อ -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnCData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        เบอร์ติดต่อ:
+                    </label>
+                    <input id="columnCData" type="text" placeholder="กรอกเบอร์ติดต่อ" name="columnCData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-                <div class="flex items-center space-x-2 mb-2">
-                    <input type="text" class="input-field w-full border border-gray-300 p-2 rounded" id="columnDData"
-                        placeholder="สิทธิการรักษา" name="columnDData" required>
+
+                <!-- สิทธิการรักษา -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnDData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        สิทธิการรักษา:
+                    </label>
+                    <input id="columnDData" type="text" placeholder="กรอกสิทธิการรักษา" name="columnDData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
+  
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
                 <input type="hidden" id="columnAData" name="columnAData" />
             </div>
-
             <!-- กลุ่มปุ่มเลือกประเภทของงาน (เช่น เข้างาน, ระหว่างวัน, ออกงาน) -->
             <div class="switch-field mt-4 mb-4 space-y-2">
                 <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-three" name="switch-job" value="เข้างาน" class="hidden " />
+                    <input type="radio" id="radio-three" name="switch-job" value="ลงเวลาทานยา(ปกติ)" class="hidden " />
                     <label for="radio-three"
                         class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
                         ลงเวลาทานยา(ปกติ)
                     </label>
                 </div>
                 <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-four" name="switch-job" value="ระหว่างวัน" class="hidden " />
+                    <input type="radio" id="radio-four" name="switch-job" value="ลงเวลาทานยา(ผิดเวลา)" class="hidden " />
                     <label for="radio-four"
                         class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
                         ลงเวลาทานยา(หลัง หรือ ล่วงหน้า)
@@ -106,7 +128,6 @@
                 </div>
             </div>
             <input type="hidden" id="jobInput" name="jobInput" required>
-            <!-- หมายเหตุ -->
             <textarea class="input-field w-full border border-gray-300 rounded-lg p-4 text-gray-700" placeholder="Note"
                 id="noteInput"></textarea>
             <!-- ปุ่มสำหรับไปยังขั้นตอนถัดไป -->
@@ -174,13 +195,13 @@
 <script>
 
      // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-     const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbySKd9ZARwWl7gxVyeqv1erpSoBz8DOWd868hz4xmqRUGLwRfCZFXuC1kAJYRG8I3Uq/exec';
+    const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
     const LIFF_ID = '2005732932-l3BJMr8k'; // Liff ID
 
     // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
     window.onload = async function () {
-        await initializeLiff();
+        //await initializeLiff();
     };
 
     // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
