@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +13,7 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
 <body class="bg-slate-100 min-h-screen">
-<div class="max-w-md m-auto p-2">
+    <div class="max-w-md m-auto p-2">
         <form>
             <div class="bg-white rounded-lg p-10">    
                 <div class="mb-5 text-center">
@@ -21,362 +21,538 @@
                     <div class="mx-auto w-32 h-32 mb-2 border rounded-lg relative bg-slate-100 mb-4 shadow-inset">
                         <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Default Image" id="preview" class="h-32 w-32 object-cover rounded-lg">
                     </div>
-                    <!-- ปุ่มสำหรับอัพโหลดรูปภาพ -->
-                    <label for="file" class="cursor-pointer inline-flex justify-between items-center p-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
-                        อัพโหลดรูป
-                        <input type="file" id="file" name="file" accept="image/*" class="hidden">
-                    </label>
-                    <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">คลิกเพื่ออัพโหลดรูปของคุณ</div>
+                    <!-- ปุ่มสำหรับอัพโหลดรูปภาพ (ลบออกแล้ว) -->
                 </div>
                 <div class="flex flex-col">
-                <div class="mb-4">
-                    <!-- ฟิลด์สำหรับใส่ Line ID -->
-                    <input type="text" class="input-field w-full  bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="lineId" name="userlineId" >
-                </div>
-                <div class="mb-4">
-                    <!-- ฟิลด์สำหรับใส่ชื่อ-สกุล -->
-                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="nameId" placeholder="ชื่อ-สกุล" name="nameId" required>
-                </div>
-                <div class="mb-4">
-                    <!-- ฟิลด์สำหรับใส่รหัสพนักงาน -->
-                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumberId" placeholder="รหัสพนักงาน" name="keynumberId" required>
-                </div>
-                <div class="mb-6">
-                    <!-- ฟิลด์สำหรับใส่ตำแหน่ง -->
-                    <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="keynumber2Id" placeholder="ตำแหน่ง" name="keynumber2Id" required>
-                </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่ Line ID -->
+                        <input type="text" class="input-field w-full bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="Line ID" name="userlineId" readonly>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่ชื่อ-สกุล -->
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="nameSurname" placeholder="ชื่อ-สกุล" name="nameSurname" required>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่เลขประจำตัวผู้ป่วย -->
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="patientId" placeholder="เลขประจำตัวผู้ป่วย" name="patientId" required>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับเลือกเพศ -->
+                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="gender" name="gender" required>
+                            <option value="" disabled selected>เลือกเพศ</option>
+                            <option value="ชาย">ชาย</option>
+                            <option value="หญิง">หญิง</option>
+                            <option value="ไม่ระบุ">ไม่ระบุ</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่วันเกิด -->
+                        <input type="date" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="birthdate" name="birthdate" required>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่ที่อยู่ -->
+                        <textarea class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="address" placeholder="ที่อยู่" name="address" required></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่เบอร์โทร -->
+                        <input type="tel" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="phoneNumber" placeholder="เบอร์โทร" name="phoneNumber" required>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่ระดับการศึกษา -->
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="educationLevel" placeholder="ระดับการศึกษา" name="educationLevel" required>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่อาชีพ -->
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="occupation" placeholder="อาชีพ" name="occupation" required>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่สถานภาพสมรส -->
+                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="maritalStatus" name="maritalStatus" required>
+                            <option value="" disabled selected>เลือกสถานภาพสมรส</option>
+                            <option value="โสด">โสด</option>
+                            <option value="สมรส">สมรส</option>
+                            <option value="หย่าร้าง">หย่าร้าง</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <!-- ฟิลด์สำหรับใส่สิทธิการรักษา -->
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="healthcareRights" placeholder="สิทธิการรักษา" name="healthcareRights" required>
+                    </div>
                 </div>
                 <!-- ปุ่มสำหรับบันทึกข้อมูล -->
                 <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">บันทึกข้อมูล</button>
             </div>
         </form>
-</div>
-<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-<script>
+    </div>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        // URL ของ Web App ที่ใช้ในการลงทะเบียน
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzTriWLHOA-4yCu7h2kYXSK10R5qQ6G2EB1LlGexGT5tC05m-ATln8QqZ7rFna8-ZLo1Q/exec'; 
+        // LIFF ID สำหรับการเชื่อมต่อกับ LINE
+        const LIFF_ID = '2005732932-5PmW19MO'; // กรุณาตรวจสอบว่า LIFF ID ถูกต้อง
 
-	// URL ของ Web App ที่ใช้ในการลงทะเบียน
-    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec'; 
-    // LIFF ID สำหรับการเชื่อมต่อกับ LINE
-    const LIFF_ID = '2005732932-5PmW19MO'; // LIFF ID
+        // ฟังก์ชันเริ่มต้น LIFF SDK เมื่อโหลดหน้าเว็บ
+        window.onload = function () {
+            initializeLiff();
+        };
 
-// ฟังก์ชันเริ่มต้น LIFF SDK เมื่อโหลดหน้าเว็บ
-window.onload = function () {
-    initializeLiff();
-};
+        // ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: `${LIFF_ID}` });
 
-// ฟังก์ชันสำหรับเริ่มต้น LIFF SDK
-async function initializeLiff() {
-    await liff.init({ liffId: `${LIFF_ID}` });
-
-    if (liff.isLoggedIn()) {
-        getUserProfile(); // ถ้าเข้าสู่ระบบแล้วให้ดึงข้อมูลโปรไฟล์
-    } else {
-        liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้เข้าสู่ระบบก่อน
-    }
-}
-
-// ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LINE
-async function getUserProfile() {
-    try {
-        const profile = await liff.getProfile();
-        document.getElementById('userlineId').value = profile.userId; // กำหนดค่า Line ID ในฟิลด์
-    } catch (error) {
-        console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-    }
-}
-
-// ฟังก์ชันสำหรับส่งข้อความ Flex ไปยังผู้ใช้
-async function sendFlexMessage() {
-    const flexMessage = {
-        type: 'flex',
-        altText: 'ลงทะเบียนเรียบร้อย',
-        contents: {
-            type: 'bubble',
-            styles: {
-                header: {
-                    backgroundColor: '#f0f0f0'
-                },
-                footer: {
-                    backgroundColor: '#f0f0f0'
-                },
-                body: {
-                    backgroundColor: '#ffffff'
+                if (liff.isLoggedIn()) {
+                    getUserProfile(); // ถ้าเข้าสู่ระบบแล้วให้ดึงข้อมูลโปรไฟล์
+                } else {
+                    liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้เข้าสู่ระบบก่อน
                 }
-            },
-            header: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
-                        type: 'text',
-                        text: 'ข้อมูลลงทะเบียนสำเร็จ',
-                        weight: 'bold',
-                        size: 'lg',
-                        color: '#000000',
-                        align: 'center'
-                    }
-                ]
-            },
-            body: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการเริ่มต้น LIFF:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Initialization Error',
+                    text: 'เกิดข้อผิดพลาดในการเชื่อมต่อกับ LINE.',
+                });
+            }
+        }
+
+        // ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LINE
+        async function getUserProfile() {
+            try {
+                const profile = await liff.getProfile();
+                document.getElementById('userlineId').value = profile.userId; // กำหนดค่า Line ID ในฟิลด์
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Profile Error',
+                    text: 'เกิดข้อผิดพลาดในการดึงข้อมูลโปรไฟล์จาก LINE.',
+                });
+            }
+        }
+
+        // ฟังก์ชันสำหรับส่งข้อความ Flex ไปยังผู้ใช้
+        async function sendFlexMessage() {
+            const flexMessage = {
+                type: 'flex',
+                altText: 'ลงทะเบียนเรียบร้อย',
+                contents: {
+                    type: 'bubble',
+                    styles: {
+                        header: {
+                            backgroundColor: '#f0f0f0'
+                        },
+                        footer: {
+                            backgroundColor: '#f0f0f0'
+                        },
+                        body: {
+                            backgroundColor: '#ffffff'
+                        }
+                    },
+                    header: {
                         type: 'box',
                         layout: 'vertical',
-                        margin: 'lg',
-                        spacing: 'sm',
+                        contents: [
+                            {
+                                type: 'text',
+                                text: 'ข้อมูลลงทะเบียนสำเร็จ',
+                                weight: 'bold',
+                                size: 'lg',
+                                color: '#000000',
+                                align: 'center'
+                            }
+                        ]
+                    },
+                    body: {
+                        type: 'box',
+                        layout: 'vertical',
                         contents: [
                             {
                                 type: 'box',
-                                layout: 'horizontal',
+                                layout: 'vertical',
+                                margin: 'lg',
+                                spacing: 'sm',
                                 contents: [
                                     {
-                                        type: 'text',
-                                        text: 'ชื่อ-สกุล',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'ชื่อ-สกุล',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('nameSurname').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
                                     },
                                     {
-                                        type: 'text',
-                                        text: document.getElementById('nameId').value,
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ]
-                            },
-                            {
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'รหัสพนักงาน',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'เลขประจำตัวผู้ป่วย',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('patientId').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
                                     },
                                     {
-                                        type: 'text',
-                                        text: document.getElementById('keynumberId').value,
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
-                                    }
-                                ]
-                            },
-                            {
-                                type: 'box',
-                                layout: 'horizontal',
-                                contents: [
-                                    {
-                                        type: 'text',
-                                        text: 'อีเมล',
-                                        size: 'sm',
-                                        color: '#555555',
-                                        flex: 1
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'เพศ',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('gender').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
                                     },
                                     {
-                                        type: 'text',
-                                        text: document.getElementById('keynumber2Id').value,
-                                        size: 'sm',
-                                        color: '#111111',
-                                        align: 'end',
-                                        flex: 2
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'วันเกิด',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('birthdate').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'ที่อยู่',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('address').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'เบอร์โทร',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('phoneNumber').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'ระดับการศึกษา',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('educationLevel').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'อาชีพ',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('occupation').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'สถานภาพสมรส',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('maritalStatus').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'horizontal',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'สิทธิการรักษา',
+                                                size: 'sm',
+                                                color: '#555555',
+                                                flex: 1
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: document.getElementById('healthcareRights').value,
+                                                size: 'sm',
+                                                color: '#111111',
+                                                align: 'end',
+                                                flex: 2
+                                            }
+                                        ]
                                     }
                                 ]
                             }
                         ]
+                    },
+                    footer: {
+                        type: 'box',
+                        layout: 'vertical',
+                        contents: [
+                            {
+                                type: 'text',
+                                text: 'ยินดีต้อนรับ!',
+                                size: 'sm',
+                                color: '#aaaaaa',
+                                align: 'center'
+                            }
+                        ]
                     }
-                ]
-            },
-            footer: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
-                        type: 'text',
-                        text: 'ยินดีต้อนรับ!',
-                        size: 'sm',
-                        color: '#aaaaaa',
-                        align: 'center'
-                    }
-                ]
+                }
+            };
+
+            try {
+                await liff.sendMessages([flexMessage]); // ส่งข้อความ Flex ผ่าน LIFF
+            } catch (error) {
+                console.error('เกิดข้อผิดพลาดในการส่ง Flex Message:', error);
             }
         }
-    };
 
-    await liff.sendMessages([flexMessage]); // ส่งข้อความ Flex ผ่าน LIFF
-}
+        // กำหนดตัวแปรสำหรับใช้ในฟังก์ชันต่างๆ
+        let url = `${WEB_APP_URL}`;
+        let userlineIdInput = document.getElementById("userlineId");
+        let nameSurnameInput = document.getElementById("nameSurname");
+        let patientIdInput = document.getElementById("patientId");
+        let genderInput = document.getElementById("gender");
+        let birthdateInput = document.getElementById("birthdate");
+        let addressInput = document.getElementById("address");
+        let phoneNumberInput = document.getElementById("phoneNumber");
+        let educationLevelInput = document.getElementById("educationLevel");
+        let occupationInput = document.getElementById("occupation");
+        let maritalStatusInput = document.getElementById("maritalStatus");
+        let healthcareRightsInput = document.getElementById("healthcareRights");
+        let submitBtn = document.getElementById("submitBtn");
 
-// กำหนดตัวแปรสำหรับใช้ในฟังก์ชันต่างๆ
-let url = `${WEB_APP_URL}`;
-let fileInput = document.getElementById("file");
-let imgPreview = document.getElementById("preview");
-let userlineIdInput = document.getElementById("userlineId");
-let nameIdInput = document.getElementById("nameId");
-let keynumberIdInput = document.getElementById("keynumberId");
-let keynumber2IdInput = document.getElementById("keynumber2Id");
-let submitBtn = document.getElementById("submitBtn");
+        // ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
+        function validateForm() {
+            const userlineId = userlineIdInput.value.trim();
+            const nameSurname = nameSurnameInput.value.trim();
+            const patientId = patientIdInput.value.trim();
+            const gender = genderInput.value.trim();
+            const birthdate = birthdateInput.value.trim();
+            const address = addressInput.value.trim();
+            const phoneNumber = phoneNumberInput.value.trim();
+            const educationLevel = educationLevelInput.value.trim();
+            const occupation = occupationInput.value.trim();
+            const maritalStatus = maritalStatusInput.value.trim();
+            const healthcareRights = healthcareRightsInput.value.trim();
 
-// ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
-function getBase64(file) {
-    return new Promise((resolve, reject) => {
-        let reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = error => reject(error);
-        reader.readAsDataURL(file);
-    });
-}
+            if (
+                userlineId === '' || 
+                nameSurname === '' || 
+                patientId === '' || 
+                gender === '' || 
+                birthdate === '' || 
+                address === '' || 
+                phoneNumber === '' || 
+                educationLevel === '' || 
+                occupation === '' || 
+                maritalStatus === '' || 
+                healthcareRights === ''
+            ) {
+                return false;
+            }
 
-// ฟังก์ชันสำหรับแสดงภาพตัวอย่างเมื่อผู้ใช้เลือกไฟล์
-function previewImage() {
-    if (fileInput.files.length > 0) {
-        let file = fileInput.files[0];
-        let reader = new FileReader();
+            return true;
+        }
 
-        reader.onload = function(e) {
-            imgPreview.src = e.target.result; // แสดงภาพที่อัพโหลดใน img
-        };
+        // เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
+        submitBtn.addEventListener('click', async (event) => {
+            event.preventDefault();
 
-        reader.readAsDataURL(file);
-    } else {
-        imgPreview.src = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"; // ภาพเริ่มต้นถ้าไม่มีการอัพโหลดภาพใหม่
-    }
-}
+            if (!validateForm()) { // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+                });
+                return;
+            }
 
-// เพิ่ม event listener สำหรับการเปลี่ยนแปลงใน input file เพื่อแสดงภาพตัวอย่าง
-fileInput.addEventListener('change', () => {
-    previewImage();
-});
+            const isConfirmed = await showConfirmationDialog(); // แสดงกล่องยืนยันก่อนบันทึกข้อมูล
 
-// ฟังก์ชันสำหรับตรวจสอบการกรอกข้อมูลในฟิลด์ที่จำเป็น
-function validateForm() {
-    const userlineId = userlineIdInput.value.trim();
-    const nameId = nameIdInput.value.trim();
-    const keynumberId = keynumberIdInput.value.trim();
-    const keynumber2Id = keynumber2IdInput.value.trim();
+            if (isConfirmed) {
+                submitBtn.disabled = true;
 
-    if (userlineId === '' || nameId === '' || keynumberId === '' || keynumber2Id === '') {
-        return false;
-    }
+                try {
+                    const obj = {
+                        lineId: userlineIdInput.value,
+                        nameSurname: nameSurnameInput.value,
+                        patientId: patientIdInput.value,
+                        gender: genderInput.value,
+                        birthdate: birthdateInput.value,
+                        address: addressInput.value,
+                        phoneNumber: phoneNumberInput.value,
+                        educationLevel: educationLevelInput.value,
+                        occupation: occupationInput.value,
+                        maritalStatus: maritalStatusInput.value,
+                        healthcareRights: healthcareRightsInput.value
+                    };
 
-    return true;
-}
+                    Swal.fire({
+                        title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        html: '<div class="swal2-loading"></div>',
+                        onBeforeOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
 
-// เพิ่ม event listener สำหรับปุ่มบันทึกข้อมูล
-submitBtn.addEventListener('click', async (event) => {
-    event.preventDefault();
+                    let response = await fetch(url, {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(obj) // ส่งข้อมูลในรูปแบบ JSON ไปยัง Web App
+                    });
 
-    if (!validateForm()) { // ตรวจสอบว่ากรอกข้อมูลครบถ้วนหรือไม่
-        Swal.fire({
-            icon: 'error',
-            title: 'Validation Error',
-            text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+                    let data = await response.text();
+
+                    Swal.fire({
+                        title: 'สำเร็จ!',
+                        text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                        icon: 'success',
+                        confirmButtonText: 'ปิด',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
+                        }
+                    });
+                    sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
+                    console.log(data);
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
+                    });
+
+                    console.error(error);
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            } else {
+                Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info'); // แสดงข้อความถ้ายกเลิกการส่งข้อมูล
+            }
         });
-        return;
-    }
 
-    const isConfirmed = await showConfirmationDialog(); // แสดงกล่องยืนยันก่อนบันทึกข้อมูล
-
-    if (isConfirmed) {
-        submitBtn.disabled = true;
-
-        try {
-            let obj;
-
-            if (fileInput.files.length > 0) { // ถ้ามีการอัพโหลดรูปภาพ
-                let file = fileInput.files[0];
-                let base64 = await getBase64(file);
-                imgPreview.src = `data:${file.type};base64,${base64}`;
-
-                obj = {
-                    base64: base64,
-                    type: file.type,
-                    name: file.name,
-                    userlineId: userlineIdInput.value,
-                    nameId: nameIdInput.value,
-                    keynumberId: keynumberIdInput.value,
-                    keynumber2Id: keynumber2IdInput.value
-                };
-            } else { // ถ้าไม่มีการอัพโหลดรูปภาพ ใช้ภาพเริ่มต้นแทน
-                let response = await fetch("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-                let blob = await response.blob();
-                let base64 = await getBase64(blob);
-                
-                obj = {
-                    base64: base64,
-                    type: "image/png",
-                    name: "Avatar.png",
-                    userlineId: userlineIdInput.value,
-                    nameId: nameIdInput.value,
-                    keynumberId: keynumberIdInput.value,
-                    keynumber2Id: keynumber2IdInput.value
-                };
-            }
-
-            Swal.fire({
-                title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                html: '<div class="swal2-loading"></div>',
-                onBeforeOpen: () => {
-                    Swal.showLoading();
-                }
+        // ฟังก์ชันสำหรับแสดงกล่องยืนยันก่อนส่งข้อมูล
+        async function showConfirmationDialog() {
+            const confirmation = await Swal.fire({
+                title: 'ยืนยันการส่งข้อมูล',
+                text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ส่งข้อมูล!',
+                cancelButtonText: 'ไม่, ยกเลิก'
             });
 
-            let response = await fetch(url, {
-                method: "POST",
-                body: JSON.stringify(obj) // ส่งข้อมูลในรูปแบบ JSON ไปยัง Web App
-            });
-
-            let data = await response.text();
-
-            Swal.fire({
-                title: 'สำเร็จ!',
-                text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
-                icon: 'success',
-                confirmButtonText: 'ปิด',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    liff.closeWindow(); // ปิดหน้าต่าง LIFF เมื่อบันทึกข้อมูลสำเร็จ
-                }
-            });
-            sendFlexMessage(); // ส่งข้อความ Flex หลังจากบันทึกข้อมูลสำเร็จ
-            console.log(data);
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'เกิดข้อผิดพลาดขณะส่งข้อมูล.',
-            });
-
-            console.error(error);
-        } finally {
-            submitBtn.disabled = false;
+            return confirmation.isConfirmed;
         }
-    } else {
-        Swal.fire('Submission Canceled', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info'); // แสดงข้อความถ้ายกเลิกการส่งข้อมูล
-    }
-});
-
-// ฟังก์ชันสำหรับแสดงกล่องยืนยันก่อนส่งข้อมูล
-async function showConfirmationDialog() {
-    const confirmation = await Swal.fire({
-        title: 'ยืนยันการส่งข้อมูล',
-        text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'ใช่, ส่งข้อมูล!',
-        cancelButtonText: 'ไม่, ยกเลิก'
-    });
-
-    return confirmation.isConfirmed;
-}
-</script>
+    </script>
 </body>
 </html>
