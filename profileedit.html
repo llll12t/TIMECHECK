@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
@@ -14,54 +14,100 @@
 </head>
 
 <body class="bg-slate-100 flex items-center justify-center h-screen p-6">
-    <div class="max-w-sm w-full bg-white text-slate-800 p-10 rounded-xl shadow-md">
-        <h2 class="text-lg text-center mb-4">ข้อมูลพนักงาน</h2>
+    <div class="max-w-lg w-full bg-white text-slate-800 p-10 rounded-xl shadow-md">
+        <h2 class="text-lg text-center mb-4">แก้ไขโปรไฟล์ผู้ป่วย</h2>
         <form id="edit-form">
             <!-- ช่องสำหรับเก็บข้อมูล ID ซ่อนอยู่ -->
             <input type="hidden" id="edit-id">
-            <div class="mb-4 hidden">
-                <label for="edit-userID" class="block text-sm">UserID</label>
-                <input type="text" id="edit-userID" class="w-full border px-2 py-1 rounded-xl" disabled>
+            <input type="hidden" id="edit-userlineId">
+
+            <!-- ส่วนสำหรับแสดงและอัปโหลดรูปภาพ -->
+            <div class="mb-4 flex flex-col items-center">
+                <img id="image-preview" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Image Preview" class="mt-2 max-h-24 rounded-lg">
+                <label for="edit-image" class="cursor-pointer inline-flex justify-between items-center p-2 mt-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
+                    เปลี่ยนรูปภาพ
+                    <input type="file" id="edit-image" name="edit-image" accept="image/*" class="hidden">
+                </label>
+                <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">คลิกเพื่อเปลี่ยนรูปภาพ</div>
             </div>
-            <div class="mb-4 flex justify-center">
-                <!-- ช่องสำหรับแสดง URL รูปภาพ ซ่อนอยู่ -->
-                <label for="edit-imageUrl" class="block hidden text-sm">URL รูปภาพ</label>
-                <input type="hidden" id="edit-imageUrl" class="w-full border px-2 py-1 rounded-xl" oninput="updateImagePreview()" disabled>
-                <!-- แสดงภาพโปรไฟล์ -->
-                <img id="image-preview" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Image Preview" class="mt-2 max-h-24 rounded">
+
+            <!-- ฟิลด์สำหรับกรอกข้อมูล -->
+            <div class="flex flex-col">
+                <!-- เลขประจำตัวผู้ป่วย -->
+                <div class="mb-4">
+                    <label for="edit-patientId" class="block text-sm">เลขประจำตัวผู้ป่วย</label>
+                    <input type="text" id="edit-patientId" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                </div>
+                <!-- ชื่อ-สกุล -->
+                <div class="mb-4">
+                    <label for="edit-name" class="block text-sm">ชื่อ-สกุล</label>
+                    <input type="text" id="edit-name" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                </div>
+                <!-- เพศ -->
+                <div class="mb-4">
+                    <label for="edit-gender" class="block text-sm">เพศ</label>
+                    <select id="edit-gender" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                        <option value="" disabled>เลือกเพศ</option>
+                        <option value="ชาย">ชาย</option>
+                        <option value="หญิง">หญิง</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+                <!-- วันเกิด -->
+                <div class="mb-4">
+                    <label for="edit-birthdate" class="block text-sm">วันเกิด</label>
+                    <input type="date" id="edit-birthdate" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                </div>
+                <!-- ที่อยู่ -->
+                <div class="mb-4">
+                    <label for="edit-address" class="block text-sm">ที่อยู่</label>
+                    <textarea id="edit-address" class="w-full text-slate-800 border px-2 py-1 rounded-xl" rows="3" required></textarea>
+                </div>
+                <!-- เบอร์โทร -->
+                <div class="mb-4">
+                    <label for="edit-phone" class="block text-sm">เบอร์โทร</label>
+                    <input type="tel" pattern="[0-9]{10}" id="edit-phone" class="w-full text-slate-800 border px-2 py-1 rounded-xl" placeholder="เบอร์โทร (10 หลัก)" required>
+                </div>
+                <!-- ระดับการศึกษา -->
+                <div class="mb-4">
+                    <label for="edit-educationLevel" class="block text-sm">ระดับการศึกษา</label>
+                    <input type="text" id="edit-educationLevel" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                </div>
+                <!-- อาชีพ -->
+                <div class="mb-4">
+                    <label for="edit-occupation" class="block text-sm">อาชีพ</label>
+                    <input type="text" id="edit-occupation" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                </div>
+                <!-- สถานภาพสมรส -->
+                <div class="mb-4">
+                    <label for="edit-maritalStatus" class="block text-sm">สถานภาพสมรส</label>
+                    <select id="edit-maritalStatus" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                        <option value="" disabled>เลือกสถานภาพสมรส</option>
+                        <option value="โสด">โสด</option>
+                        <option value="สมรส">สมรส</option>
+                        <option value="หย่าร้าง">หย่าร้าง</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+                <!-- สิทธิการรักษา -->
+                <div class="mb-6">
+                    <label for="edit-medicalRights" class="block text-sm">สิทธิการรักษา</label>
+                    <input type="text" id="edit-medicalRights" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                </div>
             </div>
-            <!-- ส่วนสำหรับอัปโหลดรูปภาพ -->
-            <div class="mb-4 hidden" id="image-upload-section">
-                <label for="edit-image" class="block text-sm">อัปโหลดรูปภาพ</label>
-                <input type="file" id="edit-image" class="w-full border px-2 py-1 rounded-xl" disabled>
-            </div>
-            <!-- ฟิลด์สำหรับกรอกชื่อพนักงาน -->
-            <div class="mb-4">
-                <label for="edit-name" class="block text-sm">ชื่อพนักงาน</label>
-                <input type="text" id="edit-name" class="w-full text-slate-800 border px-2 py-1 rounded-xl" disabled>
-            </div>
-            <!-- ฟิลด์สำหรับกรอกรหัสพนักงาน -->
-            <div class="mb-4">
-                <label for="edit-employeeID" class="block text-sm">รหัสพนักงาน</label>
-                <input type="text" id="edit-employeeID" class="w-full text-slate-800 border px-2 py-1 rounded-xl" disabled>
-            </div>
-            <!-- ฟิลด์สำหรับกรอกแผนก -->
-            <div class="mb-4">
-                <label for="edit-department" class="block text-sm">แผนก</label>
-                <input type="text" id="edit-department" class="w-full text-slate-800 border px-2 py-1 rounded-xl" disabled>
-            </div>
+
             <!-- ปุ่มสำหรับแก้ไขข้อมูล ยกเลิก และบันทึก -->
             <div class="flex justify-end">
-                <button type="button" id="edit-button" class="bg-yellow-500 text-white py-1 px-3 rounded-xl hover:bg-yellow-700">Edit</button>
-                <button type="button" class="bg-red-500 text-white py-1 px-3 rounded-xl hover:bg-red-700 mr-2 hidden" onclick="cancelEdit()">ยกเลิก</button>
-                <button type="submit" class="bg-blue-500 text-white py-1 px-3 rounded-xl hover:bg-blue-700 hidden">Save</button>
+                <button type="button" id="edit-button" class="bg-yellow-500 text-white py-1 px-3 rounded-xl hover:bg-yellow-700">แก้ไข</button>
+                <button type="button" id="cancel-button" class="bg-red-500 text-white py-1 px-3 rounded-xl hover:bg-red-700 mr-2 hidden">ยกเลิก</button>
+                <button type="submit" id="save-button" class="bg-blue-500 text-white py-1 px-3 rounded-xl hover:bg-blue-700 hidden">บันทึก</button>
             </div>
         </form>
     </div>
 
     <script>
         // URL ของ Web App และ LIFF ID
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
         const LIFF_ID = '2005732932-14NZGM4v'; // LIFF ID
 
         let latestData = {};
@@ -90,24 +136,41 @@
 
         // ฟังก์ชันค้นหาข้อมูลตาม userlineId
         async function searchDataByUserlineId(userlineId) {
+            // แสดง loading spinner
+            Swal.fire({
+                title: 'Loading...',
+                text: 'กำลังค้นหาข้อมูล กรุณารอสักครู่...',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading(); // แสดง spinner
+                }
+            });
+
             try {
-                const response = await fetch(WEB_APP_URL);
+                const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
                 const data = await response.json();
 
                 // ค้นหาข้อมูลตาม userlineId
-                const filteredData = data.find(row => row[1] === userlineId);
+                const filteredData = data.find(row => row['ไอดีไลน์'] === userlineId);
 
                 if (filteredData) {
                     latestData = filteredData;
 
                     // กรอกข้อมูลลงในฟอร์ม
-                    document.getElementById('edit-id').value = filteredData[0];
-                    document.getElementById('edit-userID').value = filteredData[1];
-                    document.getElementById('edit-name').value = filteredData[2];
-                    document.getElementById('edit-employeeID').value = filteredData[3];
-                    document.getElementById('edit-department').value = filteredData[4];
-                    document.getElementById('edit-imageUrl').value = filteredData[5];
+                    document.getElementById('edit-id').value = filteredData['เลขที่'];
+                    document.getElementById('edit-userlineId').value = filteredData['ไอดีไลน์'];
+                    document.getElementById('edit-patientId').value = filteredData['เลขประจำตัวผู้ป่วย'];
+                    document.getElementById('edit-name').value = filteredData['ชื่อ-สกุล'];
+                    document.getElementById('edit-gender').value = filteredData['เพศ'];
+                    document.getElementById('edit-birthdate').value = filteredData['วันเกิด'];
+                    document.getElementById('edit-address').value = filteredData['ที่อยู่'];
+                    document.getElementById('edit-phone').value = filteredData['เบอร์โทร'];
+                    document.getElementById('edit-educationLevel').value = filteredData['ระดับการศึกษา'];
+                    document.getElementById('edit-occupation').value = filteredData['อาชีพ'];
+                    document.getElementById('edit-maritalStatus').value = filteredData['สถานภาพสมรส'];
+                    document.getElementById('edit-medicalRights').value = filteredData['สิทธิการรักษา'];
 
+                    document.getElementById('edit-imageUrl').value = filteredData['fileLink'] || '';
                     updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
                 } else {
                     Swal.fire({
@@ -125,15 +188,18 @@
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
+            } finally {
+                // ปิด loading spinner
+                Swal.close();
             }
         }
 
         // ฟังก์ชันสำหรับล็อกหรือปลดล็อกฟอร์มและจัดการการแสดงผลปุ่ม
         function toggleFormEditing(enable) {
-            const inputs = document.querySelectorAll('#edit-form input');
-            const saveButton = document.querySelector('#edit-form button[type="submit"]');
-            const cancelButton = document.querySelector('#edit-form button[type="button"]:not(#edit-button)');
-            const imageUploadSection = document.getElementById('image-upload-section');
+            const inputs = document.querySelectorAll('#edit-form input, #edit-form select, #edit-form textarea');
+            const saveButton = document.getElementById('save-button');
+            const cancelButton = document.getElementById('cancel-button');
+            const editButton = document.getElementById('edit-button');
 
             inputs.forEach(input => {
                 input.disabled = !enable; // ปลดล็อก input
@@ -142,13 +208,11 @@
             if (enable) {
                 saveButton.classList.remove('hidden');
                 cancelButton.classList.remove('hidden');
-                imageUploadSection.classList.remove('hidden'); // แสดงส่วนอัปโหลดรูปภาพ
-                document.getElementById('edit-button').classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
+                editButton.classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
             } else {
                 saveButton.classList.add('hidden');
                 cancelButton.classList.add('hidden');
-                imageUploadSection.classList.add('hidden'); // ซ่อนส่วนอัปโหลดรูปภาพ
-                document.getElementById('edit-button').classList.remove('hidden'); // แสดงปุ่ม Edit
+                editButton.classList.remove('hidden'); // แสดงปุ่ม Edit
             }
         }
 
@@ -157,11 +221,16 @@
             toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
         });
 
+        // เพิ่ม event listener สำหรับปุ่มยกเลิกการแก้ไข
+        document.getElementById('cancel-button').addEventListener('click', function () {
+            cancelEdit();
+        });
+
         // ฟังก์ชันสำหรับอัปเดตการแสดงผลของรูปภาพตาม URL ที่ป้อน
         function updateImagePreview() {
             const imageUrl = document.getElementById('edit-imageUrl').value;
             const imagePreview = document.getElementById('image-preview');
-            imagePreview.src = imageUrl ? imageUrl : ''; // อัปเดต src ของรูปภาพ
+            imagePreview.src = imageUrl ? imageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'; // อัปเดต src ของรูปภาพ
         }
 
         // ฟังก์ชันสำหรับส่งฟอร์มและบันทึกข้อมูล
@@ -169,18 +238,34 @@
             e.preventDefault();
 
             const id = document.getElementById('edit-id').value;
-            const userID = document.getElementById('edit-userID').value;
-            const name = document.getElementById('edit-name').value;
-            const employeeID = document.getElementById('edit-employeeID').value;
-            const department = document.getElementById('edit-department').value;
+            const userlineId = document.getElementById('edit-userlineId').value;
+            const patientId = document.getElementById('edit-patientId').value.trim();
+            const name = document.getElementById('edit-name').value.trim();
+            const gender = document.getElementById('edit-gender').value;
+            const birthdate = document.getElementById('edit-birthdate').value;
+            const address = document.getElementById('edit-address').value.trim();
+            const phone = document.getElementById('edit-phone').value.trim();
+            const educationLevel = document.getElementById('edit-educationLevel').value.trim();
+            const occupation = document.getElementById('edit-occupation').value.trim();
+            const maritalStatus = document.getElementById('edit-maritalStatus').value;
+            const medicalRights = document.getElementById('edit-medicalRights').value.trim();
             const imageFile = document.getElementById('edit-image').files[0];
+            const existingImageUrl = document.getElementById('edit-imageUrl').value;
 
-            let imageUrl = document.getElementById('edit-imageUrl').value;
+            // การตรวจสอบข้อมูลเบื้องต้น
+            if (!patientId || !name || !gender || !birthdate || !address || !phone || !educationLevel || !occupation || !maritalStatus || !medicalRights) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
+                });
+                return;
+            }
 
             // แสดงผลการโหลด
             Swal.fire({
                 title: 'Saving data...',
-                text: 'Please wait while we save your data.',
+                text: 'กรุณารอสักครู่...',
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading(); // แสดง spinner
@@ -188,23 +273,53 @@
             });
 
             try {
-                let result;
+                let imageUrl = existingImageUrl;
+
                 if (imageFile) {
-                    const base64Image = await getBase64(imageFile); // แปลงไฟล์เป็น Base64
-                    result = await updateData(id, userID, name, employeeID, department, base64Image);
-                } else {
-                    result = await updateData(id, userID, name, employeeID, department, imageUrl);
+                    // แปลงไฟล์เป็น Base64
+                    const base64Image = await getBase64(imageFile);
+                    imageUrl = base64Image; // ส่ง Base64 ไปยัง Apps Script
                 }
+
+                const payload = {
+                    method: 'updateData',
+                    id: id,
+                    userID: userlineId,
+                    patientId: patientId,
+                    name: name,
+                    gender: gender,
+                    birthdate: birthdate,
+                    address: address,
+                    phone: phone,
+                    educationLevel: educationLevel,
+                    occupation: occupation,
+                    maritalStatus: maritalStatus,
+                    medicalRights: medicalRights,
+                    imageUrl: imageUrl // อัปโหลดรูปใหม่เป็น Base64 หรือใช้ URL เดิม
+                };
+
+                const response = await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.text();
 
                 // ตรวจสอบผลลัพธ์ที่ได้รับ
                 if (result && result.includes('Data updated')) {
                     Swal.fire({
-                        title: 'Success',
-                        text: 'Data saved successfully!',
+                        title: 'สำเร็จ!',
+                        text: 'แก้ไขข้อมูลของคุณเรียบร้อยแล้ว!',
                         icon: 'success',
                         confirmButtonText: 'OK'
+                    }).then(() => {
+                        toggleFormEditing(false);
+                        // รีเฟรชข้อมูล
+                        searchDataByUserlineId(userlineId);
                     });
-                    await initializeLiff(); // อัปเดตข้อมูลในฟอร์มหลังจากบันทึกข้อมูลสำเร็จ
                 } else {
                     throw new Error(result || 'Failed to save data');
                 }
@@ -213,46 +328,32 @@
                 console.error('Error saving data:', error);
                 Swal.fire({
                     title: 'Error',
-                    text: error.message || 'Failed to save data. Please try again.',
+                    text: error.message || 'เกิดข้อผิดพลาดขณะบันทึกข้อมูล.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } finally {
-                cancelEdit();
             }
         });
 
         // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
         function cancelEdit() {
             document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = latestData[0];
-            document.getElementById('edit-userID').value = latestData[1];
-            document.getElementById('edit-name').value = latestData[2];
-            document.getElementById('edit-employeeID').value = latestData[3];
-            document.getElementById('edit-department').value = latestData[4];
-            document.getElementById('edit-imageUrl').value = latestData[5];
+            document.getElementById('edit-id').value = latestData['เลขที่'];
+            document.getElementById('edit-userlineId').value = latestData['ไอดีไลน์'];
+            document.getElementById('edit-patientId').value = latestData['เลขประจำตัวผู้ป่วย'];
+            document.getElementById('edit-name').value = latestData['ชื่อ-สกุล'];
+            document.getElementById('edit-gender').value = latestData['เพศ'];
+            document.getElementById('edit-birthdate').value = latestData['วันเกิด'];
+            document.getElementById('edit-address').value = latestData['ที่อยู่'];
+            document.getElementById('edit-phone').value = latestData['เบอร์โทร'];
+            document.getElementById('edit-educationLevel').value = latestData['ระดับการศึกษา'];
+            document.getElementById('edit-occupation').value = latestData['อาชีพ'];
+            document.getElementById('edit-maritalStatus').value = latestData['สถานภาพสมรส'];
+            document.getElementById('edit-medicalRights').value = latestData['สิทธิการรักษา'];
 
+            document.getElementById('edit-imageUrl').value = latestData['fileLink'] || '';
             updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
             toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-        }
-
-        // ฟังก์ชันสำหรับอัปเดตข้อมูลไปยังเซิร์ฟเวอร์
-        async function updateData(id, userID, name, employeeID, department, base64Image) {
-            const response = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: `method=updateData&id=${id}&userID=${encodeURIComponent(userID)}&name=${encodeURIComponent(name)}&employeeID=${encodeURIComponent(employeeID)}&department=${encodeURIComponent(department)}&imageUrl=${encodeURIComponent(base64Image)}`
-            });
-            const result = await response.text();
-
-            // ตรวจสอบว่าผลลัพธ์ที่ได้มีเนื้อหาหรือไม่
-            if (!result || result.trim() === '') {
-                throw new Error('Empty response from server');
-            }
-
-            return result;
         }
 
         // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
@@ -264,7 +365,6 @@
                 reader.readAsDataURL(file);
             });
         }
-
     </script>
 </body>
 
