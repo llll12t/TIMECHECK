@@ -607,6 +607,16 @@ function getFormattedDate() {
     return `${year}-${month}-${day}`; // เปลี่ยนเป็น yyyy-mm-dd
 }
 
+  // ฟังก์ชันสำหรับดึงวันที่ในรูปแบบที่กำหนด
+  function getFormattedDate2() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+
+    return `${day}-${month}-${year}`; // เปลี่ยนเป็น yyyy-mm-dd
+}
+
     // ตั้งค่าวันที่ปัจจุบันใน input ที่ชื่อว่า todayInput
     document.getElementById('todayInput').value = getFormattedDate();
 
@@ -711,7 +721,7 @@ function getFormattedDate() {
                                     contents: [
                                         {
                                             type: 'text',
-                                            text: 'รหัสพนักงาน',
+                                            text: 'เลขประจำตัว',
                                             weight: 'bold',
                                             size: 'sm',
                                             flex: 0,
@@ -721,6 +731,28 @@ function getFormattedDate() {
                                         {
                                             type: 'text',
                                             text: `${columnAData.value}`,
+                                            size: 'sm',
+                                            color: '#000000FF',
+                                            align: 'end',
+                                            contents: [],
+                                        },
+                                    ],
+                                },{
+                                    type: 'box',
+                                    layout: 'baseline',
+                                    contents: [
+                                        {
+                                            type: 'text',
+                                            text: 'สิทธิการรักษา',
+                                            weight: 'bold',
+                                            size: 'sm',
+                                            flex: 0,
+                                            margin: 'sm',
+                                            contents: [],
+                                        },
+                                        {
+                                            type: 'text',
+                                            text: `${columnDData.value}`,
                                             size: 'sm',
                                             color: '#000000FF',
                                             align: 'end',
@@ -749,7 +781,7 @@ function getFormattedDate() {
                                         },
                                         {
                                             type: 'text',
-                                            text: `${todayInput.value}`,
+                                            text: `${getFormattedDate2(todayInput.value)}`,
                                             weight: 'bold',
                                             align: 'end',
                                             contents: [],
