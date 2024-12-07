@@ -17,6 +17,12 @@
             display: none;
             text-align: center;
         }
+
+        /* เพิ่มเคอร์เซอร์แบบ pointer เมื่อ hover บนแถว */
+        tr.clickable-row:hover {
+            cursor: pointer;
+            background-color: #f1f5f9; /* สีพื้นหลังเมื่อ hover */
+        }
     </style>
 </head>
 
@@ -26,7 +32,7 @@
             <input type="hidden" id="userId" name="userId">
             <input type="hidden" id="displayName" name="displayName">
 
-             <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
+            <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
             <div id="main-info" class="mb-4">
                 <div class="mb-2"><strong>ชื่อ:</strong> <span id="name-info" class="font-medium text-md"></span></div>
                 <div class="mb-2"><strong>รหัสพนักงาน:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
@@ -38,10 +44,11 @@
             <table class="overflow-hidden w-full rounded-lg border border-slate-200 shadow-sm">
                 <thead>
                     <tr class="bg-slate-800 text-slate-100 shadow-md text-left">
+                        <th class="py-2 text-md px-4">สถานะ</th>
+                        <th class="py-2 text-md px-4">หมายเหตุ</th>
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
-                        <th class="py-2 text-md px-4">หมายเหตุ</th>
-                        <th class="py-2 text-md px-4">สถานะ</th>
+                        <th class="py-2 text-md px-4">ผู้บันทึก</th>
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -58,6 +65,7 @@
     <script>
         // URL ของ Web App ที่คุณ Deploy ไว้
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
+        const LIFF_ID = '2005732932-gOr8yJdV'; // LIFF ID
 
         // จำนวนรายการที่จะแสดงต่อหน้า
         const itemsPerPage = 20;
@@ -71,9 +79,8 @@
 
         // ฟังก์ชันเริ่มต้น LIFF
         async function initializeLiff() {
-            const LIFF_ID = '2005732932-gOr8yJdV'; // LIFF ID ของคุณ
             try {
-                await liff.init({ liffId: LIFF_ID }); // ใช้ LIFF ID ที่กำหนด
+                await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ LIFF ID ที่กำหนด
                 if (liff.isLoggedIn()) {
                     getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
                 } else {
@@ -108,19 +115,19 @@
                 }
                 const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
                 console.log('Fetched data:', data); // ล็อกข้อมูลที่ดึงมาเพื่อการตรวจสอบ
-                const filteredData = data.filter(row => row['ไอดีไลน์'] === userId); // กรองข้อมูลตาม userId
+                const filteredData = data.filter(row => row['lineId'] === userId); // กรองข้อมูลตาม userId
                 console.log('Filtered data:', filteredData); // ล็อกข้อมูลที่กรองเพื่อการตรวจสอบ
 
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
                 allData = filteredData;
 
-                 // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
+                // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
-                    document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
-                    document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
-                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
-                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
+                    document.getElementById('name-info').textContent = lastRow['name'] || 'N/A';
+                    document.getElementById('employee-id-info').textContent = lastRow['patientId'] || 'N/A';
+                    document.getElementById('phone-info').textContent = lastRow['phone'] || 'N/A';
+                    document.getElementById('medical-rights-info').textContent = lastRow['insurance'] || 'N/A';
                 } else {
                     document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
@@ -132,7 +139,7 @@
                 updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="4">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
                 Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
@@ -142,15 +149,18 @@
         // ฟังก์ชันสำหรับจัดรูปแบบวันที่
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
-            const [day, month, year] = dateString.split('-').map(Number);
-            return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
 
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
             const [hours, minutes] = timeString.split(':').map(Number);
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
         }
 
         // ฟังก์ชันสำหรับสร้างตารางแสดงข้อมูล
@@ -159,37 +169,60 @@
             table.innerHTML = '';
 
             if (values.length === 0) {
-                table.innerHTML = '<tr><td colspan="4" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                table.innerHTML = '<tr><td colspan="5" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
                 return;
             }
 
             // แสดงข้อมูลในแต่ละแถว
             values.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.classList.add('border-b', 'hover:bg-slate-100');
+                tr.classList.add('border-b', 'hover:bg-slate-100', 'clickable-row');
 
-                // เพิ่มวันที่
+                // เพิ่ม data-row attribute เก็บข้อมูลทั้งหมดในรูปแบบ JSON
+                tr.setAttribute('data-row', JSON.stringify(row));
+
+                // เพิ่มสถานะ
                 let td = document.createElement('td');
-                td.textContent = formatDate(row['วันที่']) || 'N/A';
-                td.classList.add('py-2', 'px-4');
-                tr.appendChild(td);
+                const status = row['status']; // 'on_time' หรือ 'late'
+                let statusText = 'N/A';
+                let statusColorClass = 'text-slate-700';
 
-                // เพิ่มเวลา
-                td = document.createElement('td');
-                td.textContent = formatTime(row['เวลา']) || 'N/A';
-                td.classList.add('py-2', 'px-4');
+                if (status === 'on_time') {
+                    statusText = 'ตรงเวลา';
+                    statusColorClass = 'text-green-500';
+                } else if (status === 'late') {
+                    statusText = 'ไม่ตรงเวลา';
+                    statusColorClass = 'text-red-500';
+                } else {
+                    statusText = status;
+                }
+
+                td.textContent = statusText;
+                td.classList.add('py-2', 'px-4', statusColorClass);
                 tr.appendChild(td);
 
                 // เพิ่มหมายเหตุ
                 td = document.createElement('td');
-                td.textContent = row['หมายเหตุ'] || 'N/A';
+                td.textContent = row['remarks'] || 'N/A';
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
-                // เพิ่มสถานะ
+                // แปลงและเพิ่มวันที่
                 td = document.createElement('td');
-                td.textContent = row['สถานะ'] === 'ตรงเวลา' ? 'ตรงเวลา' : (row['สถานะ'] === 'ไม่ตรงเวลา' ? 'ไม่ตรงเวลา' : 'N/A');
-                td.classList.add('py-2', 'px-4', getStatusClass(row['สถานะ']));
+                td.textContent = formatDate(row['date']) || 'N/A';
+                td.classList.add('py-2', 'px-4');
+                tr.appendChild(td);
+
+                // แปลงและเพิ่มเวลา
+                td = document.createElement('td');
+                td.textContent = formatTime(row['time']) || 'N/A';
+                td.classList.add('py-2', 'px-4');
+                tr.appendChild(td);
+
+                // เพิ่มผู้บันทึก
+                td = document.createElement('td');
+                td.textContent = row['user'] || 'N/A'; // แก้ไขให้ตรงกับฟิลด์ผู้บันทึก
+                td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
                 table.appendChild(tr);
@@ -199,9 +232,9 @@
         // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ
         function getStatusClass(status) {
             switch (status) {
-                case 'ตรงเวลา':
+                case 'on_time':
                     return 'text-green-500';
-                case 'ไม่ตรงเวลา':
+                case 'late':
                     return 'text-red-500';
                 default:
                     return 'text-slate-700';
@@ -243,6 +276,39 @@
             const reversedValues = allData.slice().reverse(); // กลับลำดับข้อมูลเพื่อให้แสดงข้อมูลล่าสุดก่อน
             return reversedValues.slice(startIndex, endIndex);
         }
+
+        // เพิ่ม Event Listener สำหรับการคลิกแถว
+        document.getElementById('data-table').addEventListener('click', function (e) {
+            let tr = e.target.closest('tr.clickable-row');
+            if (tr) {
+                let rowData = tr.getAttribute('data-row') ? JSON.parse(tr.getAttribute('data-row')) : null;
+                if (rowData) {
+                    // สร้าง HTML สำหรับแสดงรายละเอียด
+                    let content = `
+                        <strong>ชื่อ:</strong> ${rowData['name'] || 'N/A'}<br>
+                        <strong>รหัสพนักงาน:</strong> ${rowData['patientId'] || 'N/A'}<br>
+                        <strong>เบอร์โทร:</strong> ${rowData['phone'] || 'N/A'}<br>
+                        <strong>สิทธิการรักษา:</strong> ${rowData['insurance'] || 'N/A'}<br>
+                        <strong>สถานะ:</strong> ${rowData['status'] === 'on_time' ? 'ตรงเวลา' : (rowData['status'] === 'late' ? 'ไม่ตรงเวลา' : 'N/A')}<br>
+                        <strong>หมายเหตุ:</strong> ${rowData['remarks'] || 'N/A'}<br>
+                        <strong>วันที่:</strong> ${formatDate(rowData['date']) || 'N/A'}<br>
+                        <strong>เวลา:</strong> ${formatTime(rowData['time']) || 'N/A'}<br>
+                        <strong>ผู้บันทึก:</strong> ${rowData['user'] || 'N/A'}<br>
+                        <strong>ที่อยู่:</strong> <a href="${rowData['address']}" target="_blank">ดูแผนที่</a><br>
+                        <strong>รูปถ่าย:</strong> <a href="${rowData['photo']}" target="_blank">ดูรูป</a><br>
+                        <strong>รูปที่อยู่:</strong> <a href="${rowData['addressPhoto']}" target="_blank">ดูรูป</a><br>
+                    `;
+
+                    // แสดง SweetAlert2
+                    Swal.fire({
+                        title: 'รายละเอียดการบันทึก',
+                        html: content,
+                        icon: 'info',
+                        confirmButtonText: 'ปิด'
+                    });
+                }
+            }
+        });
     </script>
 </body>
 
