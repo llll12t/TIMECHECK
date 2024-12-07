@@ -53,7 +53,7 @@
             <div id="loadingOverlay">
                 <div class="text-center text-white">ค้นหารายชื่อ..</div>
             </div>
-            <div class="flex justify-center items-center">
+            <div class="flex justify-center items-center w-full">
                 <div class="bg-slate-800 rounded-lg shadow-xl p-6">
                 <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
             <div class="loading-container bg-slate-100 p-4 rounded-lg">
@@ -112,15 +112,13 @@
                 <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
                     <div class="w-32 mb-5">
                         <select type="text" id="typeId" name="typeId" class="w-full p-2 rounded-lg">
-                            <option value="ลาพักร้อน">ลาพักร้อน</option>
-                            <option value="ลาป่วย">ลาป่วย</option>
-                            <option value="ลากิจ">ลากิจ</option>
+                           <option value="แจ้งเรื่อง">แจ้งเรื่อง</option>
+                            <option value="แจ้งปัญหา">แจ้งปัญหา</option>
                             <option value="อื่นๆ">อื่นๆ</option>
                         </select>
                     </div>
                     <div class="mt-4 flex justify-between mb-5">
                         <input type="date" id="startDateId" name="startDateId" class="w-1/2 mr-2 p-2 rounded-lg">
-                        <input type="date" id="endDateId" name="endDateId" class="w-1/2 ml-2 p-2 rounded-lg">
                     </div>
                     <div class="mt-6 mb-5">
                         <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
@@ -249,7 +247,6 @@
         let roleId = document.getElementById("columnDData");
         let typeId = document.getElementById("typeId");
         let startDateId = document.getElementById("startDateId");
-        let endDateId = document.getElementById("endDateId");
         let titleId = document.getElementById("titleId");
         let detailId = document.getElementById("detailId");
         let submitBtn = document.getElementById("submitBtn");
@@ -281,11 +278,10 @@
             const roleIdValue = roleId.value.trim();
             const typeIdValue = typeId.value.trim();
             const startDateIdValue = startDateId.value.trim();
-            const endDateIdValue = endDateId.value.trim();
             const titleIdValue = titleId.value.trim();
             const detailIdValue = detailId.value.trim();
 
-            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || endDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
+            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === ''  || titleIdValue === '' || detailIdValue === '') {
                 return false;
             }
 
@@ -318,7 +314,6 @@
                         numberId: numberIdInput.value,
                         typeId: typeId.value,
                         startDateId: startDateId.value,
-                        endDateId: endDateId.value,
                         titleId: titleId.value,
                         detailId: detailId.value
                     };
@@ -408,8 +403,7 @@
                                 type: "box", layout: "vertical", margin: "lg", spacing: "sm", contents: [
                                     { type: "text", text: `ชื่อ: ${data.nameId}` },
                                     { type: "text", text: `เรื่อง: ${data.typeId}` },
-                                    { type: "text", text: `วันเริ่มต้น: ${formatDate(data.startDateId)}` },
-                                    { type: "text", text: `วันสิ้นสุด: ${formatDate(data.endDateId)}` },
+                                    { type: "text", text: `วันที่: ${formatDate(data.startDateId)}` },
                                     { type: "text", color: '#2d63c7', text: `📋รอการอนุมัติ` }
                                 ]
                             }
@@ -437,7 +431,6 @@
 
         // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
         document.getElementById('startDateId').value = getFormattedDate();
-        document.getElementById('endDateId').value = getFormattedDate();
 
         // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการ
         function formatDate(dateString) {
