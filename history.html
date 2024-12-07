@@ -9,8 +9,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความแจ้งเตือน -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- นำเข้า LIFF SDK ของ LINE -->
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
         /* เพิ่ม CSS สำหรับการแสดงสถานะการโหลด */
         #loading {
@@ -55,10 +53,8 @@
     </div>
 
     <script>
-
         // URL ของ Web App ที่คุณ Deploy ไว้
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
-        const LIFF_ID = '2005732932-gOr8yJdV'; // Liff ID
 
         // จำนวนรายการที่จะแสดงต่อหน้า
         const itemsPerPage = 20;
@@ -72,7 +68,8 @@
 
         // ฟังก์ชันเริ่มต้น LIFF
         async function initializeLiff() {
-            await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ LIFF ID ที่กำหนด
+            const LIFF_ID = '2005732932-gOr8yJdV'; // LIFF ID ของคุณ
+            await liff.init({ liffId: LIFF_ID }); // ใช้ LIFF ID ที่กำหนด
             if (liff.isLoggedIn()) {
                 getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
             } else {
@@ -133,20 +130,15 @@
         // ฟังก์ชันสำหรับจัดรูปแบบวันที่
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
-            const date = new Date(dateString);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
+            const [day, month, year] = dateString.split('-').map(Number);
+            return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
         }
 
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
-            const date = new Date(timeString);
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${hours}:${minutes}`;
+            const [hours, minutes] = timeString.split(':').map(Number);
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
         }
 
         // ฟังก์ชันสำหรับสร้างตารางแสดงข้อมูล
@@ -184,7 +176,7 @@
 
                 // เพิ่มสถานะ
                 td = document.createElement('td');
-                td.textContent = row['สถานะ'] || 'N/A';
+                td.textContent = row['สถานะ'] === 'ตรง' ? 'ตรงเวลา' : (row['สถานะ'] === 'ไม่ตรง' ? 'ไม่ตรงเวลา' : 'N/A');
                 td.classList.add('py-2', 'px-4', getStatusClass(row['สถานะ']));
                 tr.appendChild(td);
 
@@ -194,10 +186,10 @@
 
         // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ
         function getStatusClass(status) {
-            switch(status) {
-                case 'ตรงเวลา':
+            switch (status) {
+                case 'ตรง':
                     return 'text-green-500';
-                case 'สาย':
+                case 'ไม่ตรง':
                     return 'text-red-500';
                 default:
                     return 'text-slate-700';
@@ -239,7 +231,6 @@
             const reversedValues = allData.slice().reverse(); // กลับลำดับข้อมูลเพื่อให้แสดงข้อมูลล่าสุดก่อน
             return reversedValues.slice(startIndex, endIndex);
         }
-
     </script>
 </body>
 
