@@ -38,11 +38,10 @@
             <table class="overflow-hidden w-full rounded-lg border border-slate-200 shadow-sm">
                 <thead>
                     <tr class="bg-slate-800 text-slate-100 shadow-md text-left">
-                        <th class="py-2 text-md px-4">สถานะ</th>
-                        <th class="py-2 text-md px-4">หมายเหตุ</th>
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
-                        <th class="py-2 text-md px-4">ผู้บันทึก</th>
+                        <th class="py-2 text-md px-4">หมายเหตุ</th>
+                        <th class="py-2 text-md px-4">กำหนดการทานยา</th>
                         <th class="py-2 text-md px-4">สถานะการทานยา</th> <!-- เพิ่มคอลัมน์ใหม่ -->
                     </tr>
                 </thead>
@@ -129,7 +128,7 @@
                 updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="6">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
                 Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
@@ -140,7 +139,7 @@
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
             const [day, month, year] = dateString.split('-');
-            return `${day}/${month}/${year}`;
+            return `${day}-${month}-${year}`;
         }
 
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
@@ -156,7 +155,7 @@
             table.innerHTML = '';
 
             if (values.length === 0) {
-                table.innerHTML = '<tr><td colspan="6" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                table.innerHTML = '<tr><td colspan="5" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
                 return;
             }
 
@@ -165,14 +164,16 @@
                 const tr = document.createElement('tr');
                 tr.classList.add('border-b', 'hover:bg-slate-100');
 
-                // เปลี่ยนสีของสถานะตามเงื่อนไข
-                const status = row['บันทึก']; // บันทึก (คอลัมน์ที่ 6)
-                const statusColorClass = status === 'เข้างาน' ? 'text-green-500' : status === 'ออกงาน' ? 'text-red-500' : 'text-slate-700';
-
-                // เพิ่มสถานะ
+                // เพิ่มวันที่
                 let td = document.createElement('td');
-                td.textContent = status;
-                td.classList.add('py-2', 'px-4', statusColorClass);
+                td.textContent = formatDate(row['วันที่']) || 'N/A';
+                td.classList.add('py-2', 'px-4');
+                tr.appendChild(td);
+
+                // เพิ่มเวลา
+                td = document.createElement('td');
+                td.textContent = formatTime(row['เวลา']) || 'N/A';
+                td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
                 // เพิ่มหมายเหตุ
@@ -181,21 +182,9 @@
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
-                // แปลงและเพิ่มวันที่
+                // เพิ่มกำหนดการทานยา
                 td = document.createElement('td');
-                td.textContent = formatDate(row['วันที่']) || 'N/A';
-                td.classList.add('py-2', 'px-4');
-                tr.appendChild(td);
-
-                // แปลงและเพิ่มเวลา
-                td = document.createElement('td');
-                td.textContent = formatTime(row['เวลา']) || 'N/A';
-                td.classList.add('py-2', 'px-4');
-                tr.appendChild(td);
-
-                // เพิ่มผู้บันทึก
-                td = document.createElement('td');
-                td.textContent = row['พิกัด latitude'] || 'N/A'; // ปรับเปลี่ยนให้ตรงกับข้อมูลที่ต้องการ
+                td.textContent = row['กำหนดการทานยา'] || 'N/A';
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
