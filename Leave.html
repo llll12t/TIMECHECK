@@ -134,77 +134,87 @@
         </div>
     </div>
     <script>
-        // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-        const WEB_MEMBER_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec'; 
-        const WEB_APP_Leave_URL = 'https://script.google.com/macros/s/AKfycbzNLjM_KWC-bBfcv_s8WKuo83c9wmv_g33PCD_Nx8Kw7RWFQDvzsJSfkQFvYrr5IXiJ/exec'; 
-        const LIFF_ID = '2005732932-9wEjkrWQ'; // Liff ID
+            // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
+    const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
+    const LIFF_ID = '2005732932-l3BJMr8k'; // Liff ID
 
-        // เริ่มการทำงานเมื่อโหลดหน้าเว็บ
-        window.onload = async function () {
-            await initializeLiff();
-        };
+    // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+    window.onload = async function () {
+        await initializeLiff();
+    };
 
-        // ฟังก์ชันสำหรับเริ่มการทำงานของ LIFF
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ Liff ID ของคุณ
-                if (liff.isLoggedIn()) {
-                    getUserProfile();
-                } else {
-                    liff.login();
-                }
-            } catch (error) {
-                console.error('Error initializing LIFF:', error);
+    // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
+    async function initializeLiff() {
+        try {
+            // เริ่มต้น LIFF โดยใช้ LIFF ID ที่กำหนด
+            await liff.init({ liffId: `${LIFF_ID}` });
+            // ถ้าผู้ใช้ได้เข้าสู่ระบบแล้ว จะดึงข้อมูลโปรไฟล์
+            if (liff.isLoggedIn()) {
+                getUserProfile();
+            } else {
+                // ถ้ายังไม่ได้เข้าสู่ระบบ จะพาผู้ใช้ไปที่หน้าล็อกอิน
+                liff.login();
             }
+        } catch (error) {
+            // ถ้ามีข้อผิดพลาดในขณะเริ่มต้น LIFF จะทำการล็อกข้อผิดพลาดในคอนโซล
+            console.error('Error initializing LIFF:', error);
         }
+    }
 
-        // ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ผู้ใช้
-        async function getUserProfile() {
-            try {
-                const profile = await liff.getProfile();
-                const userId = profile.userId;
-                document.getElementById('userId').value = userId;
-                document.getElementById('displayName').value = profile.displayName;
-                await fetchData(userId);
-            } catch (error) {
-                console.error('Error getting profile data:', error);
+    // ฟังก์ชันนี้ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
+    async function getUserProfile() {
+        try {
+            // รับข้อมูลโปรไฟล์ของผู้ใช้
+            const profile = await liff.getProfile();
+            const userId = profile.userId;
+            // กำหนดค่า userId และ displayName ในฟอร์ม
+            document.getElementById('userId').value = userId;
+            document.getElementById('displayName').value = profile.displayName;
+            // ดึงข้อมูลเพิ่มเติมโดยใช้ userId
+            await fetchData(userId);
+        } catch (error) {
+            // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
+            console.error('Error getting profile data:', error);
+        }
+    }
+
+    // ฟังก์ชันนี้ดึงข้อมูลเพิ่มเติมจาก Google Apps Script โดยใช้ userId
+    async function fetchData(userId) {
+        showLoading(true); // แสดงหน้าต่างโหลด
+        try {
+            // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
+            const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
+                method: 'POST',
+                body: JSON.stringify({ action: 'fetchData', userId: userId })
+            });
+            const data = await response.json();
+            // กรองแถวที่มี userId ตรงกับที่ต้องการ
+            const userRows = data.filter(row => row.userlineId === userId);
+            if (userRows.length > 0) {
+                // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 13) จากล่าสุดไปเก่าสุด
+                userRows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
+            } else {
+                // ถ้าไม่มีข้อมูลที่ตรงกับ userId จะแสดงข้อความในคอนโซล
+                console.log('No data found for userId:', userId);
             }
+        } catch (error) {
+            // ถ้ามีข้อผิดพลาดในการดึงข้อมูล จะทำการล็อกข้อผิดพลาดในคอนโซล
+            console.error('Error fetching data:', error);
+        } finally {
+            showLoading(false); // ซ่อนหน้าต่างโหลด
         }
+    }
 
-        // ฟังก์ชันสำหรับดึงข้อมูลจาก Google Sheets
-        async function fetchData(userId) {
-            showLoading(true);
-            try {
-                const response = await fetch(`${WEB_MEMBER_APP_URL}`, {
-                    method: 'POST',
-                    body: JSON.stringify({ action: 'fetchData', userId: userId })
-                });
-                const data = await response.json();
-                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
-                const row = data.find(row => row[1] === userId);
-                if (row) {
-                    displayData(row);
-                } else {
-                    console.log('No data found for userId:', userId);
-                }
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            } finally {
-                showLoading(false);
-            }
-        }
+    // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
+    function displayData(row) {
+        document.getElementById('columnAData').value = row.patientId || '';
+        document.getElementById('columnBData').value = row.name || '';
+        document.getElementById('columnCData').value = row.phone || '';
+        document.getElementById('columnDData').value = row.medicalRights || '';
+    }
 
-        // ฟังก์ชันสำหรับแสดงข้อมูลบนหน้าเว็บ
-        function displayData(row) {
-            document.getElementById('columnAData').value = row[1] || '';
-            document.getElementById('columnBData').value = row[2] || '';
-            document.getElementById('columnCData').value = row[3] || '';
-            document.getElementById('columnDData').value = row[4] || '';
-            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-            document.getElementById('columnGData').value = row[7] || '';
-            document.getElementById('columnHData').value = row[8] || '';
-            document.getElementById('columnIData').value = row[9] || '';
-        }
 
         // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
         function showLoading(isLoading) {
