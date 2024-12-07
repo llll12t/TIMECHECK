@@ -17,12 +17,6 @@
             display: none;
             text-align: center;
         }
-
-        /* เพิ่มเคอร์เซอร์แบบ pointer เมื่อ hover บนแถว */
-        tr.clickable-row:hover {
-            cursor: pointer;
-            background-color: #f1f5f9; /* สีพื้นหลังเมื่อ hover */
-        }
     </style>
 </head>
 
@@ -49,6 +43,7 @@
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
                         <th class="py-2 text-md px-4">ผู้บันทึก</th>
+                        <th class="py-2 text-md px-4">รายละเอียด</th> <!-- คอลัมน์ใหม่สำหรับรายละเอียด -->
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -63,6 +58,7 @@
     </div>
 
     <script>
+
         // URL ของ Web App ที่คุณ Deploy ไว้
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
         const LIFF_ID = '2005732932-gOr8yJdV'; // LIFF ID
@@ -80,7 +76,7 @@
         // ฟังก์ชันเริ่มต้น LIFF
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ LIFF ID ที่กำหนด
+                await liff.init({ liffId: LIFF_ID }); // ใช้ LIFF ID ที่กำหนด
                 if (liff.isLoggedIn()) {
                     getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
                 } else {
@@ -115,7 +111,7 @@
                 }
                 const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
                 console.log('Fetched data:', data); // ล็อกข้อมูลที่ดึงมาเพื่อการตรวจสอบ
-                const filteredData = data.filter(row => row['lineId'] === userId); // กรองข้อมูลตาม userId
+                const filteredData = data.filter(row => row['ไอดีไลน์'] === userId); // กรองข้อมูลตาม userId
                 console.log('Filtered data:', filteredData); // ล็อกข้อมูลที่กรองเพื่อการตรวจสอบ
 
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
@@ -124,10 +120,10 @@
                 // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
-                    document.getElementById('name-info').textContent = lastRow['name'] || 'N/A';
-                    document.getElementById('employee-id-info').textContent = lastRow['patientId'] || 'N/A';
-                    document.getElementById('phone-info').textContent = lastRow['phone'] || 'N/A';
-                    document.getElementById('medical-rights-info').textContent = lastRow['insurance'] || 'N/A';
+                    document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
+                    document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
+                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
+                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
                 } else {
                     document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
@@ -139,7 +135,7 @@
                 updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="6">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
                 Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
@@ -159,8 +155,10 @@
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
-            const [hours, minutes] = timeString.split(':').map(Number);
-            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            const date = new Date(timeString);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
         }
 
         // ฟังก์ชันสำหรับสร้างตารางแสดงข้อมูล
@@ -169,21 +167,17 @@
             table.innerHTML = '';
 
             if (values.length === 0) {
-                table.innerHTML = '<tr><td colspan="5" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                table.innerHTML = '<tr><td colspan="6" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
                 return;
             }
 
             // แสดงข้อมูลในแต่ละแถว
             values.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.classList.add('border-b', 'hover:bg-slate-100', 'clickable-row');
+                tr.classList.add('border-b', 'hover:bg-slate-100');
 
-                // เพิ่ม data-row attribute เก็บข้อมูลทั้งหมดในรูปแบบ JSON
-                tr.setAttribute('data-row', JSON.stringify(row));
-
-                // เพิ่มสถานะ
-                let td = document.createElement('td');
-                const status = row['status']; // 'on_time' หรือ 'late'
+                // เปลี่ยนสีของสถานะตามเงื่อนไข
+                const status = row['status']; // ฟิลด์ 'status'
                 let statusText = 'N/A';
                 let statusColorClass = 'text-slate-700';
 
@@ -197,6 +191,8 @@
                     statusText = status;
                 }
 
+                // เพิ่มสถานะ
+                let td = document.createElement('td');
                 td.textContent = statusText;
                 td.classList.add('py-2', 'px-4', statusColorClass);
                 tr.appendChild(td);
@@ -221,24 +217,56 @@
 
                 // เพิ่มผู้บันทึก
                 td = document.createElement('td');
-                td.textContent = row['user'] || 'N/A'; // แก้ไขให้ตรงกับฟิลด์ผู้บันทึก
+                td.textContent = row['user'] || 'N/A'; // ฟิลด์ 'user'
                 td.classList.add('py-2', 'px-4');
+                tr.appendChild(td);
+
+                // เพิ่มปุ่มดูรายละเอียด
+                td = document.createElement('td');
+                td.classList.add('py-2', 'px-4');
+                const button = document.createElement('button');
+                button.textContent = 'ดูรายละเอียด';
+                button.classList.add('bg-blue-500', 'text-white', 'px-3', 'py-1', 'rounded', 'hover:bg-blue-700');
+                button.addEventListener('click', () => {
+                    showDetails(row);
+                });
+                td.appendChild(button);
                 tr.appendChild(td);
 
                 table.appendChild(tr);
             });
         }
 
-        // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ
-        function getStatusClass(status) {
-            switch (status) {
-                case 'on_time':
-                    return 'text-green-500';
-                case 'late':
-                    return 'text-red-500';
-                default:
-                    return 'text-slate-700';
-            }
+        // ฟังก์ชันสำหรับแสดงรายละเอียดใน SweetAlert
+        function showDetails(row) {
+            // สร้าง HTML สำหรับแสดงรายละเอียดทั้งหมด
+            let htmlContent = `
+                <div class="text-left">
+                    <p><strong>เลขที่:</strong> ${row['number'] || 'N/A'}</p>
+                    <p><strong>เลขประจำตัวผู้ป่วย:</strong> ${row['patientId'] || 'N/A'}</p>
+                    <p><strong>ชื่อ-สกุล:</strong> ${row['name'] || 'N/A'}</p>
+                    <p><strong>เบอร์โทร:</strong> ${row['phone'] || 'N/A'}</p>
+                    <p><strong>สิทธิการรักษา:</strong> ${row['insurance'] || 'N/A'}</p>
+                    <p><strong>บันทึก:</strong> ${row['record'] || 'N/A'}</p>
+                    <p><strong>หมายเหตุ:</strong> ${row['remarks'] || 'N/A'}</p>
+                    <p><strong>วันที่:</strong> ${formatDate(row['date']) || 'N/A'}</p>
+                    <p><strong>เวลา:</strong> ${formatTime(row['time']) || 'N/A'}</p>
+                    <p><strong>ผู้บันทึก:</strong> ${row['user'] || 'N/A'}</p>
+                    <p><strong>สถานะ:</strong> ${row['status'] === 'on_time' ? 'ตรงเวลา' : (row['status'] === 'late' ? 'ไม่ตรงเวลา' : 'N/A')}</p>
+                    <p><strong>รูปถ่าย:</strong> ${row['photo'] ? `<a href="${row['photo']}" target="_blank">ดูรูป</a>` : 'N/A'}</p>
+                    <p><strong>รูปที่อยู่:</strong> ${row['addressPhoto'] ? `<a href="${row['addressPhoto']}" target="_blank">ดูรูป</a>` : 'N/A'}</p>
+                    <p><strong>ที่อยู่:</strong> ${row['address'] ? `<a href="${row['address']}" target="_blank">ดูที่อยู่</a>` : 'N/A'}</p>
+                    <p><strong>กำหนดการทานยา:</strong> ${row['medTime'] || 'N/A'}</p>
+                    <p><strong>ไอดีไลน์:</strong> ${row['lineId'] || 'N/A'}</p>
+                </div>
+            `;
+
+            Swal.fire({
+                title: 'รายละเอียดการบันทึก',
+                html: htmlContent,
+                width: '600px',
+                confirmButtonText: 'ปิด'
+            });
         }
 
         // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
@@ -277,38 +305,6 @@
             return reversedValues.slice(startIndex, endIndex);
         }
 
-        // เพิ่ม Event Listener สำหรับการคลิกแถว
-        document.getElementById('data-table').addEventListener('click', function (e) {
-            let tr = e.target.closest('tr.clickable-row');
-            if (tr) {
-                let rowData = tr.getAttribute('data-row') ? JSON.parse(tr.getAttribute('data-row')) : null;
-                if (rowData) {
-                    // สร้าง HTML สำหรับแสดงรายละเอียด
-                    let content = `
-                        <strong>ชื่อ:</strong> ${rowData['name'] || 'N/A'}<br>
-                        <strong>รหัสพนักงาน:</strong> ${rowData['patientId'] || 'N/A'}<br>
-                        <strong>เบอร์โทร:</strong> ${rowData['phone'] || 'N/A'}<br>
-                        <strong>สิทธิการรักษา:</strong> ${rowData['insurance'] || 'N/A'}<br>
-                        <strong>สถานะ:</strong> ${rowData['status'] === 'on_time' ? 'ตรงเวลา' : (rowData['status'] === 'late' ? 'ไม่ตรงเวลา' : 'N/A')}<br>
-                        <strong>หมายเหตุ:</strong> ${rowData['remarks'] || 'N/A'}<br>
-                        <strong>วันที่:</strong> ${formatDate(rowData['date']) || 'N/A'}<br>
-                        <strong>เวลา:</strong> ${formatTime(rowData['time']) || 'N/A'}<br>
-                        <strong>ผู้บันทึก:</strong> ${rowData['user'] || 'N/A'}<br>
-                        <strong>ที่อยู่:</strong> <a href="${rowData['address']}" target="_blank">ดูแผนที่</a><br>
-                        <strong>รูปถ่าย:</strong> <a href="${rowData['photo']}" target="_blank">ดูรูป</a><br>
-                        <strong>รูปที่อยู่:</strong> <a href="${rowData['addressPhoto']}" target="_blank">ดูรูป</a><br>
-                    `;
-
-                    // แสดง SweetAlert2
-                    Swal.fire({
-                        title: 'รายละเอียดการบันทึก',
-                        html: content,
-                        icon: 'info',
-                        confirmButtonText: 'ปิด'
-                    });
-                }
-            }
-        });
     </script>
 </body>
 
