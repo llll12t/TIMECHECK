@@ -55,19 +55,54 @@
             </div>
             <div class="flex justify-center items-center">
                 <div class="bg-slate-800 rounded-lg shadow-xl p-6">
-                    <div class="flex items-center mb-4">
-                        <img class="mx-auto w-24 h-24 object-cover rounded-lg mr-4" id="columnEData"
-                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
-                        <div>
-                            <input type="text"
-                                   class="input-field bg-slate-50 text-white text-md font-bold bg-opacity-0 "
-                                   id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
-                            <input type="text" class="input-field text-white text-md bg-white bg-opacity-0 "
-                                   id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>
-                            <input type="text" class="input-field text-white text-md bg-white bg-opacity-0 "
-                                   id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>
-                        </div>
-                    </div>
+                <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
+            <div class="loading-container bg-slate-100 p-4 rounded-lg">
+                <div id="loadingOverlay">
+                    <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
+                </div>
+               <!-- เลขประจำตัวผู้ป่วย -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnAData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        เลขประจำตัวผู้ป่วย:
+                    </label>
+                    <input id="columnAData" type="text" placeholder="กรอกเลขประจำตัวผู้ป่วย" name="columnAData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                </div>
+
+                <!-- ชื่อ-สกุล -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnBData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        ชื่อ-สกุล:
+                    </label>
+                    <input id="columnBData" type="text" placeholder="กรอกชื่อ-สกุล" name="columnBData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                </div>
+
+                <!-- เบอร์ติดต่อ -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnCData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        เบอร์ติดต่อ:
+                    </label>
+                    <input id="columnCData" type="text" placeholder="กรอกเบอร์ติดต่อ" name="columnCData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                </div>
+
+                <!-- สิทธิการรักษา -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="columnDData"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                        สิทธิการรักษา:
+                    </label>
+                    <input id="columnDData" type="text" placeholder="กรอกสิทธิการรักษา" name="columnDData" required
+                        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                </div>
+  
+                <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
+                <input type="hidden" id="userId" name="userId" />
+            </div>
 
                     <div class="pt-4 border rounded-lg">
                         <div class="flex justify-between">
