@@ -43,6 +43,7 @@
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
                         <th class="py-2 text-md px-4">ผู้บันทึก</th>
+                        <th class="py-2 text-md px-4">สถานะการทานยา</th> <!-- เพิ่มคอลัมน์ใหม่ -->
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -99,7 +100,7 @@
         async function fetchData(userId) {
             document.getElementById('loading').style.display = 'block'; // แสดงสถานะการโหลด
             try {
-                const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
+                const response = await fetch(`${WEB_APP_URL}?action=fetchData`); // ใช้ action=fetchData
                 if (!response.ok) {
                     throw new Error('Network response was not ok'); // ตรวจสอบสถานะของการตอบสนอง
                 }
@@ -128,7 +129,7 @@
                 updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="6">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
                 Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
@@ -138,19 +139,14 @@
         // ฟังก์ชันสำหรับจัดรูปแบบวันที่
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
-            const date = new Date(dateString);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
+            const [day, month, year] = dateString.split('-');
             return `${day}/${month}/${year}`;
         }
 
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
-            const date = new Date(timeString);
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const [hours, minutes] = timeString.split(':');
             return `${hours}:${minutes}`;
         }
 
@@ -160,7 +156,7 @@
             table.innerHTML = '';
 
             if (values.length === 0) {
-                table.innerHTML = '<tr><td colspan="5" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                table.innerHTML = '<tr><td colspan="6" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
                 return;
             }
 
@@ -170,23 +166,12 @@
                 tr.classList.add('border-b', 'hover:bg-slate-100');
 
                 // เปลี่ยนสีของสถานะตามเงื่อนไข
-                const status = row['สิทธิการรักษา']; // ปรับเปลี่ยนให้ตรงกับคอลัมน์ที่ต้องการ
-                let statusText = 'N/A';
-                let statusColorClass = 'text-slate-700';
-
-                if (status === 'เข้างาน') {
-                    statusText = 'เข้างาน';
-                    statusColorClass = 'text-green-500';
-                } else if (status === 'ออกงาน') {
-                    statusText = 'ออกงาน';
-                    statusColorClass = 'text-red-500';
-                } else {
-                    statusText = status;
-                }
+                const status = row['บันทึก']; // บันทึก (คอลัมน์ที่ 6)
+                const statusColorClass = status === 'เข้างาน' ? 'text-green-500' : status === 'ออกงาน' ? 'text-red-500' : 'text-slate-700';
 
                 // เพิ่มสถานะ
                 let td = document.createElement('td');
-                td.textContent = statusText;
+                td.textContent = status;
                 td.classList.add('py-2', 'px-4', statusColorClass);
                 tr.appendChild(td);
 
@@ -214,8 +199,28 @@
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
+                // เพิ่มสถานะการทานยา
+                td = document.createElement('td');
+                td.textContent = row['สถานะการทานยา'] || 'N/A';
+                td.classList.add('py-2', 'px-4', getMedicationStatusClass(row['สถานะการทานยา']));
+                tr.appendChild(td);
+
                 table.appendChild(tr);
             });
+        }
+
+        // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะการทานยา
+        function getMedicationStatusClass(status) {
+            switch (status) {
+                case 'ตรงเวลา':
+                    return 'text-green-500';
+                case 'ไม่ตรงเวลา':
+                    return 'text-red-500';
+                case 'ไม่มีการนัดหมาย':
+                    return 'text-yellow-500';
+                default:
+                    return 'text-slate-700';
+            }
         }
 
         // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
