@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความแจ้งเตือน -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- นำเข้า LIFF SDK ของ LINE -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
         /* เพิ่ม CSS สำหรับการแสดงสถานะการโหลด */
         #loading {
@@ -69,11 +71,16 @@
         // ฟังก์ชันเริ่มต้น LIFF
         async function initializeLiff() {
             const LIFF_ID = '2005732932-gOr8yJdV'; // LIFF ID ของคุณ
-            await liff.init({ liffId: LIFF_ID }); // ใช้ LIFF ID ที่กำหนด
-            if (liff.isLoggedIn()) {
-                getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
-            } else {
-                liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้พาไปหน้าเข้าสู่ระบบ
+            try {
+                await liff.init({ liffId: LIFF_ID }); // ใช้ LIFF ID ที่กำหนด
+                if (liff.isLoggedIn()) {
+                    getUserProfile(); // ถ้าเข้าสู่ระบบแล้ว ให้ดึงข้อมูลโปรไฟล์ผู้ใช้
+                } else {
+                    liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้พาไปหน้าเข้าสู่ระบบ
+                }
+            } catch (error) {
+                console.error('Error initializing LIFF:', error);
+                Swal.fire('ข้อผิดพลาด', 'ไม่สามารถเริ่มต้น LIFF ได้', 'error');
             }
         }
 
