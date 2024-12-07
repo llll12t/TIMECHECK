@@ -20,7 +20,7 @@
     </style>
 </head>
 
-<body class="bg-slate-100 max-w-md mx-auto h-screen">
+<body class="bg-slate-100 max-w-4xl mx-auto h-screen overflow-auto">
     <div class="container p-4">
         <div class="bg-white rounded-lg shadow-md p-6">
             <input type="hidden" id="userId" name="userId">
@@ -29,7 +29,9 @@
             <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
             <div id="main-info" class="mb-4">
                 <div class="mb-2"><strong>ชื่อ:</strong> <span id="name-info" class="font-medium text-md"></span></div>
-                <div><strong>รหัสพนักงาน:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
+                <div class="mb-2"><strong>รหัสพนักงาน:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
+                <div class="mb-2"><strong>เบอร์โทร:</strong> <span id="phone-info" class="font-medium text-md"></span></div>
+                <div><strong>สิทธิการรักษา:</strong> <span id="medical-rights-info" class="font-medium text-md"></span></div>
             </div>
 
             <!-- ตารางแสดงข้อมูลการบันทึก -->
@@ -40,6 +42,7 @@
                         <th class="py-2 text-md px-4">หมายเหตุ</th>
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
+                        <th class="py-2 text-md px-4">ผู้บันทึก</th>
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -47,7 +50,7 @@
                 </tbody>
             </table>
             <!-- ตัวควบคุมการแบ่งหน้า -->
-            <div id="pagination-controls" class="mt-4"></div>
+            <div id="pagination-controls" class="mt-4 flex justify-center"></div>
             <!-- แสดงสถานะการโหลด -->
             <div id="loading" class="text-center text-slate-800 mt-4">กำลังโหลด...</div>
         </div>
@@ -62,6 +65,7 @@
         // จำนวนรายการที่จะแสดงต่อหน้า
         const itemsPerPage = 20;
         let currentPage = 1;
+        let allData = []; // เก็บข้อมูลทั้งหมด
 
         // เริ่มต้นการทำงานเมื่อโหลดหน้าเสร็จสิ้น
         window.onload = function () {
@@ -87,6 +91,7 @@
                 fetchData(profile.userId); // ดึงข้อมูลการบันทึกโดยใช้ userId
             } catch (error) {
                 console.error('Error getting profile data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
+                Swal.fire('ข้อผิดพลาด', 'ไม่สามารถดึงข้อมูลโปรไฟล์ได้', 'error');
             }
         }
 
@@ -94,25 +99,37 @@
         async function fetchData(userId) {
             document.getElementById('loading').style.display = 'block'; // แสดงสถานะการโหลด
             try {
-                const response = await fetch(`${WEB_APP_URL}`);
+                const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok'); // ตรวจสอบสถานะของการตอบสนอง
                 }
                 const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
                 console.log('Fetched data:', data); // ล็อกข้อมูลที่ดึงมาเพื่อการตรวจสอบ
-                const filteredData = data.filter(row => row[11] === userId); // กรองข้อมูลตาม userId (คอลัมน์ที่ 11)
+                const filteredData = data.filter(row => row['ไอดีไลน์'] === userId); // กรองข้อมูลตาม userId
 
-                // แสดงชื่อและรหัสพนักงานจากแถวสุดท้ายของข้อมูลที่กรอง
+                // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
+                allData = filteredData;
+
+                // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
-                    document.getElementById('name-info').textContent = lastRow[2]; // ชื่อ (คอลัมน์ที่ 2)
-                    document.getElementById('employee-id-info').textContent = lastRow[3]; // รหัสพนักงาน (คอลัมน์ที่ 3)
+                    document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
+                    document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
+                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
+                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
+                } else {
+                    document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('phone-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('medical-rights-info').textContent = 'ไม่มีข้อมูล';
                 }
 
-                buildTable('data-table', filteredData); // สร้างตารางแสดงข้อมูล
+                buildTable('data-table', getCurrentPageData()); // สร้างตารางแสดงข้อมูล
+                updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="4">Error fetching data. Please check the console for more details.</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
             }
@@ -120,6 +137,7 @@
 
         // ฟังก์ชันสำหรับจัดรูปแบบวันที่
         function formatDate(dateString) {
+            if (!dateString) return 'N/A';
             const date = new Date(dateString);
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -129,6 +147,7 @@
 
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
+            if (!timeString) return 'N/A';
             const date = new Date(timeString);
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -140,47 +159,63 @@
             const table = document.getElementById(tableId);
             table.innerHTML = '';
 
-            const startIndex = (currentPage - 1) * itemsPerPage;
-            const endIndex = startIndex + itemsPerPage;
-            const reversedValues = values.slice().reverse(); // กลับลำดับข้อมูลเพื่อให้แสดงข้อมูลล่าสุดก่อน
+            if (values.length === 0) {
+                table.innerHTML = '<tr><td colspan="5" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                return;
+            }
 
             // แสดงข้อมูลในแต่ละแถว
-            reversedValues.slice(startIndex, endIndex).forEach(row => {
+            values.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.classList.add('border-b', 'hover:bg-slate-100');
 
                 // เปลี่ยนสีของสถานะตามเงื่อนไข
-                const status = row[4];
-                const statusColorClass = status === 'เข้างาน' ? 'text-green-500' : status === 'ออกงาน' ? 'text-red-500' : 'text-slate-700';
+                const status = row['สิทธิการรักษา']; // ปรับเปลี่ยนให้ตรงกับคอลัมน์ที่ต้องการ
+                let statusText = 'N/A';
+                let statusColorClass = 'text-slate-700';
+
+                if (status === 'เข้างาน') {
+                    statusText = 'เข้างาน';
+                    statusColorClass = 'text-green-500';
+                } else if (status === 'ออกงาน') {
+                    statusText = 'ออกงาน';
+                    statusColorClass = 'text-red-500';
+                } else {
+                    statusText = status;
+                }
 
                 // เพิ่มสถานะ
                 let td = document.createElement('td');
-                td.textContent = status;
+                td.textContent = statusText;
                 td.classList.add('py-2', 'px-4', statusColorClass);
                 tr.appendChild(td);
 
                 // เพิ่มหมายเหตุ
                 td = document.createElement('td');
-                td.textContent = row[5];
+                td.textContent = row['หมายเหตุ'] || 'N/A';
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
                 // แปลงและเพิ่มวันที่
                 td = document.createElement('td');
-                td.textContent = formatDate(row[6]);
+                td.textContent = formatDate(row['วันที่']) || 'N/A';
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
                 // แปลงและเพิ่มเวลา
                 td = document.createElement('td');
-                td.textContent = formatTime(row[7]);
+                td.textContent = formatTime(row['เวลา']) || 'N/A';
+                td.classList.add('py-2', 'px-4');
+                tr.appendChild(td);
+
+                // เพิ่มผู้บันทึก
+                td = document.createElement('td');
+                td.textContent = row['พิกัด latitude'] || 'N/A'; // ปรับเปลี่ยนให้ตรงกับข้อมูลที่ต้องการ
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
                 table.appendChild(tr);
             });
-
-            updatePaginationControls(values.length); // อัปเดตตัวควบคุมการแบ่งหน้า
         }
 
         // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
@@ -188,20 +223,37 @@
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             const paginationControls = document.getElementById('pagination-controls');
             paginationControls.innerHTML = '';
+
+            if (totalPages <= 1) return; // ไม่ต้องแสดงถ้ามีแค่หน้าเดียว
+
             for (let i = 1; i <= totalPages; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.textContent = i;
                 pageButton.addEventListener('click', () => {
                     currentPage = i;
-                    fetchData(document.getElementById('userId').value); // ดึงข้อมูลใหม่เมื่อเปลี่ยนหน้า
+                    buildTable('data-table', getCurrentPageData());
+                    updatePaginationControls(totalItems); // อัปเดตการไฮไลท์ปุ่ม
                 });
                 pageButton.classList.add('py-1', 'px-3', 'm-1', 'border', 'rounded');
+
                 if (i === currentPage) {
                     pageButton.classList.add('bg-black', 'text-white'); // ไฮไลท์หน้าปัจจุบัน
+                } else {
+                    pageButton.classList.add('bg-white', 'text-black');
                 }
+
                 paginationControls.appendChild(pageButton);
             }
         }
+
+        // ฟังก์ชันสำหรับดึงข้อมูลในหน้าปัจจุบัน
+        function getCurrentPageData() {
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const reversedValues = allData.slice().reverse(); // กลับลำดับข้อมูลเพื่อให้แสดงข้อมูลล่าสุดก่อน
+            return reversedValues.slice(startIndex, endIndex);
+        }
+
     </script>
 </body>
 
