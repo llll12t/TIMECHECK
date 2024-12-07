@@ -40,6 +40,7 @@
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
                         <th class="py-2 text-md px-4">หมายเหตุ</th>
+                        <th class="py-2 text-md px-4">สถานะ</th>
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -122,7 +123,7 @@
                 updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="3">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="4">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
                 Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
@@ -154,7 +155,7 @@
             table.innerHTML = '';
 
             if (values.length === 0) {
-                table.innerHTML = '<tr><td colspan="3" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                table.innerHTML = '<tr><td colspan="4" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
                 return;
             }
 
@@ -181,8 +182,26 @@
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
+                // เพิ่มสถานะ
+                td = document.createElement('td');
+                td.textContent = row['สถานะ'] || 'N/A';
+                td.classList.add('py-2', 'px-4', getStatusClass(row['สถานะ']));
+                tr.appendChild(td);
+
                 table.appendChild(tr);
             });
+        }
+
+        // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะ
+        function getStatusClass(status) {
+            switch(status) {
+                case 'ตรงเวลา':
+                    return 'text-green-500';
+                case 'สาย':
+                    return 'text-red-500';
+                default:
+                    return 'text-slate-700';
+            }
         }
 
         // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
