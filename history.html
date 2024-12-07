@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
@@ -29,9 +29,8 @@
             <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
             <div id="main-info" class="mb-4">
                 <div class="mb-2"><strong>ชื่อ:</strong> <span id="name-info" class="font-medium text-md"></span></div>
-                <div class="mb-2"><strong>เลขประจำตัวผู้ป่วย:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
-                <div class="mb-2"><strong>เบอร์ติดต่อ:</strong> <span id="phone-info" class="font-medium text-md"></span></div>
-                <div><strong>สิทธิการรักษา:</strong> <span id="medical-rights-info" class="font-medium text-md"></span></div>
+                <div class="mb-2"><strong>รหัสพนักงาน:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
+                <!-- คุณสามารถเพิ่มข้อมูลเพิ่มเติมได้ที่นี่ หากต้องการ -->
             </div>
 
             <!-- ตารางแสดงข้อมูลการบันทึก -->
@@ -41,7 +40,6 @@
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
                         <th class="py-2 text-md px-4">หมายเหตุ</th>
-                        <th class="py-2 text-md px-4">สถานะการทานยา</th> 
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -98,7 +96,7 @@
         async function fetchData(userId) {
             document.getElementById('loading').style.display = 'block'; // แสดงสถานะการโหลด
             try {
-                const response = await fetch(`${WEB_APP_URL}?action=fetchData`); // ใช้ action=fetchData
+                const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok'); // ตรวจสอบสถานะของการตอบสนอง
                 }
@@ -109,25 +107,22 @@
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
                 allData = filteredData;
 
-                // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
+                // แสดงข้อมูลชื่อและรหัสพนักงานจากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
                     document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
                     document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
-                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
-                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
+                    // คุณสามารถเพิ่มข้อมูลเพิ่มเติมได้ที่นี่ หากต้องการ
                 } else {
                     document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
-                    document.getElementById('phone-info').textContent = 'ไม่มีข้อมูล';
-                    document.getElementById('medical-rights-info').textContent = 'ไม่มีข้อมูล';
                 }
 
                 buildTable('data-table', getCurrentPageData()); // สร้างตารางแสดงข้อมูล
                 updatePaginationControls(allData.length); // อัปเดตตัวควบคุมการแบ่งหน้า
             } catch (error) {
                 console.error('Error fetching data:', error); // แสดงข้อผิดพลาดถ้าดึงข้อมูลไม่สำเร็จ
-                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="3">เกิดข้อผิดพลาดในการดึงข้อมูล โปรดตรวจสอบคอนโซลสำหรับรายละเอียดเพิ่มเติม</td></tr>';
                 Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
             } finally {
                 document.getElementById('loading').style.display = 'none'; // ซ่อนสถานะการโหลด
@@ -137,14 +132,19 @@
         // ฟังก์ชันสำหรับจัดรูปแบบวันที่
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
-            const [day, month, year] = dateString.split('-');
-            return `${day}-${month}-${year}`;
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
         }
 
         // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
-            const [hours, minutes] = timeString.split(':');
+            const date = new Date(timeString);
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
             return `${hours}:${minutes}`;
         }
 
@@ -154,7 +154,7 @@
             table.innerHTML = '';
 
             if (values.length === 0) {
-                table.innerHTML = '<tr><td colspan="5" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
+                table.innerHTML = '<tr><td colspan="3" class="py-2 px-4">ไม่มีข้อมูลที่จะแสดง</td></tr>';
                 return;
             }
 
@@ -181,34 +181,8 @@
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
-                // เพิ่มกำหนดการทานยา
-                td = document.createElement('td');
-                td.textContent = row['กำหนดการทานยา'] || 'N/A';
-                td.classList.add('py-2', 'px-4');
-                tr.appendChild(td);
-
-                // เพิ่มสถานะการทานยา
-                td = document.createElement('td');
-                td.textContent = row['สถานะการทานยา'] || 'N/A';
-                td.classList.add('py-2', 'px-4', getMedicationStatusClass(row['สถานะการทานยา']));
-                tr.appendChild(td);
-
                 table.appendChild(tr);
             });
-        }
-
-        // ฟังก์ชันสำหรับกำหนดคลาส CSS ตามสถานะการทานยา
-        function getMedicationStatusClass(status) {
-            switch (status) {
-                case 'ตรงเวลา':
-                    return 'text-green-500';
-                case 'ไม่ตรงเวลา':
-                    return 'text-red-500';
-                case 'ไม่มีการนัดหมาย':
-                    return 'text-yellow-500';
-                default:
-                    return 'text-slate-700';
-            }
         }
 
         // ฟังก์ชันสำหรับอัปเดตตัวควบคุมการแบ่งหน้า
