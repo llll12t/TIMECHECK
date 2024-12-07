@@ -41,8 +41,7 @@
                         <th class="py-2 text-md px-4">วันที่</th>
                         <th class="py-2 text-md px-4">เวลา</th>
                         <th class="py-2 text-md px-4">หมายเหตุ</th>
-                        <th class="py-2 text-md px-4">กำหนดการทานยา</th>
-                        <th class="py-2 text-md px-4">สถานะการทานยา</th>
+                        <th class="py-2 text-md px-4">สถานะการทานยา</th> 
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -135,16 +134,18 @@
             }
         }
 
-        // ฟังก์ชันสำหรับจัดรูปแบบวันที่เป็น 'dd-mm-yyyy'
+        // ฟังก์ชันสำหรับจัดรูปแบบวันที่
         function formatDate(dateString) {
             if (!dateString) return 'N/A';
-            return dateString;
+            const [day, month, year] = dateString.split('-');
+            return `${day}-${month}-${year}`;
         }
 
-        // ฟังก์ชันสำหรับจัดรูปแบบเวลาเป็น 'HH:mm'
+        // ฟังก์ชันสำหรับจัดรูปแบบเวลา
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
-            return timeString;
+            const [hours, minutes] = timeString.split(':');
+            return `${hours}:${minutes}`;
         }
 
         // ฟังก์ชันสำหรับสร้างตารางแสดงข้อมูล
