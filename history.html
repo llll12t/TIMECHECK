@@ -26,11 +26,12 @@
             <input type="hidden" id="userId" name="userId">
             <input type="hidden" id="displayName" name="displayName">
 
-            <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
+             <!-- ส่วนสำหรับแสดงข้อมูลหลัก -->
             <div id="main-info" class="mb-4">
                 <div class="mb-2"><strong>ชื่อ:</strong> <span id="name-info" class="font-medium text-md"></span></div>
                 <div class="mb-2"><strong>รหัสพนักงาน:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
-                <!-- คุณสามารถเพิ่มข้อมูลเพิ่มเติมได้ที่นี่ หากต้องการ -->
+                <div class="mb-2"><strong>เบอร์โทร:</strong> <span id="phone-info" class="font-medium text-md"></span></div>
+                <div><strong>สิทธิการรักษา:</strong> <span id="medical-rights-info" class="font-medium text-md"></span></div>
             </div>
 
             <!-- ตารางแสดงข้อมูลการบันทึก -->
@@ -113,15 +114,18 @@
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
                 allData = filteredData;
 
-                // แสดงข้อมูลชื่อและรหัสพนักงานจากแถวสุดท้ายของข้อมูลที่กรอง
+                 // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
                     document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
                     document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
-                    // คุณสามารถเพิ่มข้อมูลเพิ่มเติมได้ที่นี่ หากต้องการ
+                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
+                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
                 } else {
                     document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('phone-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('medical-rights-info').textContent = 'ไม่มีข้อมูล';
                 }
 
                 buildTable('data-table', getCurrentPageData()); // สร้างตารางแสดงข้อมูล
