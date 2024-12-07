@@ -108,6 +108,7 @@
                 const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
                 console.log('Fetched data:', data); // ล็อกข้อมูลที่ดึงมาเพื่อการตรวจสอบ
                 const filteredData = data.filter(row => row['ไอดีไลน์'] === userId); // กรองข้อมูลตาม userId
+                console.log('Filtered data:', filteredData); // ล็อกข้อมูลที่กรองเพื่อการตรวจสอบ
 
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
                 allData = filteredData;
