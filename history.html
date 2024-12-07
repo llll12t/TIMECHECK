@@ -111,7 +111,7 @@
                 }
                 const data = await response.json(); // แปลงข้อมูลที่ได้มาเป็น JSON
                 console.log('Fetched data:', data); // ล็อกข้อมูลที่ดึงมาเพื่อการตรวจสอบ
-                const filteredData = data.filter(row => row['ไอดีไลน์'] === userId); // กรองข้อมูลตาม userId
+                const filteredData = data.filter(row => row['lineId'] === userId); // กรองข้อมูลตาม userId
                 console.log('Filtered data:', filteredData); // ล็อกข้อมูลที่กรองเพื่อการตรวจสอบ
 
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
@@ -120,10 +120,10 @@
                 // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา จากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
-                    document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
-                    document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
-                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
-                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
+                    document.getElementById('name-info').textContent = lastRow['name'] || 'N/A';
+                    document.getElementById('employee-id-info').textContent = lastRow['patientId'] || 'N/A';
+                    document.getElementById('phone-info').textContent = lastRow['phone'] || 'N/A';
+                    document.getElementById('medical-rights-info').textContent = lastRow['insurance'] || 'N/A';
                 } else {
                     document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
