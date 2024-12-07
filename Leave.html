@@ -54,19 +54,20 @@
                 <div class="text-center text-white">ค้นหารายชื่อ..</div>
             </div>
             <div class="flex justify-center items-center w-full">
-                <div class="bg-slate-800 rounded-lg shadow-xl p-6">
+                <div class=" w-full bg-slate-800 rounded-lg shadow-xl p-6">
                 <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
             <div class="loading-container bg-slate-100 p-4 rounded-lg">
                 <div id="loadingOverlay">
                     <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
+             <div class="flex justify-between space-x-4">   
                <!-- เลขประจำตัวผู้ป่วย -->
                 <div class="input flex flex-col w-full static mb-2">
                     <label for="columnAData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         เลขประจำตัวผู้ป่วย:
                     </label>
-                    <input id="columnAData" type="text" placeholder="กรอกเลขประจำตัวผู้ป่วย" name="columnAData" required
+                    <input id="columnAData" type="text"  name="columnAData" required
                         class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
 
@@ -76,17 +77,18 @@
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         ชื่อ-สกุล:
                     </label>
-                    <input id="columnBData" type="text" placeholder="กรอกชื่อ-สกุล" name="columnBData" required
+                    <input id="columnBData" type="text"  name="columnBData" required
                         class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-
+            </div>   
+            <div class="flex justify-between space-x-4">   
                 <!-- เบอร์ติดต่อ -->
                 <div class="input flex flex-col w-full static mb-2">
                     <label for="columnCData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         เบอร์ติดต่อ:
                     </label>
-                    <input id="columnCData" type="text" placeholder="กรอกเบอร์ติดต่อ" name="columnCData" required
+                    <input id="columnCData" type="text" name="columnCData" required
                         class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
 
@@ -96,10 +98,10 @@
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                         สิทธิการรักษา:
                     </label>
-                    <input id="columnDData" type="text" placeholder="กรอกสิทธิการรักษา" name="columnDData" required
+                    <input id="columnDData" type="text" name="columnDData" required
                         class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-  
+            </div>
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
             </div>
@@ -150,7 +152,7 @@
 
     // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
     window.onload = async function () {
-        await initializeLiff();
+        //await initializeLiff();
     };
 
     // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
