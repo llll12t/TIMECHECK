@@ -147,6 +147,8 @@
                 <div class="flex justify-center space-x-4 my-4 px-8">
                     <button class="w-full text-center py-2 px-4 rounded-lg bg-yellow-500 text-white "
                         id="start-camera-btn">เริ่มเปิดกล้อง</button>
+                    <button id="switch-camera-btn" class="w-full text-center py-2 px-4 rounded-lg bg-blue-500 text-white">สลับกล้อง</button>
+
                     <button class="w-full text-center py-4 px-4 rounded-lg bg-green-500 text-white" id="capture-btn"
                         disabled="">ถ่ายรูป</button>
                 </div>
@@ -639,6 +641,31 @@ function getFormattedDate() {
             document.getElementById(`step${currentStep}`).style.display = 'block';
         }
     }
+
+let currentCamera = "user"; // เริ่มต้นด้วยกล้องหน้า
+const switchCameraBtn = document.getElementById("switch-camera-btn");
+
+switchCameraBtn.addEventListener("click", async () => {
+    // หยุดสตรีมปัจจุบัน
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+    }
+
+    // สลับกล้อง
+    currentCamera = currentCamera === "user" ? "environment" : "user";
+
+    // เรียก getUserMedia อีกครั้งด้วย constraints ใหม่
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: currentCamera }
+        });
+        video.srcObject = stream; // ตั้งค่ากล้องใหม่ให้ video element
+    } catch (error) {
+        console.error("Error switching camera:", error);
+    }
+});
+
+
  // ฟังก์ชันสำหรับส่งข้อความ Flex Message ผ่าน LIFF
     async function sendFlexMessage() {
         let jobColor = '';
