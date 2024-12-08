@@ -209,7 +209,7 @@
 
     // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
     window.onload = async function () {
-        await initializeLiff();
+       // await initializeLiff();
     };
 
     // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
@@ -553,11 +553,11 @@
 
             // เปลี่ยนสไตล์ของ label ที่เกี่ยวข้องกับตัวเลือกงาน
             document.querySelectorAll('.switch-field label').forEach(function (label) {
-                label.classList.remove('bg-slate-800', 'text-white');
+                label.classList.remove('bg-indigo-100', 'text-indigo-700');
             });
-            document.querySelector(`label[for="${this.id}"]`).classList.add('bg-slate-800', 'text-white');
+            document.querySelector(`label[for="${this.id}"]`).classList.add('bg-indigo-100', 'text-indigo-700');
         });
-    });
+    });s
 
     // ฟังก์ชันสำหรับดึงตำแหน่งที่ตั้งปัจจุบันของผู้ใช้
     function getLocation() {
