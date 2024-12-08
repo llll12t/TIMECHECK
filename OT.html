@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ฟอร์มขอทำโอที</title>
+    <title>แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</title>
     <!-- นำเข้า Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความ -->
@@ -14,186 +14,268 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 
     <style>
-        #loadingOverlay {  
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgba(0, 0, 0, 0.26); 
-            border-radius:15px; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 1000; 
+        /* ซ่อน overlay สำหรับโหลด */
+        #loadingOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.26);
+            border-radius: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
 
-        .loading-container { 
-            position: relative;  
+        /* การตั้งค่าภาชนะที่ใช้แสดง overlay โหลด */
+        .loading-container {
+            position: relative;
         }
 
-        @keyframes blink {  
-            0%, 100% { opacity: 1; } 
-            50% { opacity: 0.5; } 
+        /* การตั้งค่าภาพกระพริบ */
+        @keyframes blink {
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
 
-        .blink { 
-            animation: blink 1s infinite; 
+        /* การตั้งค่าภาพกระพริบ */
+        .blink {
+            animation: blink 1s infinite;
         }
     </style>
 </head>
+
 <body class="bg-slate-100 h-screen">
     <div class="max-w-md mx-auto p-4 mt-4">
-        <input type="hidden" id="displayName" name="displayName" value="J'ame  •">
+        <input type="hidden" id="displayName" name="displayName">
         <div class="loading-container">
             <div id="loadingOverlay">
-                <div class="text-center text-white">ค้นหารายชื่อ..</div>
+                <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
             </div>
-            <div class="flex justify-center items-center">
-                <div class="bg-slate-800 rounded-lg shadow-xl p-6">
-                    <div class="flex items-center mb-4">
-                        <img class="mx-auto w-24 h-24 object-cover rounded-lg mr-4" id="columnEData"
-                             src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png">
-                        <div>
-                            <input type="text"
-                                   class="input-field bg-slate-50 text-white text-md font-bold bg-opacity-0 "
-                                   id="columnBData" placeholder="ชื่อ" name="columnBData" readonly>
-                            <input type="text" class="input-field text-white text-md bg-white bg-opacity-0 "
-                                   id="columnCData" placeholder="รหัสพนักงาน" name="columnCData" readonly>
-                            <input type="text" class="input-field text-white text-md bg-white bg-opacity-0 "
-                                   id="columnDData" placeholder="ตำแหน่ง" name="columnDData" readonly>
-                        </div>
-                    </div>
 
-                    <div class="p-4 bg-slate-600  rounded-md">
-                        <div class="flex justify-between">
-                            <h1 class="font-light text-white text-center text-md">🕔ล่วงเวลา</h1>
-                            <input type="text" class="input-field text-md bg-white text-white text-bold bg-opacity-0  "
-                                    id="columnGData"  name="columnGData" readonly>
+            <div class="flex justify-center items-center w-full">
+                <div class="w-full bg-white rounded-lg shadow-xl">
+                    <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
+                    <div class="loading-container bg-slate-100 p-4 rounded-lg">
+                        <div id="loadingOverlay">
+                            <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                         </div>
+
+                        <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
+                            <h1 class="text-xl mb-2">แจ้งเรื่อง/สอบถาม</h1>
+                            <div class="text-sm">⚠️ แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</div>
+                        </div>
+                        <div class="flex justify-between space-x-4">
+                            <!-- เลขประจำตัวผู้ป่วย -->
+                            <div class="input flex flex-col w-full static mb-2">
+                                <label for="patientId"
+                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                    เลขประจำตัวผู้ป่วย:
+                                </label>
+                                <input id="patientId" type="text" name="patientId" required
+                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                            </div>
+
+                            <!-- ชื่อ-สกุล -->
+                            <div class="input flex flex-col w-full static mb-2">
+                                <label for="fullName"
+                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                    ชื่อ-สกุล:
+                                </label>
+                                <input id="fullName" type="text" name="fullName" required
+                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                            </div>
+                        </div>
+                        <div class="flex justify-between space-x-4">
+                            <!-- เบอร์ติดต่อ -->
+                            <div class="input flex flex-col w-full static mb-2">
+                                <label for="phoneNumber"
+                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                    เบอร์ติดต่อ:
+                                </label>
+                                <input id="phoneNumber" type="text" name="phoneNumber" required
+                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                            </div>
+
+                            <!-- สิทธิการรักษา -->
+                            <div class="input flex flex-col w-full static mb-2">
+                                <label for="treatmentRights"
+                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                    สิทธิการรักษา:
+                                </label>
+                                <input id="treatmentRights" type="text" name="treatmentRights" required
+                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                            </div>
+                        </div>
+                        <div class="flex justify-between space-x-4">
+                            <!-- กำหนดการทานยา -->
+                            <div class="input flex flex-col w-full static mb-2">
+                                <label for="medicationSchedule"
+                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                    กำหนดการทานยา:
+                                </label>
+                                <input id="medicationSchedule" type="date" name="medicationSchedule" required
+                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none" />
+                            </div>
+
+                            <!-- นัดถัดไป -->
+                            <div class="input flex flex-col w-full static mb-2">
+                                <label for="nextAppointment"
+                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                    นัดถัดไป:
+                                </label>
+                                <input id="nextAppointment" type="date" name="nextAppointment" required
+                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none" />
+                            </div>
+                        </div>
+
+                        <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
+                        <input type="hidden" id="userId" name="userId" />
                     </div>
                     <input type="hidden" id="userId" name="userId">
-                    <input type="hidden" id="columnAData" name="columnAData">
                 </div>
             </div>
         </div>
         <div class="max-w-md mx-auto py-4">
             <form>
-                <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
-
-                    <div class="flex justify-between">
+                <div class="bg-white relative p-10 shadow-xl rounded-lg w-full mx-auto">
+                    <div class="w-32 mb-5">
+                        <select type="text" id="typeId" name="typeId" class="w-full p-2 rounded-lg" required>
+                            <option value="">เลือกประเภท</option>
+                            <option value="แจ้งเรื่อง">แจ้งเรื่อง</option>
+                            <option value="แจ้งปัญหา">แจ้งปัญหา</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
                     <div class="mt-4 flex justify-between mb-5">
-                        <input type="date" id="otDate" name="otDate" class="mr-2 p-2 rounded-lg">
+                        <input type="date" id="startDateId" name="startDateId" class="w-1/2 mr-2 p-2 rounded-lg" required>
+                        <input type="date" id="nextAppointment" name="nextAppointment" class="w-1/2 p-2 rounded-lg" required>
                     </div>
-
-                    <div class="mt-4 mb-5">
-                        <input type="text" id="totalTime" name="totalTime" class="w-full p-2 border rounded-lg bg-gray-100" readonly>
-                    </div>
-                 </div>
-                    <div class="mt-4 flex justify-between mb-5">
-                        <input type="time" id="startTime" name="startTime" class="w-1/2 mr-2 p-2 rounded-lg">
-                        <input type="time" id="endTime" name="endTime" class="w-1/2 ml-2 p-2 rounded-lg">
-                    </div>
-             
                     <div class="mt-6 mb-5">
-                        <input type="text" id="otTitle" name="otTitle" placeholder="หัวข้อเรื่อง"
-                               class="w-full p-2 border rounded-lg">
+                        <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
+                            class="w-full p-2 border rounded-lg" required>
                     </div>
                     <div class="mt-4 mb-5">
-                        <textarea id="otDetail" name="otDetail" placeholder="รายละเอียด"
-                                  class="w-full p-2 border rounded-lg"></textarea>
+                        <textarea id="detailId" name="detailId" placeholder="รายละเอียด"
+                            class="w-full p-2 border rounded-lg" required></textarea>
                     </div>
                     <div class="text-center bg-slate-100 rounded-lg my-5 p-4">
                         <label for="file" class="cursor-pointer justify-between items-center"> อัพโหลดเอกสาร
                             <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                                   class="hidden">
-                            <div id="fileNameDisplay" class="text-slate-800 text-xs text-center mt-1">ยังไม่ได้เลือกไฟล์</div>
+                                class="hidden">
+                            <div id="fileNameDisplay" class="text-slate-800 text-xs text-center mt-1">ยังไม่ได้เลือกไฟล์
+                            </div>
                         </label>
-                        <div class="mx-auto text-slate-800 text-xs text-center mt-1">รูปแบบที่รองรับ jpg jpeg png pdf doc docx</div>
+                        <div class="mx-auto text-slate-800 text-xs text-center mt-1">รูปแบบที่รองรับ jpg jpeg png pdf doc
+                            docx</div>
                     </div>
                     <button type="button" id="submitBtn"
-                            class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
+                        class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
                 </div>
             </form>
         </div>
     </div>
     <script>
         // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
-        const WEB_MEMBER_APP_URL = 'https://script.google.com/macros/s/AKfycbyImoE0rNW7mG7kStGH-TE32wepRuo_maLY3V7N6szaOVU2KJ8Co646DvKjkIjc3MVs/exec'; 
-        const WEB_APP_OT_URL = 'https://script.google.com/macros/s/AKfycbxGIwvPlnrWv_9PoZPOivABFwCHALc1TPGLsfWN18EhnZZkFbKW-rRGZCmvc3WA6DkZLQ/exec'; 
+        const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby7m_rrEGipkZpEJibxJLDkpTakwLMF3uDIEsDs2xD76zXcfx_h-HccCeCRaA__FG8r/exec';
         const LIFF_ID = '2005732932-O4PN1ezo'; // Liff ID
 
-        // เริ่มการทำงานเมื่อโหลดหน้าเว็บ
+        // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
         window.onload = async function () {
             await initializeLiff();
         };
 
-        // ฟังก์ชันสำหรับเริ่มการทำงานของ LIFF
+        // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // ใช้ Liff ID ของคุณ
+                // เริ่มต้น LIFF โดยใช้ LIFF ID ที่กำหนด
+                await liff.init({ liffId: `${LIFF_ID}` });
+                // ถ้าผู้ใช้ได้เข้าสู่ระบบแล้ว จะดึงข้อมูลโปรไฟล์
                 if (liff.isLoggedIn()) {
                     getUserProfile();
                 } else {
+                    // ถ้ายังไม่ได้เข้าสู่ระบบ จะพาผู้ใช้ไปที่หน้าล็อกอิน
                     liff.login();
                 }
             } catch (error) {
+                // ถ้ามีข้อผิดพลาดในขณะเริ่มต้น LIFF จะทำการล็อกข้อผิดพลาดในคอนโซล
                 console.error('Error initializing LIFF:', error);
             }
         }
 
-        // ฟังก์ชันสำหรับดึงข้อมูลโปรไฟล์ผู้ใช้
+        // ฟังก์ชันนี้ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
         async function getUserProfile() {
             try {
+                // รับข้อมูลโปรไฟล์ของผู้ใช้
                 const profile = await liff.getProfile();
                 const userId = profile.userId;
+                // กำหนดค่า userId และ displayName ในฟอร์ม
                 document.getElementById('userId').value = userId;
                 document.getElementById('displayName').value = profile.displayName;
+                // ดึงข้อมูลเพิ่มเติมโดยใช้ userId
                 await fetchData(userId);
             } catch (error) {
+                // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
                 console.error('Error getting profile data:', error);
             }
         }
 
-        // ฟังก์ชันสำหรับดึงข้อมูลจาก Google Sheets
+        // ฟังก์ชันนี้ดึงข้อมูลเพิ่มเติมจาก Google Apps Script โดยใช้ userId
         async function fetchData(userId) {
-            showLoading(true);
+            showLoading(true); // แสดงหน้าต่างโหลด
             try {
-                const response = await fetch(`${WEB_MEMBER_APP_URL}`, {
+                // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
+                const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({ action: 'fetchData', userId: userId })
                 });
                 const data = await response.json();
-                data.sort((a, b) => new Date(b[6]) - new Date(a[6]));
-                const row = data.find(row => row[1] === userId);
-                if (row) {
-                    displayData(row);
+                // กรองแถวที่มี userId ตรงกับที่ต้องการ
+                const userRows = data.filter(row => row.lineId === userId);
+                if (userRows.length > 0) {
+                    // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 10) จากล่าสุดไปเก่าสุด
+                    userRows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
                 } else {
+                    // ถ้าไม่มีข้อมูลที่ตรงกับ userId จะแสดงข้อความในคอนโซล
                     console.log('No data found for userId:', userId);
                 }
             } catch (error) {
+                // ถ้ามีข้อผิดพลาดในการดึงข้อมูล จะทำการล็อกข้อผิดพลาดในคอนโซล
                 console.error('Error fetching data:', error);
             } finally {
-                showLoading(false);
+                showLoading(false); // ซ่อนหน้าต่างโหลด
             }
         }
 
-        // ฟังก์ชันสำหรับแสดงข้อมูลบนหน้าเว็บ
+        // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
         function displayData(row) {
-            document.getElementById('columnAData').value = row[1] || '';
-            document.getElementById('columnBData').value = row[2] || '';
-            document.getElementById('columnCData').value = row[3] || '';
-            document.getElementById('columnDData').value = row[4] || '';
-            document.getElementById('columnEData').src = row[5] || 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png';
-            document.getElementById('columnGData').value = row[10] || '';
-         
-
+            document.getElementById('patientId').value = row.patientId || '';
+            document.getElementById('fullName').value = row.fullName || '';
+            document.getElementById('phoneNumber').value = row.phoneNumber || '';
+            document.getElementById('treatmentRights').value = row.treatmentRights || '';
+            document.getElementById('medicationSchedule').value = formatDate(row.medicationSchedule) || '';
+            document.getElementById('nextAppointment').value = formatDate(row.nextAppointment) || '';
+            // หากต้องการแสดงข้อมูลอื่นๆ สามารถเพิ่มได้ที่นี่
         }
+
 
         // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
         function showLoading(isLoading) {
             const overlay = document.getElementById('loadingOverlay');
-            const inputs = document.querySelectorAll('.input-field');
+            const inputs = document.querySelectorAll('input, select, textarea');
             if (isLoading) {
                 overlay.style.display = 'flex';
                 inputs.forEach(input => input.disabled = true);
@@ -204,23 +286,23 @@
         }
 
         // การตั้งค่าตัวแปรสำหรับการส่งข้อมูล
-        let url = `${WEB_APP_OT_URL}`;
-        let userlineIdInput = document.getElementById("userId");
-        let nameIdInput = document.getElementById("columnBData");
-        let numberIdInput = document.getElementById("columnCData");
-        let roleId = document.getElementById("columnDData");
-        let otDate = document.getElementById("otDate");
-        let startTime = document.getElementById("startTime");
-        let endTime = document.getElementById("endTime");
-        let totalTime = document.getElementById("totalTime");
-        let otTitle = document.getElementById("otTitle");
-        let otDetail = document.getElementById("otDetail");
-        let submitBtn = document.getElementById("submitBtn");
+        let url = `${WEB_APP_URL}`;
         let fileInput = document.getElementById("file");
+        let userlineIdInput = document.getElementById("userId");
+        let fullNameInput = document.getElementById("fullName");
+        let phoneNumberInput = document.getElementById("phoneNumber");
+        let treatmentRightsInput = document.getElementById("treatmentRights");
+        let medicationScheduleInput = document.getElementById("medicationSchedule");
+        let nextAppointmentInput = document.getElementById("nextAppointment");
+        let typeIdInput = document.getElementById("typeId");
+        let startDateIdInput = document.getElementById("startDateId");
+        let titleIdInput = document.getElementById("titleId");
+        let detailIdInput = document.getElementById("detailId");
+        let submitBtn = document.getElementById("submitBtn");
         let fileNameDisplay = document.getElementById("fileNameDisplay");
 
         // แสดงชื่อไฟล์ที่เลือก
-        fileInput.addEventListener('change', function() {
+        fileInput.addEventListener('change', function () {
             if (fileInput.files.length > 0) {
                 fileNameDisplay.textContent = fileInput.files[0].name;
             } else {
@@ -238,43 +320,22 @@
             });
         }
 
-        // ฟังก์ชันสำหรับคำนวณเวลาทำโอที
-        function calculateTimeDifference(start, end) {
-            const startTime = new Date(`1970-01-01T${start}:00`);
-            const endTime = new Date(`1970-01-01T${end}:00`);
-            const diff = (endTime - startTime) / 60000; // ความแตกต่างในนาที
-
-            const hours = Math.floor(diff / 60);
-            const minutes = diff % 60;
-
-            return `${hours} ชั่วโมง ${minutes} นาที`;
-        }
-
-        // คำนวณเวลาทำโอทีเมื่อเปลี่ยนแปลงเวลา
-        startTime.addEventListener('change', () => {
-            if (startTime.value && endTime.value) {
-                totalTime.value = calculateTimeDifference(startTime.value, endTime.value);
-            }
-        });
-
-        endTime.addEventListener('change', () => {
-            if (startTime.value && endTime.value) {
-                totalTime.value = calculateTimeDifference(startTime.value, endTime.value);
-            }
-        });
-
         // ฟังก์ชันสำหรับตรวจสอบความถูกต้องของฟอร์ม
         function validateForm() {
             const userlineId = userlineIdInput.value.trim();
-            const nameId = nameIdInput.value.trim();
-            const roleIdValue = roleId.value.trim();
-            const otDateValue = otDate.value.trim();
-            const startTimeValue = startTime.value.trim();
-            const endTimeValue = endTime.value.trim();
-            const otTitleValue = otTitle.value.trim();
-            const otDetailValue = otDetail.value.trim();
+            const fullName = fullNameInput.value.trim();
+            const phoneNumber = phoneNumberInput.value.trim();
+            const treatmentRights = treatmentRightsInput.value.trim();
+            const medicationSchedule = medicationScheduleInput.value.trim();
+            const nextAppointment = nextAppointmentInput.value.trim();
+            const typeId = typeIdInput.value.trim();
+            const startDateId = startDateIdInput.value.trim();
+            const titleId = titleIdInput.value.trim();
+            const detailId = detailIdInput.value.trim();
 
-            if (userlineId === '' || nameId === '' || roleIdValue === '' || otDateValue === '' || startTimeValue === '' || endTimeValue === '' || otTitleValue === '' || otDetailValue === '') {
+            if (userlineId === '' || fullName === '' || phoneNumber === '' || treatmentRights === '' ||
+                medicationSchedule === '' || nextAppointment === '' || typeId === '' || startDateId === '' ||
+                titleId === '' || detailId === '') {
                 return false;
             }
 
@@ -289,7 +350,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'Validation Error',
-                    text: 'Please fill in all required fields.',
+                    text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง.',
                 });
                 return;
             }
@@ -302,15 +363,16 @@
                 try {
                     let obj = {
                         userlineId: userlineIdInput.value,
-                        nameId: nameIdInput.value,
-                        roleId: roleId.value,
-                        numberId: numberIdInput.value,
-                        otDate: otDate.value,
-                        startTime: startTime.value,
-                        endTime: endTime.value,
-                        totalTime: totalTime.value,
-                        otTitle: otTitle.value,
-                        otDetail: otDetail.value
+                        patientId: document.getElementById('patientId').value,
+                        fullName: fullNameInput.value,
+                        phoneNumber: phoneNumberInput.value,
+                        treatmentRights: treatmentRightsInput.value,
+                        medicationSchedule: medicationScheduleInput.value,
+                        nextAppointment: nextAppointmentInput.value,
+                        typeId: typeIdInput.value,
+                        startDateId: startDateIdInput.value,
+                        titleId: titleIdInput.value,
+                        detailId: detailIdInput.value
                     };
 
                     if (fileInput.files.length > 0) {
@@ -334,6 +396,9 @@
 
                     let response = await fetch(url, {
                         method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
                         body: JSON.stringify(obj)
                     });
 
@@ -348,6 +413,7 @@
                         if (result.isConfirmed) {
                             // Reset form
                             document.querySelector('form').reset();
+                            fileNameDisplay.textContent = 'ยังไม่ได้เลือกไฟล์';
                             await sendFlexMessage(obj); // ส่งข้อความ Flex Message หลังจากการส่งข้อมูล
                         }
                     });
@@ -356,7 +422,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'An error occurred while submitting data.',
+                        text: 'เกิดข้อผิดพลาดในการส่งข้อมูล.',
                     });
 
                     console.error(error);
@@ -364,7 +430,7 @@
                     submitBtn.disabled = false;
                 }
             } else {
-                Swal.fire('Submission Canceled', 'Your data has not been submitted.', 'info');
+                Swal.fire('ยกเลิกการส่งข้อมูล', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info');
             }
         });
 
@@ -386,35 +452,139 @@
         async function sendFlexMessage(data) {
             const flexMessage = {
                 type: "flex",
-                altText: "คำขออนุมัติการทำโอที",
+                altText: "รายละเอียดการแจ้งเรื่อง",
                 contents: {
                     type: "bubble",
                     body: {
                         type: "box",
                         layout: "vertical",
                         contents: [
-                            { type: "text", text: "🟢 คำขออนุมัติการทำโอที", weight: "bold", size: "md", color: "#1DB446" },
                             {
-                                type: "box", layout: "vertical", margin: "lg", spacing: "sm", contents: [
-                                    { type: "text", text: `ชื่อ: ${data.nameId}` },
-                                    { type: "text", text: `วันที่ทำโอที: ${formatDate(data.otDate)}` },
-                                    { type: "text", text: `เวลาที่เริ่ม: ${data.startTime}` },
-                                    { type: "text", text: `เวลาที่สิ้นสุด: ${data.endTime}` },
-                                    { type: "text", color: '#2d63c7', text: `📋รอการอนุมัติ` }
+                                type: "text",
+                                text: "📌 รายละเอียดการแจ้งเรื่อง",
+                                weight: "bold",
+                                size: "lg",
+                                color: "#1DB446",
+                                wrap: true
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                margin: "lg",
+                                spacing: "sm",
+                                contents: [
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "ชื่อ-สกุล",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${data.fullName}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "เรื่องที่แจ้ง",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${data.titleId}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "ประเภท",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${data.typeId}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "วันที่แจ้ง",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${formatDate(data.medicationSchedule)}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "text",
+                                        text: `รายละเอียด: ${data.detailId}`,
+                                        margin: "lg",
+                                        size: "sm",
+                                        color: "#333333",
+                                        wrap: true
+                                    }
                                 ]
                             }
                         ]
                     }
                 }
             };
-            try { 
+
+            try {
                 await liff.sendMessages([flexMessage]);
                 liff.closeWindow(); // ปิดหน้าต่าง LIFF
-                console.log("Flex message sent"); 
-            } catch (error) { 
-                console.error("Error sending Flex message:", error); 
+                console.log("Flex message sent");
+            } catch (error) {
+                console.error("Error sending Flex message:", error);
             }
         }
+
 
         // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
         function getFormattedDate() {
@@ -426,7 +596,9 @@
         }
 
         // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
-        document.getElementById('otDate').value = getFormattedDate();
+        document.getElementById('startDateId').value = getFormattedDate();
+        document.getElementById('medicationSchedule').value = getFormattedDate();
+        document.getElementById('nextAppointment').value = getFormattedDate();
 
         // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการ
         function formatDate(dateString) {
@@ -435,4 +607,5 @@
         }
     </script>
 </body>
+
 </html>
