@@ -121,12 +121,12 @@
             </div>
             <!-- กลุ่มปุ่มเลือกประเภทของงาน (เช่น เข้างาน, ระหว่างวัน, ออกงาน) -->
             <div class="switch-field mt-4 mb-4 space-y-2">
-                <div class="flex items-center space-x-2 w-full">
+                <div class="flex items-centerw-full">
                     <input type="radio" id="radio-three" name="switch-job" value="ทานยา" class="hidden" checked />
                     <label for="radio-three"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">ลงเวลาทานยา</label>
+                        class="cursor-pointer border border-indigo-100 px-4 py-3 rounded-lg w-full text-center bg-indigo-100 text-black">ลงเวลาทานยา</label>
                 </div>
-<!--                 <div class="flex items-center space-x-2 w-full">
+                <!--                 <div class="flex items-center space-x-2 w-full">
                     <input type="radio" id="radio-four" name="switch-job" value="ทานยา(นอกเวลา)" class="hidden " />
                     <label for="radio-four"
                         class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">ทานยา(นอกเวลา)</label>
@@ -209,7 +209,7 @@
 
     // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
     window.onload = async function () {
-        await initializeLiff();
+       // await initializeLiff();
     };
 
     // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
