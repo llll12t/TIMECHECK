@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -36,6 +36,7 @@
 
         /* การตั้งค่าภาพกระพริบ */
         @keyframes blink {
+
             0%,
             100% {
                 opacity: 1;
@@ -55,96 +56,114 @@
 
 <body class="bg-slate-100 h-screen">
     <div class="max-w-md mx-auto p-4 mt-4">
-        <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
-        <input type="hidden" id="displayName" name="displayName">
-        <input type="hidden" id="userId" name="userId">
-        
-        <div class="loading-container">
-            <div id="loadingOverlay" class="flex justify-center items-center">
-                <div class="text-center text-gray-800">กำลังโหลดข้อมูล...</div>
-            </div>
+        <input type="hidden" id="displayName" name="displayName" ">
+        <div class=" loading-container">
+        <div id="loadingOverlay">
+            <div class="text-center text-white">ค้นหารายชื่อ..</div>
+        </div>
+        <div class="flex justify-center items-center w-full">
+            <div class=" w-full bg-white rounded-lg shadow-xl">
+                <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
+                <div class="loading-container bg-slate-100 p-4 rounded-lg">
+                    <div id="loadingOverlay">
+                        <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
+                    </div>
 
-            <div class="flex justify-center items-center w-full">
-                <div class="w-full bg-white rounded-lg shadow-xl">
-                    <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
+              <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
                         <h1 class="text-xl mb-2">แจ้งเรื่อง/สอบถาม</h1>
                         <div class="text-sm">⚠️ แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</div>
                     </div>
-                    
-                    <form id="appointmentForm" class="p-4">
+                    <div class="flex justify-between space-x-4">
                         <!-- เลขประจำตัวผู้ป่วย -->
-                        <div class="input flex flex-col w-full mb-4">
-                            <label for="patientId" class="text-black text-xs font-semibold mb-1">
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnAData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                                 เลขประจำตัวผู้ป่วย:
                             </label>
-                            <input id="patientId" type="text" name="patientId" required
-                                class="border-slate-500 px-3 py-2 text-sm bg-slate-100 border rounded-md w-full focus:outline-none placeholder:text-black/25" />
+                            <input id="columnAData" type="text" name="columnAData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
 
                         <!-- ชื่อ-สกุล -->
-                        <div class="input flex flex-col w-full mb-4">
-                            <label for="fullName" class="text-black text-xs font-semibold mb-1">
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnBData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                                 ชื่อ-สกุล:
                             </label>
-                            <input id="fullName" type="text" name="fullName" required
-                                class="border-slate-500 px-3 py-2 text-sm bg-slate-100 border rounded-md w-full focus:outline-none placeholder:text-black/25" />
+                            <input id="columnBData" type="text" name="columnBData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
-
+                    </div>
+                    <div class="flex justify-between space-x-4">
                         <!-- เบอร์ติดต่อ -->
-                        <div class="input flex flex-col w-full mb-4">
-                            <label for="phoneNumber" class="text-black text-xs font-semibold mb-1">
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnCData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                                 เบอร์ติดต่อ:
                             </label>
-                            <input id="phoneNumber" type="text" name="phoneNumber" required
-                                class="border-slate-500 px-3 py-2 text-sm bg-slate-100 border rounded-md w-full focus:outline-none placeholder:text-black/25" />
+                            <input id="columnCData" type="text" name="columnCData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
 
                         <!-- สิทธิการรักษา -->
-                        <div class="input flex flex-col w-full mb-4">
-                            <label for="treatmentRights" class="text-black text-xs font-semibold mb-1">
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnDData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
                                 สิทธิการรักษา:
                             </label>
-                            <input id="treatmentRights" type="text" name="treatmentRights" required
-                                class="border-slate-500 px-3 py-2 text-sm bg-slate-100 border rounded-md w-full focus:outline-none placeholder:text-black/25" />
+                            <input id="columnDData" type="text" name="columnDData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
-
-                        <!-- กำหนดการทานยา -->
-                        <div class="input flex flex-col w-full mb-4">
-                            <label for="medicationSchedule" class="text-black text-xs font-semibold mb-1">
-                                กำหนดการทานยา:
-                            </label>
-                            <input id="medicationSchedule" type="date" name="medicationSchedule" required
-                                class="border-slate-500 px-3 py-2 text-sm bg-slate-100 border rounded-md w-full focus:outline-none" />
-                        </div>
-
-                        <!-- นัดถัดไป -->
-                        <div class="input flex flex-col w-full mb-4">
-                            <label for="nextAppointment" class="text-black text-xs font-semibold mb-1">
-                                นัดถัดไป:
-                            </label>
-                            <input id="nextAppointment" type="date" name="nextAppointment" required
-                                class="border-slate-500 px-3 py-2 text-sm bg-slate-100 border rounded-md w-full focus:outline-none" />
-                        </div>
-
-                        <!-- ไอดีไลน์ (ซ่อน) -->
-                        <!-- ไอดีไลน์จะถูกเก็บไว้ในฟิลด์ซ่อนโดยอัตโนมัติจาก LIFF SDK -->
-
-                        <!-- ปุ่มบันทึกข้อมูล -->
-                        <button type="button" id="submitBtn"
-                            class="bg-slate-800 text-center w-full text-white py-2 px-4 rounded-lg hover:bg-slate-600">
-                            บันทึกข้อมูล
-                        </button>
-                    </form>
+                    </div>
+                    <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
+                    <input type="hidden" id="userId" name="userId" />
                 </div>
+                <input type="hidden" id="userId" name="userId">
             </div>
         </div>
     </div>
-
+    <div class="max-w-md mx-auto py-4">
+        <form>
+            <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
+                <div class="w-32 mb-5">
+                    <select type="text" id="typeId" name="typeId" class="w-full p-2 rounded-lg">
+                        <option value="แจ้งเรื่อง">แจ้งเรื่อง</option>
+                        <option value="แจ้งปัญหา">แจ้งปัญหา</option>
+                        <option value="อื่นๆ">อื่นๆ</option>
+                    </select>
+                </div>
+                <div class="mt-4 flex justify-between mb-5">
+                    <input type="date" id="startDateId" name="startDateId" class="w-1/2 mr-2 p-2 rounded-lg">
+                </div>
+                <div class="mt-6 mb-5">
+                    <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
+                        class="w-full p-2 border rounded-lg">
+                </div>
+                <div class="mt-4 mb-5">
+                    <textarea id="detailId" name="detailId" placeholder="รายละเอียด"
+                        class="w-full p-2 border rounded-lg"></textarea>
+                </div>
+                <div class="text-center bg-slate-100 rounded-lg my-5 p-4">
+                    <label for="file" class="cursor-pointer justify-between items-center"> อัพโหลดเอกสาร
+                        <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                            class="hidden">
+                        <div id="fileNameDisplay" class="text-slate-800 text-xs text-center mt-1">ยังไม่ได้เลือกไฟล์
+                        </div>
+                    </label>
+                    <div class="mx-auto text-slate-800 text-xs text-center mt-1">รูปแบบที่รองรับ jpg jpeg png pdf doc
+                        docx</div>
+                </div>
+                <button type="button" id="submitBtn"
+                    class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
+            </div>
+        </form>
+    </div>
+    </div>
     <script>
         // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
         const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby7m_rrEGipkZpEJibxJLDkpTakwLMF3uDIEsDs2xD76zXcfx_h-HccCeCRaA__FG8r/exec';
-        const LIFF_ID = '2005732932-O4PN1ezo'; // Liff ID
+        const LIFF_ID = '2005732932-9wEjkrWQ'; // Liff ID
 
         // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
         window.onload = async function () {
@@ -193,16 +212,13 @@
                 // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
                 const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify({ action: 'fetchData', userId: userId })
                 });
                 const data = await response.json();
                 // กรองแถวที่มี userId ตรงกับที่ต้องการ
                 const userRows = data.filter(row => row.userlineId === userId);
                 if (userRows.length > 0) {
-                    // เรียงลำดับข้อมูลตามวันที่ (timestamp) จากล่าสุดไปเก่าสุด
+                    // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 13) จากล่าสุดไปเก่าสุด
                     userRows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                     displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
                 } else {
@@ -219,28 +235,17 @@
 
         // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
         function displayData(row) {
-            document.getElementById('patientId').value = row.patientId || '';
-            document.getElementById('name').value = row.name || '';
-            document.getElementById('phone').value = row.phone || '';
-            document.getElementById('medicalRights').value = row.medicalRights || '';
-            document.getElementById('medicineSchedule').value = row.medicineSchedule || '';
-            document.getElementById('nextAppointment').value = row.nextAppointment || '';
-
+            document.getElementById('columnAData').value = row.patientId || '';
+            document.getElementById('columnBData').value = row.name || '';
+            document.getElementById('columnCData').value = row.phone || '';
+            document.getElementById('columnDData').value = row.medicalRights || '';
         }
 
-        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการสำหรับ input type="date"
-        function formatDateInput(dateString) {
-            const date = new Date(dateString);
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
 
         // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
         function showLoading(isLoading) {
             const overlay = document.getElementById('loadingOverlay');
-            const inputs = document.querySelectorAll('input, select, textarea, button');
+            const inputs = document.querySelectorAll('.input-field');
             if (isLoading) {
                 overlay.style.display = 'flex';
                 inputs.forEach(input => input.disabled = true);
@@ -252,27 +257,48 @@
 
         // การตั้งค่าตัวแปรสำหรับการส่งข้อมูล
         let url = `${WEB_APP_URL}`;
+        let fileInput = document.getElementById("file");
         let userlineIdInput = document.getElementById("userId");
-        let fullNameInput = document.getElementById("fullName");
-        let phoneNumberInput = document.getElementById("phoneNumber");
-        let treatmentRightsInput = document.getElementById("treatmentRights");
-        let medicationScheduleInput = document.getElementById("medicationSchedule");
-        let nextAppointmentInput = document.getElementById("nextAppointment");
-        let patientIdInput = document.getElementById("patientId");
+        let nameIdInput = document.getElementById("columnBData");
+        let numberIdInput = document.getElementById("columnCData");
+        let roleId = document.getElementById("columnDData");
+        let typeId = document.getElementById("typeId");
+        let startDateId = document.getElementById("startDateId");
+        let titleId = document.getElementById("titleId");
+        let detailId = document.getElementById("detailId");
         let submitBtn = document.getElementById("submitBtn");
+        let fileNameDisplay = document.getElementById("fileNameDisplay");
+
+        // แสดงชื่อไฟล์ที่เลือก
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'ยังไม่ได้เลือกไฟล์';
+            }
+        });
+
+        // ฟังก์ชันสำหรับแปลงไฟล์เป็น base64
+        function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                let reader = new FileReader();
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
+            });
+        }
 
         // ฟังก์ชันสำหรับตรวจสอบความถูกต้องของฟอร์ม
         function validateForm() {
             const userlineId = userlineIdInput.value.trim();
-            const patientId = patientIdInput.value.trim();
-            const fullName = fullNameInput.value.trim();
-            const phoneNumber = phoneNumberInput.value.trim();
-            const treatmentRights = treatmentRightsInput.value.trim();
-            const medicationSchedule = medicationScheduleInput.value.trim();
-            const nextAppointment = nextAppointmentInput.value.trim();
+            const nameId = nameIdInput.value.trim();
+            const roleIdValue = roleId.value.trim();
+            const typeIdValue = typeId.value.trim();
+            const startDateIdValue = startDateId.value.trim();
+            const titleIdValue = titleId.value.trim();
+            const detailIdValue = detailId.value.trim();
 
-            if (userlineId === '' || patientId === '' || fullName === '' || phoneNumber === '' || treatmentRights === '' ||
-                medicationSchedule === '' || nextAppointment === '') {
+            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
                 return false;
             }
 
@@ -286,8 +312,8 @@
             if (!validateForm()) {
                 Swal.fire({
                     icon: 'error',
-                    title: 'ข้อผิดพลาด',
-                    text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง.',
+                    title: 'Validation Error',
+                    text: 'Please fill in all required fields.',
                 });
                 return;
             }
@@ -300,29 +326,36 @@
                 try {
                     let obj = {
                         userlineId: userlineIdInput.value,
-                        patientId: patientIdInput.value,
-                        fullName: fullNameInput.value,
-                        phoneNumber: phoneNumberInput.value,
-                        treatmentRights: treatmentRightsInput.value,
-                        medicationSchedule: medicationScheduleInput.value,
-                        nextAppointment: nextAppointmentInput.value
+                        nameId: nameIdInput.value,
+                        roleId: roleId.value,
+                        numberId: numberIdInput.value,
+                        typeId: typeId.value,
+                        startDateId: startDateId.value,
+                        titleId: titleId.value,
+                        detailId: detailId.value
                     };
+
+                    if (fileInput.files.length > 0) {
+                        let file = fileInput.files[0];
+                        let base64 = await getBase64(file);
+
+                        obj.base64 = base64;
+                        obj.type = file.type;
+                        obj.name = file.name;
+                    }
 
                     Swal.fire({
                         title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
                         allowOutsideClick: false,
                         showConfirmButton: false,
                         html: '<div class="swal2-loading"></div>',
-                        didOpen: () => {
+                        onBeforeOpen: () => {
                             Swal.showLoading();
                         }
                     });
 
                     let response = await fetch(url, {
                         method: "POST",
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
                         body: JSON.stringify(obj)
                     });
 
@@ -336,7 +369,7 @@
                     }).then(async (result) => {
                         if (result.isConfirmed) {
                             // Reset form
-                            document.getElementById('appointmentForm').reset();
+                            document.querySelector('form').reset();
                             await sendFlexMessage(obj); // ส่งข้อความ Flex Message หลังจากการส่งข้อมูล
                         }
                     });
@@ -344,8 +377,8 @@
                 } catch (error) {
                     Swal.fire({
                         icon: 'error',
-                        title: 'ข้อผิดพลาด',
-                        text: 'เกิดข้อผิดพลาดในการส่งข้อมูล.',
+                        title: 'Error',
+                        text: 'An error occurred while submitting data.',
                     });
 
                     console.error(error);
@@ -353,7 +386,7 @@
                     submitBtn.disabled = false;
                 }
             } else {
-                Swal.fire('ยกเลิกการส่งข้อมูล', 'ข้อมูลของคุณไม่ได้ถูกส่ง.', 'info');
+                Swal.fire('Submission Canceled', 'Your data has not been submitted.', 'info');
             }
         });
 
@@ -410,7 +443,7 @@
                                             },
                                             {
                                                 type: "text",
-                                                text: `${data.fullName}`,
+                                                text: `${data.nameId}`,
                                                 size: "sm",
                                                 color: "#333333",
                                                 flex: 5,
@@ -424,7 +457,7 @@
                                         contents: [
                                             {
                                                 type: "text",
-                                                text: "เลขประจำตัวผู้ป่วย",
+                                                text: "เรื่องที่แจ้ง",
                                                 weight: "bold",
                                                 size: "sm",
                                                 color: "#aaaaaa",
@@ -432,7 +465,7 @@
                                             },
                                             {
                                                 type: "text",
-                                                text: `${data.patientId}`,
+                                                text: `${data.titleId}`,
                                                 size: "sm",
                                                 color: "#333333",
                                                 flex: 5,
@@ -446,7 +479,7 @@
                                         contents: [
                                             {
                                                 type: "text",
-                                                text: "เบอร์ติดต่อ",
+                                                text: "ประเภท",
                                                 weight: "bold",
                                                 size: "sm",
                                                 color: "#aaaaaa",
@@ -454,7 +487,7 @@
                                             },
                                             {
                                                 type: "text",
-                                                text: `${data.phoneNumber}`,
+                                                text: `${data.typeId}`,
                                                 size: "sm",
                                                 color: "#333333",
                                                 flex: 5,
@@ -468,7 +501,7 @@
                                         contents: [
                                             {
                                                 type: "text",
-                                                text: "สิทธิการรักษา",
+                                                text: "วันที่แจ้ง",
                                                 weight: "bold",
                                                 size: "sm",
                                                 color: "#aaaaaa",
@@ -476,7 +509,7 @@
                                             },
                                             {
                                                 type: "text",
-                                                text: `${data.treatmentRights}`,
+                                                text: `${formatDate(data.startDateId)}`,
                                                 size: "sm",
                                                 color: "#333333",
                                                 flex: 5,
@@ -485,48 +518,12 @@
                                         ]
                                     },
                                     {
-                                        type: "box",
-                                        layout: "baseline",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: "กำหนดการทานยา",
-                                                weight: "bold",
-                                                size: "sm",
-                                                color: "#aaaaaa",
-                                                flex: 2
-                                            },
-                                            {
-                                                type: "text",
-                                                text: `${formatDate(data.medicationSchedule)}`,
-                                                size: "sm",
-                                                color: "#333333",
-                                                flex: 5,
-                                                wrap: true
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "baseline",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: "นัดถัดไป",
-                                                weight: "bold",
-                                                size: "sm",
-                                                color: "#aaaaaa",
-                                                flex: 2
-                                            },
-                                            {
-                                                type: "text",
-                                                text: `${formatDate(data.nextAppointment)}`,
-                                                size: "sm",
-                                                color: "#333333",
-                                                flex: 5,
-                                                wrap: true
-                                            }
-                                        ]
+                                        type: "text",
+                                        text: `รายละเอียด: ${data.detailId}`,
+                                        margin: "lg",
+                                        size: "sm",
+                                        color: "#333333",
+                                        wrap: true
                                     }
                                 ]
                             }
@@ -544,6 +541,7 @@
             }
         }
 
+
         // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
         function getFormattedDate() {
             const today = new Date();
@@ -554,10 +552,9 @@
         }
 
         // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
-        document.getElementById('medicationSchedule').value = getFormattedDate();
-        document.getElementById('nextAppointment').value = getFormattedDate();
+        document.getElementById('startDateId').value = getFormattedDate();
 
-        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการสำหรับ Flex Message
+        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการ
         function formatDate(dateString) {
             const date = new Date(dateString);
             return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
