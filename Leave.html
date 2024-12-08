@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ข้อมูลส่วนตัว</title>
+    <title>แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</title>
     <!-- นำเข้า Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความ -->
@@ -69,7 +69,7 @@
                         <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                     </div>
 
-                    <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
+              <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
                         <h1 class="text-xl mb-2">แจ้งเรื่อง/สอบถาม</h1>
                         <div class="text-sm">⚠️ แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</div>
                     </div>
@@ -259,7 +259,6 @@
         let url = `${WEB_APP_URL}`;
         let fileInput = document.getElementById("file");
         let userlineIdInput = document.getElementById("userId");
-        let patientIdInput = document.getElementById("columnAData");
         let nameIdInput = document.getElementById("columnBData");
         let numberIdInput = document.getElementById("columnCData");
         let roleId = document.getElementById("columnDData");
@@ -293,14 +292,13 @@
         function validateForm() {
             const userlineId = userlineIdInput.value.trim();
             const nameId = nameIdInput.value.trim();
-            const patientId = patientIdInput.value.trim();
             const roleIdValue = roleId.value.trim();
             const typeIdValue = typeId.value.trim();
             const startDateIdValue = startDateId.value.trim();
             const titleIdValue = titleId.value.trim();
             const detailIdValue = detailId.value.trim();
 
-            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || patientId === '' || startDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
+            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
                 return false;
             }
 
@@ -330,8 +328,6 @@
                         userlineId: userlineIdInput.value,
                         nameId: nameIdInput.value,
                         roleId: roleId.value,
-                        patientId: patientId.value,
-
                         numberId: numberIdInput.value,
                         typeId: typeId.value,
                         startDateId: startDateId.value,
