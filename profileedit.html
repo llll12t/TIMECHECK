@@ -1,362 +1,279 @@
 <!DOCTYPE html>
-<html lang="th">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แก้ไขโปรไฟล์</title>
-    <!-- นำเข้า Tailwind CSS สำหรับการออกแบบ -->
+    <title>ข้อมูลส่วนตัว</title>
+    <!-- นำเข้า Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- นำเข้า LIFF SDK สำหรับการเชื่อมต่อกับ LINE -->
-    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
-    <!-- นำเข้า SweetAlert2 สำหรับการแสดงการแจ้งเตือน -->
+    <!-- นำเข้า SweetAlert2 สำหรับแสดงกล่องข้อความ -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- นำเข้า LIFF SDK ของ LINE -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+
+    <style>
+        /* ซ่อน overlay สำหรับโหลด */
+        #loadingOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.26);
+            border-radius: 15px;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        /* การตั้งค่าภาชนะที่ใช้แสดง overlay โหลด */
+        .loading-container {
+            position: relative;
+        }
+
+        /* การตั้งค่าภาพกระพริบ */
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        /* การตั้งค่าภาพกระพริบ */
+        .blink {
+            animation: blink 1s infinite;
+        }
+    </style>
 </head>
 
-<body class="bg-slate-100 flex items-center justify-center h-screen p-6">
-    <div class="max-w-lg w-full bg-white text-slate-800 p-10 rounded-xl shadow-md">
-        <h2 class="text-lg text-center mb-4">แก้ไขโปรไฟล์ผู้ป่วย</h2>
-        <form id="edit-form">
-            <!-- ช่องสำหรับเก็บข้อมูล ID ซ่อนอยู่ -->
-            <input type="hidden" id="edit-id">
-            <input type="hidden" id="edit-userlineId">
+<body class="bg-slate-100 h-screen">
+    <div class="max-w-md mx-auto p-4 mt-4">
+        <input type="hidden" id="displayName" name="displayName" ">
+        <div class=" loading-container">
+        <div id="loadingOverlay">
+            <div class="text-center text-white">ค้นหารายชื่อ..</div>
+        </div>
+        <div class="flex justify-center items-center w-full">
+            <div class=" w-full bg-white rounded-lg shadow-xl">
+                <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
+                <div class="loading-container bg-slate-100 p-4 rounded-lg">
+                    <div id="loadingOverlay">
+                        <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
+                    </div>
+                    <div class="flex justify-between space-x-4">
+                        <!-- เลขประจำตัวผู้ป่วย -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnAData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                เลขประจำตัวผู้ป่วย:
+                            </label>
+                            <input id="columnAData" type="text" name="columnAData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
 
-            <!-- ส่วนสำหรับแสดงและอัปโหลดรูปภาพ -->
-            <div class="mb-4 flex flex-col items-center">
-                <img id="image-preview" src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="Image Preview" class="mt-2 max-h-24 rounded-lg">
-                <label for="edit-image" class="cursor-pointer inline-flex justify-between items-center p-2 mt-2 rounded-lg text-slate-800 bg-slate-100 hover:bg-slate-300">
-                    เปลี่ยนรูปภาพ
-                    <input type="file" id="edit-image" name="edit-image" accept="image/*" class="hidden">
-                </label>
-                <div class="mx-auto w-48 text-slate-500 text-xs text-center mt-1">คลิกเพื่อเปลี่ยนรูปภาพ</div>
+                        <!-- ชื่อ-สกุล -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnBData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                ชื่อ-สกุล:
+                            </label>
+                            <input id="columnBData" type="text" name="columnBData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+                    </div>
+                    <div class="flex justify-between space-x-4">
+                        <!-- เบอร์ติดต่อ -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnCData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                เบอร์ติดต่อ:
+                            </label>
+                            <input id="columnCData" type="text" name="columnCData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+
+                        <!-- สิทธิการรักษา -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnDData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                สิทธิการรักษา:
+                            </label>
+                            <input id="columnDData" type="text" name="columnDData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+                    </div>
+                    <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
+                    <input type="hidden" id="userId" name="userId" />
+                </div>
+                <input type="hidden" id="userId" name="userId">
             </div>
-
-            <!-- ฟิลด์สำหรับกรอกข้อมูล -->
-            <div class="flex flex-col">
-                <!-- เลขประจำตัวผู้ป่วย -->
-                <div class="mb-4">
-                    <label for="edit-patientId" class="block text-sm">เลขประจำตัวผู้ป่วย</label>
-                    <input type="text" id="edit-patientId" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
-                </div>
-                <!-- ชื่อ-สกุล -->
-                <div class="mb-4">
-                    <label for="edit-name" class="block text-sm">ชื่อ-สกุล</label>
-                    <input type="text" id="edit-name" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
-                </div>
-                <!-- เพศ -->
-                <div class="mb-4">
-                    <label for="edit-gender" class="block text-sm">เพศ</label>
-                    <select id="edit-gender" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
-                        <option value="" disabled>เลือกเพศ</option>
-                        <option value="ชาย">ชาย</option>
-                        <option value="หญิง">หญิง</option>
+        </div>
+    </div>
+    <div class="max-w-md mx-auto py-4">
+        <form>
+            <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
+                <div class="w-32 mb-5">
+                    <select type="text" id="typeId" name="typeId" class="w-full p-2 rounded-lg">
+                        <option value="แจ้งเรื่อง">แจ้งเรื่อง</option>
+                        <option value="แจ้งปัญหา">แจ้งปัญหา</option>
                         <option value="อื่นๆ">อื่นๆ</option>
                     </select>
                 </div>
-                <!-- วันเกิด -->
-                <div class="mb-4">
-                    <label for="edit-birthdate" class="block text-sm">วันเกิด</label>
-                    <input type="date" id="edit-birthdate" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                <div class="mt-4 flex justify-between mb-5">
+                    <input type="date" id="startDateId" name="startDateId" class="w-1/2 mr-2 p-2 rounded-lg">
                 </div>
-                <!-- ที่อยู่ -->
-                <div class="mb-4">
-                    <label for="edit-address" class="block text-sm">ที่อยู่</label>
-                    <textarea id="edit-address" class="w-full text-slate-800 border px-2 py-1 rounded-xl" rows="3" required></textarea>
+                <div class="mt-6 mb-5">
+                    <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
+                        class="w-full p-2 border rounded-lg">
                 </div>
-                <!-- เบอร์โทร -->
-                <div class="mb-4">
-                    <label for="edit-phone" class="block text-sm">เบอร์โทร</label>
-                    <input type="tel" pattern="[0-9]{10}" id="edit-phone" class="w-full text-slate-800 border px-2 py-1 rounded-xl" placeholder="เบอร์โทร (10 หลัก)" required>
+                <div class="mt-4 mb-5">
+                    <textarea id="detailId" name="detailId" placeholder="รายละเอียด"
+                        class="w-full p-2 border rounded-lg"></textarea>
                 </div>
-                <!-- ระดับการศึกษา -->
-                <div class="mb-4">
-                    <label for="edit-educationLevel" class="block text-sm">ระดับการศึกษา</label>
-                    <input type="text" id="edit-educationLevel" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
+                <div class="text-center bg-slate-100 rounded-lg my-5 p-4">
+                    <label for="file" class="cursor-pointer justify-between items-center"> อัพโหลดเอกสาร
+                        <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
+                            class="hidden">
+                        <div id="fileNameDisplay" class="text-slate-800 text-xs text-center mt-1">ยังไม่ได้เลือกไฟล์
+                        </div>
+                    </label>
+                    <div class="mx-auto text-slate-800 text-xs text-center mt-1">รูปแบบที่รองรับ jpg jpeg png pdf doc
+                        docx</div>
                 </div>
-                <!-- อาชีพ -->
-                <div class="mb-4">
-                    <label for="edit-occupation" class="block text-sm">อาชีพ</label>
-                    <input type="text" id="edit-occupation" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
-                </div>
-                <!-- สถานภาพสมรส -->
-                <div class="mb-4">
-                    <label for="edit-maritalStatus" class="block text-sm">สถานภาพสมรส</label>
-                    <select id="edit-maritalStatus" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
-                        <option value="" disabled>เลือกสถานภาพสมรส</option>
-                        <option value="โสด">โสด</option>
-                        <option value="สมรส">สมรส</option>
-                        <option value="หย่าร้าง">หย่าร้าง</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
-                    </select>
-                </div>
-                <!-- สิทธิการรักษา -->
-                <div class="mb-6">
-                    <label for="edit-medicalRights" class="block text-sm">สิทธิการรักษา</label>
-                    <input type="text" id="edit-medicalRights" class="w-full text-slate-800 border px-2 py-1 rounded-xl" required>
-                </div>
-            </div>
-
-            <!-- ปุ่มสำหรับแก้ไขข้อมูล ยกเลิก และบันทึก -->
-            <div class="flex justify-end">
-                <button type="button" id="edit-button" class="bg-yellow-500 text-white py-1 px-3 rounded-xl hover:bg-yellow-700">แก้ไข</button>
-                <button type="button" id="cancel-button" class="bg-red-500 text-white py-1 px-3 rounded-xl hover:bg-red-700 mr-2 hidden">ยกเลิก</button>
-                <button type="submit" id="save-button" class="bg-blue-500 text-white py-1 px-3 rounded-xl hover:bg-blue-700 hidden">บันทึก</button>
+                <button type="button" id="submitBtn"
+                    class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
             </div>
         </form>
     </div>
-
+    </div>
     <script>
-        // URL ของ Web App และ LIFF ID
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
-        const LIFF_ID = '2005732932-14NZGM4v'; // LIFF ID
+        // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
+        const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbw2saQijCxrOJxhK2yU4AN7POUfVYmqImVI2DJiXkmWpiQYM_8revs5jnAA957Ndqls/exec';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxJh_J2eBkl1zL8AbMEZr0ksSazLVIXl2Vq8gzvvU4tBTLQi7NzxjI_3nb3wzx-E9qbog/exec';
+        const LIFF_ID = '2005732932-14NZGM4v'; // Liff ID
 
-        let latestData = {};
-
-        // เริ่มต้นด้วยการล็อกฟอร์มและซ่อนปุ่ม
-        window.onload = async () => {
-            await initializeLiff(); // เริ่มต้น LIFF และค้นหาข้อมูลทันทีที่ได้ userId
-            toggleFormEditing(false); // ล็อกฟอร์มในตอนเริ่มต้นและซ่อนปุ่ม
+        // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+        window.onload = async function () {
+            await initializeLiff();
         };
 
-        // ฟังก์ชันสำหรับเริ่มต้น LIFF
+        // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
         async function initializeLiff() {
             try {
-                await liff.init({ liffId: `${LIFF_ID}` }); // ใส่ LIFF ID ของคุณที่นี่
+                // เริ่มต้น LIFF โดยใช้ LIFF ID ที่กำหนด
+                await liff.init({ liffId: `${LIFF_ID}` });
+                // ถ้าผู้ใช้ได้เข้าสู่ระบบแล้ว จะดึงข้อมูลโปรไฟล์
                 if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    const userlineId = profile.userId; // ดึง userId จากโปรไฟล์
-                    searchDataByUserlineId(userlineId); // ค้นหาข้อมูลตาม userId
+                    getUserProfile();
                 } else {
-                    liff.login(); // ถ้ายังไม่ได้เข้าสู่ระบบ ให้เข้าสู่ระบบ
+                    // ถ้ายังไม่ได้เข้าสู่ระบบ จะพาผู้ใช้ไปที่หน้าล็อกอิน
+                    liff.login();
                 }
             } catch (error) {
-                console.error('LIFF Initialization failed', error);
+                // ถ้ามีข้อผิดพลาดในขณะเริ่มต้น LIFF จะทำการล็อกข้อผิดพลาดในคอนโซล
+                console.error('Error initializing LIFF:', error);
             }
         }
 
-        // ฟังก์ชันค้นหาข้อมูลตาม userlineId
-        async function searchDataByUserlineId(userlineId) {
-            // แสดง loading spinner
-            Swal.fire({
-                title: 'Loading...',
-                text: 'กำลังค้นหาข้อมูล กรุณารอสักครู่...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading(); // แสดง spinner
-                }
-            });
-
+        // ฟังก์ชันนี้ดึงข้อมูลโปรไฟล์ของผู้ใช้จาก LIFF
+        async function getUserProfile() {
             try {
-                const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
-                const data = await response.json();
-
-                // ค้นหาข้อมูลตาม userlineId
-                const filteredData = data.find(row => row['ไอดีไลน์'] === userlineId);
-
-                if (filteredData) {
-                    latestData = filteredData;
-
-                    // กรอกข้อมูลลงในฟอร์ม
-                    document.getElementById('edit-id').value = filteredData['เลขที่'];
-                    document.getElementById('edit-userlineId').value = filteredData['ไอดีไลน์'];
-                    document.getElementById('edit-patientId').value = filteredData['เลขประจำตัวผู้ป่วย'];
-                    document.getElementById('edit-name').value = filteredData['ชื่อ-สกุล'];
-                    document.getElementById('edit-gender').value = filteredData['เพศ'];
-                    document.getElementById('edit-birthdate').value = filteredData['วันเกิด'];
-                    document.getElementById('edit-address').value = filteredData['ที่อยู่'];
-                    document.getElementById('edit-phone').value = filteredData['เบอร์โทร'];
-                    document.getElementById('edit-educationLevel').value = filteredData['ระดับการศึกษา'];
-                    document.getElementById('edit-occupation').value = filteredData['อาชีพ'];
-                    document.getElementById('edit-maritalStatus').value = filteredData['สถานภาพสมรส'];
-                    document.getElementById('edit-medicalRights').value = filteredData['สิทธิการรักษา'];
-
-                    document.getElementById('edit-imageUrl').value = filteredData['fileLink'] || '';
-                    updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-                } else {
-                    Swal.fire({
-                        title: 'Not Found',
-                        text: 'ไม่พบข้อมูลที่ตรงกับ UserLineID นี้',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
-                }
+                // รับข้อมูลโปรไฟล์ของผู้ใช้
+                const profile = await liff.getProfile();
+                const userId = profile.userId;
+                // กำหนดค่า userId และ displayName ในฟอร์ม
+                document.getElementById('userId').value = userId;
+                document.getElementById('displayName').value = profile.displayName;
+                // ดึงข้อมูลเพิ่มเติมโดยใช้ userId
+                await fetchData(userId);
             } catch (error) {
-                console.error('Error fetching data:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Failed to fetch data. Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            } finally {
-                // ปิด loading spinner
-                Swal.close();
+                // ถ้ามีข้อผิดพลาดในการดึงข้อมูลโปรไฟล์ จะทำการล็อกข้อผิดพลาดในคอนโซล
+                console.error('Error getting profile data:', error);
             }
         }
 
-        // ฟังก์ชันสำหรับล็อกหรือปลดล็อกฟอร์มและจัดการการแสดงผลปุ่ม
-        function toggleFormEditing(enable) {
-            const inputs = document.querySelectorAll('#edit-form input, #edit-form select, #edit-form textarea');
-            const saveButton = document.getElementById('save-button');
-            const cancelButton = document.getElementById('cancel-button');
-            const editButton = document.getElementById('edit-button');
-
-            inputs.forEach(input => {
-                input.disabled = !enable; // ปลดล็อก input
-            });
-
-            if (enable) {
-                saveButton.classList.remove('hidden');
-                cancelButton.classList.remove('hidden');
-                editButton.classList.add('hidden'); // ซ่อนปุ่ม Edit เมื่อทำการแก้ไข
-            } else {
-                saveButton.classList.add('hidden');
-                cancelButton.classList.add('hidden');
-                editButton.classList.remove('hidden'); // แสดงปุ่ม Edit
-            }
-        }
-
-        // เพิ่ม event listener สำหรับปุ่มแก้ไขข้อมูล
-        document.getElementById('edit-button').addEventListener('click', function () {
-            toggleFormEditing(true); // ปลดล็อกฟอร์มเมื่อกดปุ่มแก้ไข
-        });
-
-        // เพิ่ม event listener สำหรับปุ่มยกเลิกการแก้ไข
-        document.getElementById('cancel-button').addEventListener('click', function () {
-            cancelEdit();
-        });
-
-        // ฟังก์ชันสำหรับอัปเดตการแสดงผลของรูปภาพตาม URL ที่ป้อน
-        function updateImagePreview() {
-            const imageUrl = document.getElementById('edit-imageUrl').value;
-            const imagePreview = document.getElementById('image-preview');
-            imagePreview.src = imageUrl ? imageUrl : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'; // อัปเดต src ของรูปภาพ
-        }
-
-        // ฟังก์ชันสำหรับส่งฟอร์มและบันทึกข้อมูล
-        document.getElementById('edit-form').addEventListener('submit', async function (e) {
-            e.preventDefault();
-
-            const id = document.getElementById('edit-id').value;
-            const userlineId = document.getElementById('edit-userlineId').value;
-            const patientId = document.getElementById('edit-patientId').value.trim();
-            const name = document.getElementById('edit-name').value.trim();
-            const gender = document.getElementById('edit-gender').value;
-            const birthdate = document.getElementById('edit-birthdate').value;
-            const address = document.getElementById('edit-address').value.trim();
-            const phone = document.getElementById('edit-phone').value.trim();
-            const educationLevel = document.getElementById('edit-educationLevel').value.trim();
-            const occupation = document.getElementById('edit-occupation').value.trim();
-            const maritalStatus = document.getElementById('edit-maritalStatus').value;
-            const medicalRights = document.getElementById('edit-medicalRights').value.trim();
-            const imageFile = document.getElementById('edit-image').files[0];
-            const existingImageUrl = document.getElementById('edit-imageUrl').value;
-
-            // การตรวจสอบข้อมูลเบื้องต้น
-            if (!patientId || !name || !gender || !birthdate || !address || !phone || !educationLevel || !occupation || !maritalStatus || !medicalRights) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Validation Error',
-                    text: 'กรุณากรอกข้อมูลในช่องที่จำเป็น.',
-                });
-                return;
-            }
-
-            // แสดงผลการโหลด
-            Swal.fire({
-                title: 'Saving data...',
-                text: 'กรุณารอสักครู่...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading(); // แสดง spinner
-                }
-            });
-
+        // ฟังก์ชันนี้ดึงข้อมูลเพิ่มเติมจาก Google Apps Script โดยใช้ userId
+        async function fetchData(userId) {
+            showLoading(true); // แสดงหน้าต่างโหลด
             try {
-                let imageUrl = existingImageUrl;
-
-                if (imageFile) {
-                    // แปลงไฟล์เป็น Base64
-                    const base64Image = await getBase64(imageFile);
-                    imageUrl = base64Image; // ส่ง Base64 ไปยัง Apps Script
-                }
-
-                const payload = {
-                    method: 'updateData',
-                    id: id,
-                    userID: userlineId,
-                    patientId: patientId,
-                    name: name,
-                    gender: gender,
-                    birthdate: birthdate,
-                    address: address,
-                    phone: phone,
-                    educationLevel: educationLevel,
-                    occupation: occupation,
-                    maritalStatus: maritalStatus,
-                    medicalRights: medicalRights,
-                    imageUrl: imageUrl // อัปโหลดรูปใหม่เป็น Base64 หรือใช้ URL เดิม
-                };
-
-                const response = await fetch(WEB_APP_URL, {
+                // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
+                const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({ action: 'fetchData', userId: userId })
                 });
-
-                const result = await response.text();
-
-                // ตรวจสอบผลลัพธ์ที่ได้รับ
-                if (result && result.includes('Data updated')) {
-                    Swal.fire({
-                        title: 'สำเร็จ!',
-                        text: 'แก้ไขข้อมูลของคุณเรียบร้อยแล้ว!',
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    }).then(() => {
-                        toggleFormEditing(false);
-                        // รีเฟรชข้อมูล
-                        searchDataByUserlineId(userlineId);
-                    });
+                const data = await response.json();
+                // กรองแถวที่มี userId ตรงกับที่ต้องการ
+                const userRows = data.filter(row => row.userlineId === userId);
+                if (userRows.length > 0) {
+                    // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 13) จากล่าสุดไปเก่าสุด
+                    userRows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
                 } else {
-                    throw new Error(result || 'Failed to save data');
+                    // ถ้าไม่มีข้อมูลที่ตรงกับ userId จะแสดงข้อความในคอนโซล
+                    console.log('No data found for userId:', userId);
                 }
-
             } catch (error) {
-                console.error('Error saving data:', error);
-                Swal.fire({
-                    title: 'Error',
-                    text: error.message || 'เกิดข้อผิดพลาดขณะบันทึกข้อมูล.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
+                // ถ้ามีข้อผิดพลาดในการดึงข้อมูล จะทำการล็อกข้อผิดพลาดในคอนโซล
+                console.error('Error fetching data:', error);
+            } finally {
+                showLoading(false); // ซ่อนหน้าต่างโหลด
+            }
+        }
+
+        // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
+        function displayData(row) {
+            document.getElementById('columnAData').value = row.patientId || '';
+            document.getElementById('columnBData').value = row.name || '';
+            document.getElementById('columnCData').value = row.phone || '';
+            document.getElementById('columnDData').value = row.medicalRights || '';
+        }
+
+
+        // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
+        function showLoading(isLoading) {
+            const overlay = document.getElementById('loadingOverlay');
+            const inputs = document.querySelectorAll('.input-field');
+            if (isLoading) {
+                overlay.style.display = 'flex';
+                inputs.forEach(input => input.disabled = true);
+            } else {
+                overlay.style.display = 'none';
+                inputs.forEach(input => input.disabled = false);
+            }
+        }
+
+        // การตั้งค่าตัวแปรสำหรับการส่งข้อมูล
+        let url = `${WEB_APP_URL}`;
+        let fileInput = document.getElementById("file");
+        let userlineIdInput = document.getElementById("userId");
+        let nameIdInput = document.getElementById("columnBData");
+        let numberIdInput = document.getElementById("columnCData");
+        let roleId = document.getElementById("columnDData");
+        let typeId = document.getElementById("typeId");
+        let startDateId = document.getElementById("startDateId");
+        let titleId = document.getElementById("titleId");
+        let detailId = document.getElementById("detailId");
+        let submitBtn = document.getElementById("submitBtn");
+        let fileNameDisplay = document.getElementById("fileNameDisplay");
+
+        // แสดงชื่อไฟล์ที่เลือก
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                fileNameDisplay.textContent = fileInput.files[0].name;
+            } else {
+                fileNameDisplay.textContent = 'ยังไม่ได้เลือกไฟล์';
             }
         });
 
-        // ฟังก์ชันยกเลิกการแก้ไขและรีเซ็ตฟอร์ม
-        function cancelEdit() {
-            document.getElementById('edit-form').reset();
-            document.getElementById('edit-id').value = latestData['เลขที่'];
-            document.getElementById('edit-userlineId').value = latestData['ไอดีไลน์'];
-            document.getElementById('edit-patientId').value = latestData['เลขประจำตัวผู้ป่วย'];
-            document.getElementById('edit-name').value = latestData['ชื่อ-สกุล'];
-            document.getElementById('edit-gender').value = latestData['เพศ'];
-            document.getElementById('edit-birthdate').value = latestData['วันเกิด'];
-            document.getElementById('edit-address').value = latestData['ที่อยู่'];
-            document.getElementById('edit-phone').value = latestData['เบอร์โทร'];
-            document.getElementById('edit-educationLevel').value = latestData['ระดับการศึกษา'];
-            document.getElementById('edit-occupation').value = latestData['อาชีพ'];
-            document.getElementById('edit-maritalStatus').value = latestData['สถานภาพสมรส'];
-            document.getElementById('edit-medicalRights').value = latestData['สิทธิการรักษา'];
-
-            document.getElementById('edit-imageUrl').value = latestData['fileLink'] || '';
-            updateImagePreview(); // อัปเดตการแสดงผลของรูปภาพ
-            toggleFormEditing(false); // ล็อกฟอร์มอีกครั้งหลังจากรีเซ็ต
-        }
-
-        // ฟังก์ชันสำหรับแปลงไฟล์เป็น Base64
+        // ฟังก์ชันสำหรับแปลงไฟล์เป็น base64
         function getBase64(file) {
             return new Promise((resolve, reject) => {
                 let reader = new FileReader();
@@ -364,6 +281,278 @@
                 reader.onerror = error => reject(error);
                 reader.readAsDataURL(file);
             });
+        }
+
+        // ฟังก์ชันสำหรับตรวจสอบความถูกต้องของฟอร์ม
+        function validateForm() {
+            const userlineId = userlineIdInput.value.trim();
+            const nameId = nameIdInput.value.trim();
+            const roleIdValue = roleId.value.trim();
+            const typeIdValue = typeId.value.trim();
+            const startDateIdValue = startDateId.value.trim();
+            const titleIdValue = titleId.value.trim();
+            const detailIdValue = detailId.value.trim();
+
+            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
+                return false;
+            }
+
+            return true;
+        }
+
+        // ฟังก์ชันสำหรับจัดการคลิกปุ่มส่งข้อมูล
+        submitBtn.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            if (!validateForm()) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Validation Error',
+                    text: 'Please fill in all required fields.',
+                });
+                return;
+            }
+
+            const isConfirmed = await showConfirmationDialog();
+
+            if (isConfirmed) {
+                submitBtn.disabled = true;
+
+                try {
+                    let obj = {
+                        userlineId: userlineIdInput.value,
+                        nameId: nameIdInput.value,
+                        roleId: roleId.value,
+                        numberId: numberIdInput.value,
+                        typeId: typeId.value,
+                        startDateId: startDateId.value,
+                        titleId: titleId.value,
+                        detailId: detailId.value
+                    };
+
+                    if (fileInput.files.length > 0) {
+                        let file = fileInput.files[0];
+                        let base64 = await getBase64(file);
+
+                        obj.base64 = base64;
+                        obj.type = file.type;
+                        obj.name = file.name;
+                    }
+
+                    Swal.fire({
+                        title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        html: '<div class="swal2-loading"></div>',
+                        onBeforeOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    let response = await fetch(url, {
+                        method: "POST",
+                        body: JSON.stringify(obj)
+                    });
+
+                    let data = await response.text();
+
+                    Swal.fire({
+                        title: 'สำเร็จ!',
+                        text: 'บันทึกข้อมูลของคุณเรียบร้อย!',
+                        icon: 'success',
+                        confirmButtonText: 'ปิด',
+                    }).then(async (result) => {
+                        if (result.isConfirmed) {
+                            // Reset form
+                            document.querySelector('form').reset();
+                            await sendFlexMessage(obj); // ส่งข้อความ Flex Message หลังจากการส่งข้อมูล
+                        }
+                    });
+                    console.log(data);
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'An error occurred while submitting data.',
+                    });
+
+                    console.error(error);
+                } finally {
+                    submitBtn.disabled = false;
+                }
+            } else {
+                Swal.fire('Submission Canceled', 'Your data has not been submitted.', 'info');
+            }
+        });
+
+        // ฟังก์ชันสำหรับแสดงกล่องยืนยันการส่งข้อมูล
+        async function showConfirmationDialog() {
+            const confirmation = await Swal.fire({
+                title: 'ยืนยันการส่งข้อมูล',
+                text: 'แน่ใจ ว่าคุณกำลังส่งข้อมูล?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ส่งข้อมูล!',
+                cancelButtonText: 'ไม่, ยกเลิก'
+            });
+
+            return confirmation.isConfirmed;
+        }
+
+        // ฟังก์ชันสำหรับส่ง Flex Message ผ่าน LINE
+        async function sendFlexMessage(data) {
+            const flexMessage = {
+                type: "flex",
+                altText: "รายละเอียดการแจ้งเรื่อง",
+                contents: {
+                    type: "bubble",
+                    body: {
+                        type: "box",
+                        layout: "vertical",
+                        contents: [
+                            {
+                                type: "text",
+                                text: "📌 รายละเอียดการแจ้งเรื่อง",
+                                weight: "bold",
+                                size: "lg",
+                                color: "#1DB446",
+                                wrap: true
+                            },
+                            {
+                                type: "box",
+                                layout: "vertical",
+                                margin: "lg",
+                                spacing: "sm",
+                                contents: [
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "ชื่อ-สกุล",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${data.nameId}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "เรื่องที่แจ้ง",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${data.titleId}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "ประเภท",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${data.typeId}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "box",
+                                        layout: "baseline",
+                                        contents: [
+                                            {
+                                                type: "text",
+                                                text: "วันที่แจ้ง",
+                                                weight: "bold",
+                                                size: "sm",
+                                                color: "#aaaaaa",
+                                                flex: 2
+                                            },
+                                            {
+                                                type: "text",
+                                                text: `${formatDate(data.startDateId)}`,
+                                                size: "sm",
+                                                color: "#333333",
+                                                flex: 5,
+                                                wrap: true
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: "text",
+                                        text: `รายละเอียด: ${data.detailId}`,
+                                        margin: "lg",
+                                        size: "sm",
+                                        color: "#333333",
+                                        wrap: true
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            };
+
+            try {
+                await liff.sendMessages([flexMessage]);
+                liff.closeWindow(); // ปิดหน้าต่าง LIFF
+                console.log("Flex message sent");
+            } catch (error) {
+                console.error("Error sending Flex message:", error);
+            }
+        }
+
+
+        // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
+        function getFormattedDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
+        document.getElementById('startDateId').value = getFormattedDate();
+
+        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
         }
     </script>
 </body>
