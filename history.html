@@ -24,8 +24,8 @@
    
     <div class="container p-4">
            <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
-            <h1 class="text-xl mb-2">บันทึกข้อมูล</h1>
-            <div class="text-sm">⚠️ตรวจสอบสถาน ย้อนหลัง</div>
+            <h1 class="text-xl mb-2">📋 บันทึกย้อนหลัง</h1>
+            <div class="text-sm">🕔กำหนดการทานยา 📆นัดถัดไป</div>
              </div>
         <div class="bg-white rounded-lg shadow-md p-4">
             <input type="hidden" id="userId" name="userId">
@@ -36,11 +36,12 @@
                 <div class="w-1/2">
                     <div class="mb-2"><strong>ชื่อ:</strong> <span id="name-info" class="font-medium text-md"></span></div>
                     <div class="mb-2"><strong>เลขที:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
+                    <div class="mb-2"><strong>กำหนดการทานยา:</strong> <span id="med-time-info" class="font-medium text-md"></span></div> <!-- เพิ่มกำหนดการทานยา -->
+
                 </div>
                 <div class="w-1/2">
                     <div class="mb-2"><strong>เบอร์โทร:</strong> <span id="phone-info" class="font-medium text-md"></span></div>
                     <div class="mb-2"><strong>สิทธิการรักษา:</strong> <span id="medical-rights-info" class="font-medium text-md"></span></div>
-                    <div class="mb-2"><strong>กำหนดการทานยา:</strong> <span id="med-time-info" class="font-medium text-md"></span></div> <!-- เพิ่มกำหนดการทานยา -->
                     <div><strong>นัดถัดไป:</strong> <span id="next-appointment-info" class="font-medium text-md"></span></div> <!-- เพิ่มนัดถัดไป -->
                 </div>
             </div>
@@ -53,7 +54,6 @@
                         <th class="py-2 text-md px-4">เวลา</th>
                         <th class="py-2 text-md px-4">หมายเหตุ</th>
                         <th class="py-2 text-md px-4">สถานะ</th>
-                        <th class="py-2 text-md px-4">นัดถัดไป</th> <!-- เพิ่มคอลัมน์นัดถัดไป -->
                     </tr>
                 </thead>
                 <tbody id="data-table" class="text-sm text-slate-600">
@@ -206,12 +206,6 @@
                 td = document.createElement('td');
                 td.textContent = row['สถานะ'] === 'ตรงเวลา' ? 'ตรงเวลา' : (row['สถานะ'] === 'ไม่ตรงเวลา' ? 'ไม่ตรงเวลา' : 'N/A');
                 td.classList.add('py-2', 'px-4', getStatusClass(row['สถานะ']));
-                tr.appendChild(td);
-
-                // เพิ่มนัดถัดไป
-                td = document.createElement('td');
-                td.textContent = row['นัดถัดไป'] || 'N/A';
-                td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
                 table.appendChild(tr);
