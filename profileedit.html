@@ -108,7 +108,7 @@
                             <input id="columnDData" type="text" name="columnDData" required
                                 class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
-                           <!-- สิทธิการรักษา -->
+                           <!-- กำหนดการทานยา -->
                            <div class="input flex flex-col w-full static mb-2">
                             <label for="columnEData"
                                 class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
@@ -117,7 +117,7 @@
                             <input id="columnEData" type="text" name="columnEData" required
                                 class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
-                           <!-- สิทธิการรักษา -->
+                           <!-- นัดถัดไป -->
                            <div class="input flex flex-col w-full static mb-2">
                             <label for="columnFData"
                                 class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
@@ -234,25 +234,7 @@
             }
         }
 
-        
-
-        // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
-        function getFormattedDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
-        document.getElementById('columnFData').value = getFormattedDate();
-
-        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการ
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-        }
+      
     </script>
 </body>
 
