@@ -54,7 +54,7 @@
     </style>
 </head>
 
-<body class="bg-slate-100 h-screen">
+<body class="bg-indigo-50 ">
     <div class="max-w-md mx-auto p-4 mt-4">
         <input type="hidden" id="displayName" name="displayName" ">
         <div class=" loading-container">
@@ -62,60 +62,60 @@
             <div class="text-center text-white">ค้นหารายชื่อ..</div>
         </div>
         <div class="flex justify-center items-center w-full">
-            <div class=" w-full bg-white rounded-lg shadow-xl">
+            <div class=" w-full bg-white rounded-lg ">
                 <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
-                <div class="loading-container bg-slate-100 p-4 rounded-lg">
+                <div class="loading-container bg-white p-4 rounded-lg">
                     <div id="loadingOverlay">
                         <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                     </div>
 
-              <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
-                        <h1 class="text-xl mb-2">แจ้งเรื่อง/สอบถาม</h1>
-                        <div class="text-sm">⚠️ แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</div>
+                    <div class="bg-indigo-100 text-black p-8 mb-2 rounded-lg w-full">
+                        <h1 class="text-xl mb-2">กำหนดการทานยา</h1>
+                        <div class="text-sm">⚠️ บันทึกข้อมูล การทานยา และ นัดหมายล่วงหน้า</div>
                     </div>
                     <div class="flex justify-between space-x-4">
                         <!-- เลขประจำตัวผู้ป่วย -->
                         <div class="input flex flex-col w-full static mb-2">
                             <label for="columnAData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white  w-fit">
                                 เลขประจำตัวผู้ป่วย:
                             </label>
                             <input id="columnAData" type="text" name="columnAData" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
 
                         <!-- ชื่อ-สกุล -->
                         <div class="input flex flex-col w-full static mb-2">
                             <label for="columnBData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white  w-fit">
                                 ชื่อ-สกุล:
                             </label>
                             <input id="columnBData" type="text" name="columnBData" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
                     </div>
                     <div class="flex justify-between space-x-4">
                         <!-- เบอร์ติดต่อ -->
                         <div class="input flex flex-col w-full static mb-2">
                             <label for="columnCData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white  w-fit">
                                 เบอร์ติดต่อ:
                             </label>
                             <input id="columnCData" type="text" name="columnCData" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
 
                         <!-- สิทธิการรักษา -->
                         <div class="input flex flex-col w-full static mb-2">
                             <label for="columnDData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white  w-fit">
                                 สิทธิการรักษา:
                             </label>
                             <input id="columnDData" type="text" name="columnDData" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
                     </div>
-                           
+
                     <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                     <input type="hidden" id="userId" name="userId" />
                 </div>
@@ -123,33 +123,34 @@
             </div>
         </div>
     </div>
-    <div class="max-w-md mx-auto py-4">
+    <div class="max-w-md mx-auto py-8">
         <form>
             <div class="bg-indigo-100 p-2 rounded-lg">
                 <!-- กำหนดการทานยา -->
                 <div class="input flex flex-col w-full static mb-2">
-                 <label for="typeId"
-                     class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
-                     กำหนดการทานยา:
-                 </label>
+                    <label for="typeId"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
+                        กำหนดการทานยา:
+                    </label>
                     <input type="time" id="typeId" name="typeId" required class="mt-1 p-2 w-full border rounded mb-2">
-                  </div>
+                </div>
 
-             </div>
-                <!-- นัดถัดไป -->
-                <div class="input flex flex-col w-full static mb-2">
-                 <label for="startDateId" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
-                     นัดถัดไป:
-                 </label>
-                 <input id="startDateId" type="date" name="startDateId" required
-                     class="border-indigo-500 input px-[10px] py-[11px] text-sm  bg-indigo-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-             </div>
-         </div>
-
-                <button type="button" id="submitBtn"
-                    class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
             </div>
-        </form>
+            <!-- นัดถัดไป -->
+            <div class="input flex flex-col w-full static mb-2">
+                <label for="startDateId"
+                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
+                    นัดถัดไป:
+                </label>
+                <input id="startDateId" type="date" name="startDateId" required
+                    class="border-indigo-500 input px-[10px] py-[11px] text-sm  bg-indigo-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+            </div>
+    </div>
+
+    <button type="button" id="submitBtn"
+        class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
+    </div>
+    </form>
     </div>
     </div>
     <script>
@@ -160,7 +161,7 @@
 
         // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
         window.onload = async function () {
-             await initializeLiff();
+          await initializeLiff();
         };
 
         // ฟังก์ชันนี้ใช้ในการเริ่มต้น LIFF (LINE Front-end Framework)
@@ -365,7 +366,7 @@
             return confirmation.isConfirmed;
         }
 
-    
+
 
         // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
         function getFormattedDate() {
