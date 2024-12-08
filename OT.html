@@ -149,20 +149,8 @@
                     <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
                         class="w-full p-2 border rounded-lg">
                 </div>
-                <div class="mt-4 mb-5">
-                    <textarea id="detailId" name="detailId" placeholder="รายละเอียด"
-                        class="w-full p-2 border rounded-lg"></textarea>
-                </div>
-                <div class="text-center bg-slate-100 rounded-lg my-5 p-4">
-                    <label for="file" class="cursor-pointer justify-between items-center"> อัพโหลดเอกสาร
-                        <input type="file" id="file" name="file" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx"
-                            class="hidden">
-                        <div id="fileNameDisplay" class="text-slate-800 text-xs text-center mt-1">ยังไม่ได้เลือกไฟล์
-                        </div>
-                    </label>
-                    <div class="mx-auto text-slate-800 text-xs text-center mt-1">รูปแบบที่รองรับ jpg jpeg png pdf doc
-                        docx</div>
-                </div>
+              
+               
                 <button type="button" id="submitBtn"
                     class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
             </div>
@@ -267,7 +255,6 @@
 
         // การตั้งค่าตัวแปรสำหรับการส่งข้อมูล
         let url = `${WEB_APP_URL}`;
-        let fileInput = document.getElementById("file");
         let userlineIdInput = document.getElementById("userId");
         let nameIdInput = document.getElementById("columnBData");
         let numberIdInput = document.getElementById("columnCData");
@@ -275,28 +262,8 @@
         let typeId = document.getElementById("typeId");
         let startDateId = document.getElementById("startDateId");
         let titleId = document.getElementById("columnAData");
-        let detailId = document.getElementById("detailId");
         let submitBtn = document.getElementById("submitBtn");
-        let fileNameDisplay = document.getElementById("fileNameDisplay");
 
-        // แสดงชื่อไฟล์ที่เลือก
-        fileInput.addEventListener('change', function () {
-            if (fileInput.files.length > 0) {
-                fileNameDisplay.textContent = fileInput.files[0].name;
-            } else {
-                fileNameDisplay.textContent = 'ยังไม่ได้เลือกไฟล์';
-            }
-        });
-
-        // ฟังก์ชันสำหรับแปลงไฟล์เป็น base64
-        function getBase64(file) {
-            return new Promise((resolve, reject) => {
-                let reader = new FileReader();
-                reader.onload = () => resolve(reader.result.split(',')[1]);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        }
 
         // ฟังก์ชันสำหรับตรวจสอบความถูกต้องของฟอร์ม
         function validateForm() {
@@ -306,9 +273,8 @@
             const typeIdValue = typeId.value.trim();
             const startDateIdValue = startDateId.value.trim();
             const titleIdValue = titleId.value.trim();
-            const detailIdValue = detailId.value.trim();
 
-            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || titleIdValue === '' || detailIdValue === '') {
+            if (userlineId === '' || nameId === '' || roleIdValue === '' || typeIdValue === '' || startDateIdValue === '' || titleIdValue === '') {
                 return false;
             }
 
@@ -341,18 +307,8 @@
                         numberId: numberIdInput.value,
                         typeId: typeId.value,
                         startDateId: startDateId.value,
-                        titleId: titleId.value,
-                        detailId: detailId.value
+                        titleId: titleId.value
                     };
-
-                    if (fileInput.files.length > 0) {
-                        let file = fileInput.files[0];
-                        let base64 = await getBase64(file);
-
-                        obj.base64 = base64;
-                        obj.type = file.type;
-                        obj.name = file.name;
-                    }
 
                     Swal.fire({
                         title: '<div class="text-md">กำลังบันทึก, รอสักครู่...</div>',
@@ -414,143 +370,7 @@
             return confirmation.isConfirmed;
         }
 
-        // ฟังก์ชันสำหรับส่ง Flex Message ผ่าน LINE
-        async function sendFlexMessage(data) {
-            const flexMessage = {
-                type: "flex",
-                altText: "รายละเอียดการแจ้งเรื่อง",
-                contents: {
-                    type: "bubble",
-                    body: {
-                        type: "box",
-                        layout: "vertical",
-                        contents: [
-                            {
-                                type: "text",
-                                text: "📌 รายละเอียดการแจ้งเรื่อง",
-                                weight: "bold",
-                                size: "lg",
-                                color: "#1DB446",
-                                wrap: true
-                            },
-                            {
-                                type: "box",
-                                layout: "vertical",
-                                margin: "lg",
-                                spacing: "sm",
-                                contents: [
-                                    {
-                                        type: "box",
-                                        layout: "baseline",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: "ชื่อ-สกุล",
-                                                weight: "bold",
-                                                size: "sm",
-                                                color: "#aaaaaa",
-                                                flex: 2
-                                            },
-                                            {
-                                                type: "text",
-                                                text: `${data.nameId}`,
-                                                size: "sm",
-                                                color: "#333333",
-                                                flex: 5,
-                                                wrap: true
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "baseline",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: "เรื่องที่แจ้ง",
-                                                weight: "bold",
-                                                size: "sm",
-                                                color: "#aaaaaa",
-                                                flex: 2
-                                            },
-                                            {
-                                                type: "text",
-                                                text: `${data.titleId}`,
-                                                size: "sm",
-                                                color: "#333333",
-                                                flex: 5,
-                                                wrap: true
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "baseline",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: "ประเภท",
-                                                weight: "bold",
-                                                size: "sm",
-                                                color: "#aaaaaa",
-                                                flex: 2
-                                            },
-                                            {
-                                                type: "text",
-                                                text: `${data.typeId}`,
-                                                size: "sm",
-                                                color: "#333333",
-                                                flex: 5,
-                                                wrap: true
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "baseline",
-                                        contents: [
-                                            {
-                                                type: "text",
-                                                text: "วันที่แจ้ง",
-                                                weight: "bold",
-                                                size: "sm",
-                                                color: "#aaaaaa",
-                                                flex: 2
-                                            },
-                                            {
-                                                type: "text",
-                                                text: `${formatDate(data.startDateId)}`,
-                                                size: "sm",
-                                                color: "#333333",
-                                                flex: 5,
-                                                wrap: true
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        type: "text",
-                                        text: `รายละเอียด: ${data.detailId}`,
-                                        margin: "lg",
-                                        size: "sm",
-                                        color: "#333333",
-                                        wrap: true
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            };
-
-            try {
-                await liff.sendMessages([flexMessage]);
-                liff.closeWindow(); // ปิดหน้าต่าง LIFF
-                console.log("Flex message sent");
-            } catch (error) {
-                console.error("Error sending Flex message:", error);
-            }
-        }
-
+    
 
         // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
         function getFormattedDate() {
