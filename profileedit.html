@@ -209,16 +209,30 @@
             }
         }
 
-        // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
-        function displayData(row) {
-            document.getElementById('columnAData').value = row.patientId || '';
-            document.getElementById('columnBData').value = row.name || '';
-            document.getElementById('columnCData').value = row.phone || '';
-            document.getElementById('columnDData').value = row.medicalRights || '';
-            document.getElementById('columnEData').value = row.medicineSchedule || '';
-            document.getElementById('columnFData').value = row.nextAppointment || '';
+       function displayData(row) {
+    document.getElementById('columnAData').value = row.patientId || '';
+    document.getElementById('columnBData').value = row.name || '';
+    document.getElementById('columnCData').value = row.phone || '';
+    document.getElementById('columnDData').value = row.medicalRights || '';
+    document.getElementById('columnEData').value = row.medicineSchedule ? formatTime(row.medicineSchedule) : '';
+    document.getElementById('columnFData').value = row.nextAppointment ? formatDate(row.nextAppointment) : '';
+}
 
-        }
+// ฟังก์ชันสำหรับแปลงเวลาเป็นรูปแบบ HH:mm
+function formatTime(timeString) {
+    const time = new Date(`1970-01-01T${timeString}Z`); // สร้างเวลาในโซน UTC
+    return time.toISOString().substring(11, 16); // คืนค่า HH:mm
+}
+
+// ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบ DD-MM-YYYY
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+}
+
 
 
         // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
@@ -236,23 +250,6 @@
 
         
 
-        // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
-        function getFormattedDate() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-
-        // กำหนดค่าของ input เป็นวันที่ปัจจุบัน
-        document.getElementById('startDateId').value = getFormattedDate();
-
-        // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการ
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-        }
     </script>
 </body>
 
