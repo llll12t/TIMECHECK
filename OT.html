@@ -55,95 +55,72 @@
 
 <body class="bg-slate-100 h-screen">
     <div class="max-w-md mx-auto p-4 mt-4">
-        <input type="hidden" id="displayName" name="displayName">
-        <div class="loading-container">
-            <div id="loadingOverlay">
-                <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
-            </div>
-
-            <div class="flex justify-center items-center w-full">
-                <div class="w-full bg-white rounded-lg shadow-xl">
-                    <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
-                    <div class="loading-container bg-slate-100 p-4 rounded-lg">
-                        <div id="loadingOverlay">
-                            <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
-                        </div>
-
-                        <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
-                            <h1 class="text-xl mb-2">แจ้งเรื่อง/สอบถาม</h1>
-                            <div class="text-sm">⚠️ แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</div>
-                        </div>
-                        <div class="flex justify-between space-x-4">
-                            <!-- เลขประจำตัวผู้ป่วย -->
-                            <div class="input flex flex-col w-full static mb-2">
-                                <label for="patientId"
-                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                    เลขประจำตัวผู้ป่วย:
-                                </label>
-                                <input id="patientId" type="text" name="patientId" required
-                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                            </div>
-
-                            <!-- ชื่อ-สกุล -->
-                            <div class="input flex flex-col w-full static mb-2">
-                                <label for="fullName"
-                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                    ชื่อ-สกุล:
-                                </label>
-                                <input id="fullName" type="text" name="fullName" required
-                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                            </div>
-                        </div>
-                        <div class="flex justify-between space-x-4">
-                            <!-- เบอร์ติดต่อ -->
-                            <div class="input flex flex-col w-full static mb-2">
-                                <label for="phoneNumber"
-                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                    เบอร์ติดต่อ:
-                                </label>
-                                <input id="phoneNumber" type="text" name="phoneNumber" required
-                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                            </div>
-
-                            <!-- สิทธิการรักษา -->
-                            <div class="input flex flex-col w-full static mb-2">
-                                <label for="treatmentRights"
-                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                    สิทธิการรักษา:
-                                </label>
-                                <input id="treatmentRights" type="text" name="treatmentRights" required
-                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                            </div>
-                        </div>
-                        <div class="flex justify-between space-x-4">
-                            <!-- กำหนดการทานยา -->
-                            <div class="input flex flex-col w-full static mb-2">
-                                <label for="medicationSchedule"
-                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                    กำหนดการทานยา:
-                                </label>
-                                <input id="medicationSchedule" type="date" name="medicationSchedule" required
-                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none" />
-                            </div>
-
-                            <!-- นัดถัดไป -->
-                            <div class="input flex flex-col w-full static mb-2">
-                                <label for="nextAppointment"
-                                    class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                    นัดถัดไป:
-                                </label>
-                                <input id="nextAppointment" type="date" name="nextAppointment" required
-                                    class="border-slate-500 input px-[10px] py-[11px] text-sm bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none" />
-                            </div>
-                        </div>
-
-                        <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
-                        <input type="hidden" id="userId" name="userId" />
+        <input type="hidden" id="displayName" name="displayName" ">
+        <div class=" loading-container">
+        <div id="loadingOverlay">
+            <div class="text-center text-white">ค้นหารายชื่อ..</div>
+        </div>
+        <div class="flex justify-center items-center w-full">
+            <div class=" w-full bg-white rounded-lg shadow-xl">
+                <!-- หน้าต่างโหลดที่แสดงในขณะดึงข้อมูล -->
+                <div class="loading-container bg-slate-100 p-4 rounded-lg">
+                    <div id="loadingOverlay">
+                        <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                     </div>
-                    <input type="hidden" id="userId" name="userId">
+
+              <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
+                        <h1 class="text-xl mb-2">แจ้งเรื่อง/สอบถาม</h1>
+                        <div class="text-sm">⚠️ แจ้งปัญหาหรือสอบถามข้อมูลเพิ่มเติม</div>
+                    </div>
+                    <div class="flex justify-between space-x-4">
+                        <!-- เลขประจำตัวผู้ป่วย -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnAData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                เลขประจำตัวผู้ป่วย:
+                            </label>
+                            <input id="columnAData" type="text" name="columnAData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+
+                        <!-- ชื่อ-สกุล -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnBData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                ชื่อ-สกุล:
+                            </label>
+                            <input id="columnBData" type="text" name="columnBData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+                    </div>
+                    <div class="flex justify-between space-x-4">
+                        <!-- เบอร์ติดต่อ -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnCData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                เบอร์ติดต่อ:
+                            </label>
+                            <input id="columnCData" type="text" name="columnCData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+
+                        <!-- สิทธิการรักษา -->
+                        <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnDData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                สิทธิการรักษา:
+                            </label>
+                            <input id="columnDData" type="text" name="columnDData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+                    </div>
+                    <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
+                    <input type="hidden" id="userId" name="userId" />
                 </div>
+                <input type="hidden" id="userId" name="userId">
             </div>
         </div>
+    </div>
         <div class="max-w-md mx-auto py-4">
             <form>
                 <div class="bg-white relative p-10 shadow-xl rounded-lg w-full mx-auto">
@@ -189,8 +166,8 @@
         const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycby7m_rrEGipkZpEJibxJLDkpTakwLMF3uDIEsDs2xD76zXcfx_h-HccCeCRaA__FG8r/exec';
         const LIFF_ID = '2005732932-O4PN1ezo'; // Liff ID
 
-        // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
-        window.onload = async function () {
+         // ฟังก์ชันนี้จะถูกเรียกใช้เมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+         window.onload = async function () {
             await initializeLiff();
         };
 
@@ -236,16 +213,13 @@
                 // ส่งคำขอไปยัง Google Apps Script เพื่อดึงข้อมูล
                 const response = await fetch(`${WEB_APP_MEMBER_URL}`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify({ action: 'fetchData', userId: userId })
                 });
                 const data = await response.json();
                 // กรองแถวที่มี userId ตรงกับที่ต้องการ
-                const userRows = data.filter(row => row.lineId === userId);
+                const userRows = data.filter(row => row.userlineId === userId);
                 if (userRows.length > 0) {
-                    // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 10) จากล่าสุดไปเก่าสุด
+                    // เรียงลำดับข้อมูลตามวันที่ (สมมติว่าอยู่ในคอลัมน์ที่ 13) จากล่าสุดไปเก่าสุด
                     userRows.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
                     displayData(userRows[0]);  // แสดงข้อมูลล่าสุด
                 } else {
@@ -262,20 +236,17 @@
 
         // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
         function displayData(row) {
-            document.getElementById('patientId').value = row.patientId || '';
-            document.getElementById('fullName').value = row.fullName || '';
-            document.getElementById('phoneNumber').value = row.phoneNumber || '';
-            document.getElementById('treatmentRights').value = row.treatmentRights || '';
-            document.getElementById('medicationSchedule').value = formatDate(row.medicationSchedule) || '';
-            document.getElementById('nextAppointment').value = formatDate(row.nextAppointment) || '';
-            // หากต้องการแสดงข้อมูลอื่นๆ สามารถเพิ่มได้ที่นี่
+            document.getElementById('columnAData').value = row.patientId || '';
+            document.getElementById('columnBData').value = row.name || '';
+            document.getElementById('columnCData').value = row.phone || '';
+            document.getElementById('columnDData').value = row.medicalRights || '';
         }
 
 
         // ฟังก์ชันสำหรับแสดง/ซ่อนการโหลดข้อมูล
         function showLoading(isLoading) {
             const overlay = document.getElementById('loadingOverlay');
-            const inputs = document.querySelectorAll('input, select, textarea');
+            const inputs = document.querySelectorAll('.input-field');
             if (isLoading) {
                 overlay.style.display = 'flex';
                 inputs.forEach(input => input.disabled = true);
