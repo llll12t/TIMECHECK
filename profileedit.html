@@ -108,6 +108,24 @@
                             <input id="columnDData" type="text" name="columnDData" required
                                 class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
+                           <!-- สิทธิการรักษา -->
+                           <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnEData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                กำหนดการทานยา:
+                            </label>
+                            <input id="columnEData" type="text" name="columnEData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
+                           <!-- สิทธิการรักษา -->
+                           <div class="input flex flex-col w-full static mb-2">
+                            <label for="columnFData"
+                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+                                นัดถัดไป:
+                            </label>
+                            <input id="columnFData" type="text" name="columnFData" required
+                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+                        </div>
                     </div>
                     <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                     <input type="hidden" id="userId" name="userId" />
@@ -197,6 +215,9 @@
             document.getElementById('columnBData').value = row.name || '';
             document.getElementById('columnCData').value = row.phone || '';
             document.getElementById('columnDData').value = row.medicalRights || '';
+            document.getElementById('columnEData').value = row.medicineSchedule || '';
+            document.getElementById('columnFData').value = row.nextAppointment || '';
+
         }
 
 
