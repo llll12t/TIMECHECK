@@ -14,29 +14,39 @@
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
         /* การตั้งค่าสำหรับ overlay ที่ใช้แสดงสถานะการโหลด */
-        #loadingOverlay { 
-            display: none; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background-color: rgb(255 255 255 / 80%); 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 1000; 
+        #loadingOverlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(255 255 255 / 80%);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
         }
+
         /* การตั้งค่าสำหรับ container ของการโหลด */
-        .loading-container { 
-            position: relative; 
+        .loading-container {
+            position: relative;
         }
+
         /* การตั้งค่าการกระพริบของข้อความ */
-        @keyframes blink { 
-            0%, 100% { opacity: 1; } 
-            50% { opacity: 0.5; } 
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
         }
-        .blink { 
-            animation: blink 1s infinite; 
+
+        .blink {
+            animation: blink 1s infinite;
         }
     </style>
 </head>
@@ -66,7 +76,7 @@
                 <div id="loadingOverlay">
                     <div class="text-center text-gray-800">ค้นหารายชื่อ..</div>
                 </div>
-               <!-- เลขประจำตัวผู้ป่วย -->
+                <!-- เลขประจำตัวผู้ป่วย -->
                 <div class="input flex flex-col w-full static mb-2">
                     <label for="columnAData"
                         class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
@@ -105,25 +115,21 @@
                     <input id="columnDData" type="text" placeholder="กรอกสิทธิการรักษา" name="columnDData" required
                         class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                 </div>
-  
+
                 <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                 <input type="hidden" id="userId" name="userId" />
             </div>
             <!-- กลุ่มปุ่มเลือกประเภทของงาน (เช่น เข้างาน, ระหว่างวัน, ออกงาน) -->
             <div class="switch-field mt-4 mb-4 space-y-2">
                 <div class="flex items-center space-x-2 w-full">
-                    <input type="radio" id="radio-three" name="switch-job" value="ทานยา(ปกติ)" class="hidden " />
+                    <input type="radio" id="radio-three" name="switch-job" value="ทานยา" class="hidden" checked />
                     <label for="radio-three"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
-                        ทานยา(ปกติ)
-                    </label>
+                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">ทานยา</label>
                 </div>
                 <div class="flex items-center space-x-2 w-full">
                     <input type="radio" id="radio-four" name="switch-job" value="ทานยา(นอกเวลา)" class="hidden " />
                     <label for="radio-four"
-                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">
-                        ทานยา(นอกเวลา)
-                    </label>
+                        class="cursor-pointer border border-gray-300 px-4 py-3 rounded-lg w-full text-center">ทานยา(นอกเวลา)</label>
                 </div>
             </div>
             <input type="hidden" id="jobInput" name="jobInput" required>
@@ -149,6 +155,9 @@
                         id="start-camera-btn">เริ่มเปิดกล้อง</button>
                     <button class="w-full text-center py-4 px-4 rounded-lg bg-green-500 text-white" id="capture-btn"
                         disabled="">ถ่ายรูป</button>
+                    <button id="switch-camera-btn" class="py-2 px-4 rounded-lg bg-yellow-500 text-white" disabled>
+                        สลับกล้อง
+                    </button>
                 </div>
             </div>
             <div class="input-group my-4 py-4 flex justify-between">
@@ -193,7 +202,7 @@
 </body>
 <script>
 
-     // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
+    // ประกาศค่า URL ที่ใช้เชื่อมต่อกับ Web App
     const WEB_APP_MEMBER_URL = 'https://script.google.com/macros/s/AKfycbzqRpgHfR6FhsAPSylanLgCdvv18vXcxTv--6X-52imoyEo3RIyfkqy1ggRz-IVKZORkg/exec';
     const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec';
     const LIFF_ID = '2005732932-l3BJMr8k'; // Liff ID
@@ -311,9 +320,59 @@
         const video = document.getElementById("camera-preview");
         const startCameraBtn = document.getElementById("start-camera-btn");
         const captureBtn = document.getElementById("capture-btn");
+        const switchCameraBtn = document.getElementById("switch-camera-btn");
         const previewImage = document.getElementById("preview");
-        const dataForm = document.getElementById("data-form");
         let stream;
+        let currentFacingMode = "environment"; // เริ่มต้นที่กล้องหลัง
+
+        // ฟังก์ชันเปิดกล้อง
+        function startCamera() {
+            navigator.mediaDevices.getUserMedia({
+                video: { facingMode: currentFacingMode } // ใช้ค่าที่ตั้งใน currentFacingMode
+            })
+                .then(function (videoStream) {
+                    stream = videoStream;
+                    video.srcObject = videoStream; // ตั้งค่ากล้องให้ video element
+                    captureBtn.disabled = false; // ปลดล็อกปุ่มถ่ายรูป
+                    switchCameraBtn.disabled = false; // ปลดล็อกปุ่มสลับกล้อง
+                    video.style.display = "block"; // แสดงกล้อง
+                    previewImage.style.display = "none"; // ซ่อนภาพถ่ายก่อนหน้า
+                })
+                .catch(function (error) {
+                    console.error("Error accessing the camera: ", error);
+                    alert("ไม่สามารถเข้าถึงกล้องได้ กรุณาตรวจสอบการอนุญาต.");
+                });
+        }
+
+        // ฟังก์ชันถ่ายรูป
+        function capturePhoto() {
+            const canvas = document.createElement("canvas");
+            const context = canvas.getContext("2d");
+
+            // กำหนดขนาดของ canvas เท่ากับ video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // ถ่ายภาพจาก video และนำมาแสดงใน preview
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            previewImage.src = canvas.toDataURL("image/png");
+            previewImage.style.display = "block"; // แสดงภาพที่ถ่าย
+            video.style.display = "none"; // ซ่อนกล้อง
+        }
+
+        // ฟังก์ชันสลับกล้อง
+        function switchCamera() {
+            // หยุดสตรีมปัจจุบัน
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+
+            // สลับค่าของ currentFacingMode
+            currentFacingMode = currentFacingMode === "environment" ? "user" : "environment";
+
+            // เรียก startCamera อีกครั้งด้วยค่าใหม่
+            startCamera();
+        }
 
         // เริ่มเปิดกล้องเมื่อคลิกปุ่ม
         startCameraBtn.addEventListener("click", function () {
@@ -322,47 +381,13 @@
 
         // ถ่ายรูปเมื่อคลิกปุ่ม
         captureBtn.addEventListener("click", function () {
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            // กำหนดขนาดของ canvas เท่ากับ video
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            // ถ่ายภาพจาก video และนำมาแสดงใน preview
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            previewImage.src = canvas.toDataURL("image/png");
-            // ซ่อนกล้อง
-            video.style.display = "none";
+            capturePhoto();
         });
 
-        // บันทึกข้อมูลเมื่อ submit form
-        dataForm.addEventListener("submit", function (event) {
-            event.preventDefault();
-            const formData = new FormData(dataForm);
-            const capturedImage = previewImage.src;
-            // เพิ่มข้อมูลรูปถ่ายลงใน FormData
-            formData.append("capturedImage", capturedImage);
-            // สามารถทำการส่งข้อมูลไปที่เซิร์ฟเวอร์หรือประมวลผลต่อไปได้ที่นี่
-            // ตัวอย่างการแสดงข้อมูลที่ console
-            for (const [key, value] of formData.entries()) {
-                console.log(key, value);
-            }
-            // ซ่อนกล้องหลังจากที่ถ่ายรูป
-            video.style.display = "none";
+        // สลับกล้องเมื่อคลิกปุ่ม
+        switchCameraBtn.addEventListener("click", function () {
+            switchCamera();
         });
-
-        // ฟังก์ชันเปิดกล้อง
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (videoStream) {
-                    stream = videoStream;
-                    video.srcObject = videoStream;
-                    captureBtn.disabled = false; // ปลดล็อกปุ่มถ่ายรูป
-                    video.style.display = "block"; // แสดงกล้อง
-                })
-                .catch(function (error) {
-                    console.error("Error accessing the camera: ", error);
-                });
-        }
     });
 
     // ตรวจสอบว่าถ่ายรูปแล้วหรือยัง ก่อนที่จะไปยังขั้นตอนถัดไป
@@ -482,9 +507,9 @@
         }
     }
 
-    
 
-    
+
+
     // ฟังก์ชันสำหรับอัปเดตวันที่และเวลาในหน้าเว็บ
     function updateDateTime() {
         // ดึงอีลิเมนต์ HTML สำหรับแสดงวันที่และเวลา
@@ -597,25 +622,25 @@
     // ตั้งค่าเวลาปัจจุบันของกรุงเทพใน input ที่ชื่อว่า currentTime
     document.getElementById('currentTime').value = getCurrentTimeInBangkok();
 
-  // ฟังก์ชันสำหรับดึงวันที่ในรูปแบบที่กำหนด
-function getFormattedDate() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    // ฟังก์ชันสำหรับดึงวันที่ในรูปแบบที่กำหนด
+    function getFormattedDate() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
 
-    return `${year}-${month}-${day}`; // เปลี่ยนเป็น yyyy-mm-dd
-}
+        return `${year}-${month}-${day}`; // เปลี่ยนเป็น yyyy-mm-dd
+    }
 
-  // ฟังก์ชันสำหรับดึงวันที่ในรูปแบบที่กำหนด
-  function getFormattedDate2() {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    // ฟังก์ชันสำหรับดึงวันที่ในรูปแบบที่กำหนด
+    function getFormattedDate2() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
 
-    return `${day}-${month}-${year}`; // เปลี่ยนเป็น yyyy-mm-dd
-}
+        return `${day}-${month}-${year}`; // เปลี่ยนเป็น yyyy-mm-dd
+    }
 
     // ตั้งค่าวันที่ปัจจุบันใน input ที่ชื่อว่า todayInput
     document.getElementById('todayInput').value = getFormattedDate();
@@ -639,7 +664,7 @@ function getFormattedDate() {
             document.getElementById(`step${currentStep}`).style.display = 'block';
         }
     }
- // ฟังก์ชันสำหรับส่งข้อความ Flex Message ผ่าน LIFF
+    // ฟังก์ชันสำหรับส่งข้อความ Flex Message ผ่าน LIFF
     async function sendFlexMessage() {
         let jobColor = '';
         if (jobInput.value === 'ลงเวลาทานยา(ปกติ)') {
@@ -737,7 +762,7 @@ function getFormattedDate() {
                                             contents: [],
                                         },
                                     ],
-                                },{
+                                }, {
                                     type: 'box',
                                     layout: 'baseline',
                                     contents: [
