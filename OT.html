@@ -115,26 +115,7 @@
                                 class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
                     </div>
-                            <div class="bg-indigo-100 p-2 rounded-lg">
-                           <!-- กำหนดการทานยา -->
-                           <div class="input flex flex-col w-full static mb-2">
-                            <label for="columnEData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
-                                กำหนดการทานยา:
-                            </label>
-                            <input id="columnEData" type="text" name="columnEData" required
-                                class="border-indigo-500 input px-[10px] py-[11px] text-sm  bg-indigo-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                        </div>
-                           <!-- นัดถัดไป -->
-                           <div class="input flex flex-col w-full static mb-2">
-                            <label for="columnFData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
-                                นัดถัดไป:
-                            </label>
-                            <input id="columnFData" type="text" name="columnFData" required
-                                class="border-indigo-500 input px-[10px] py-[11px] text-sm  bg-indigo-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                        </div>
-                    </div>
+                           
                     <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                     <input type="hidden" id="userId" name="userId" />
                 </div>
@@ -144,17 +125,25 @@
     </div>
     <div class="max-w-md mx-auto py-4">
         <form>
-            <div class="bg-white relative p-10 shadow-xl rounded-lg w-6/6 mx-auto">
-                <div class="w-32 mb-5">
-                    <select type="text" id="typeId" name="typeId" class="w-full p-2 rounded-lg">
-                        <option value="แจ้งเรื่อง">แจ้งเรื่อง</option>
-                        <option value="แจ้งปัญหา">แจ้งปัญหา</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
-                    </select>
-                </div>
-                <div class="mt-4 flex justify-between mb-5">
-                    <input type="date" id="startDateId" name="startDateId" class="w-1/2 mr-2 p-2 rounded-lg">
-                </div>
+            <div class="bg-indigo-100 p-2 rounded-lg">
+                <!-- กำหนดการทานยา -->
+                <div class="input flex flex-col w-full static mb-2">
+                 <label for="typeId"
+                     class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
+                     กำหนดการทานยา:
+                 </label>
+                 <input id="typeId" type="text" name="typeId" required
+                     class="border-indigo-500 input px-[10px] py-[11px] text-sm  bg-indigo-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+             </div>
+                <!-- นัดถัดไป -->
+                <div class="input flex flex-col w-full static mb-2">
+                 <label for="startDateId" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
+                     นัดถัดไป:
+                 </label>
+                 <input id="startDateId" type="date" name="startDateId" required
+                     class="border-indigo-500 input px-[10px] py-[11px] text-sm  bg-indigo-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+             </div>
+         </div>
                 <div class="mt-6 mb-5">
                     <input type="text" id="titleId" name="titleId" placeholder="หัวข้อเรื่อง"
                         class="w-full p-2 border rounded-lg">
@@ -259,8 +248,6 @@
             document.getElementById('columnBData').value = row.name || '';
             document.getElementById('columnCData').value = row.phone || '';
             document.getElementById('columnDData').value = row.medicalRights || '';
-            document.getElementById('columnEData').value = row.medicineSchedule || '';
-            document.getElementById('columnFData').value = row.nextAppointment || '';
         }
 
 
