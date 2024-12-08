@@ -664,6 +664,29 @@
             document.getElementById(`step${currentStep}`).style.display = 'block';
         }
     }
+
+    const radioThree = document.getElementById("radio-three");
+
+    // ตั้งค่าเริ่มต้นให้ input ที่เกี่ยวข้อง
+    if (radioThree.checked) {
+        jobInput.value = radioThree.value;
+        // อัปเดตสไตล์สำหรับปุ่มที่ถูกเลือก
+        document.querySelector('label[for="radio-three"]').classList.add('bg-slate-800', 'text-white');
+    }
+
+    // เพิ่มการเปลี่ยนสถานะเมื่อเลือกตัวเลือกอื่น
+    document.querySelectorAll('input[name="switch-job"]').forEach(function (radio) {
+        radio.addEventListener('change', function () {
+            jobInput.value = this.value;
+
+            // อัปเดตสไตล์ของปุ่มที่ถูกเลือก
+            document.querySelectorAll('.switch-field label').forEach(function (label) {
+                label.classList.remove('bg-slate-800', 'text-white');
+            });
+            document.querySelector(`label[for="${this.id}"]`).classList.add('bg-slate-800', 'text-white');
+        });
+    });
+
     // ฟังก์ชันสำหรับส่งข้อความ Flex Message ผ่าน LIFF
     async function sendFlexMessage() {
         let jobColor = '';
