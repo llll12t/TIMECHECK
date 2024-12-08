@@ -390,37 +390,167 @@
         }
 
         // ฟังก์ชันสำหรับส่ง Flex Message ผ่าน LINE
-        async function sendFlexMessage(data) {
-            const flexMessage = {
-                type: "flex",
-                altText: "คำขออนุมัติการลา",
-                contents: {
-                    type: "bubble",
-                    body: {
+       async function sendFlexMessage(data) {
+    const flexMessage = {
+        type: "flex",
+        altText: "รายละเอียดการแจ้งเรื่อง",
+        contents: {
+            type: "bubble",
+            hero: {
+                type: "image",
+                url: "https://via.placeholder.com/1024x512", // ใส่ URL รูปภาพที่เกี่ยวข้อง
+                size: "full",
+                aspectRatio: "20:13",
+                aspectMode: "cover",
+                action: {
+                    type: "uri",
+                    uri: "https://example.com" // ลิงก์ไปยังข้อมูลเพิ่มเติม
+                }
+            },
+            body: {
+                type: "box",
+                layout: "vertical",
+                contents: [
+                    {
+                        type: "text",
+                        text: "📌 รายละเอียดการแจ้งเรื่อง",
+                        weight: "bold",
+                        size: "lg",
+                        color: "#1DB446",
+                        wrap: true
+                    },
+                    {
                         type: "box",
                         layout: "vertical",
+                        margin: "lg",
+                        spacing: "sm",
                         contents: [
-                            { type: "text", text: "🟢 คำขออนุมัติการลา", weight: "bold", size: "md", color: "#1DB446" },
                             {
-                                type: "box", layout: "vertical", margin: "lg", spacing: "sm", contents: [
-                                    { type: "text", text: `ชื่อ: ${data.nameId}` },
-                                    { type: "text", text: `เรื่อง: ${data.typeId}` },
-                                    { type: "text", text: `วันที่: ${formatDate(data.startDateId)}` },
-                                    { type: "text", color: '#2d63c7', text: `📋รอการอนุมัติ` }
+                                type: "box",
+                                layout: "baseline",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "ชื่อ-สกุล",
+                                        weight: "bold",
+                                        size: "sm",
+                                        color: "#aaaaaa",
+                                        flex: 2
+                                    },
+                                    {
+                                        type: "text",
+                                        text: `${data.nameId}`,
+                                        size: "sm",
+                                        color: "#333333",
+                                        flex: 5,
+                                        wrap: true
+                                    }
                                 ]
+                            },
+                            {
+                                type: "box",
+                                layout: "baseline",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "เรื่องที่แจ้ง",
+                                        weight: "bold",
+                                        size: "sm",
+                                        color: "#aaaaaa",
+                                        flex: 2
+                                    },
+                                    {
+                                        type: "text",
+                                        text: `${data.titleId}`,
+                                        size: "sm",
+                                        color: "#333333",
+                                        flex: 5,
+                                        wrap: true
+                                    }
+                                ]
+                            },
+                            {
+                                type: "box",
+                                layout: "baseline",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "ประเภท",
+                                        weight: "bold",
+                                        size: "sm",
+                                        color: "#aaaaaa",
+                                        flex: 2
+                                    },
+                                    {
+                                        type: "text",
+                                        text: `${data.typeId}`,
+                                        size: "sm",
+                                        color: "#333333",
+                                        flex: 5,
+                                        wrap: true
+                                    }
+                                ]
+                            },
+                            {
+                                type: "box",
+                                layout: "baseline",
+                                contents: [
+                                    {
+                                        type: "text",
+                                        text: "วันที่แจ้ง",
+                                        weight: "bold",
+                                        size: "sm",
+                                        color: "#aaaaaa",
+                                        flex: 2
+                                    },
+                                    {
+                                        type: "text",
+                                        text: `${formatDate(data.startDateId)}`,
+                                        size: "sm",
+                                        color: "#333333",
+                                        flex: 5,
+                                        wrap: true
+                                    }
+                                ]
+                            },
+                            {
+                                type: "text",
+                                text: `รายละเอียด: ${data.detailId}`,
+                                margin: "lg",
+                                size: "sm",
+                                color: "#333333",
+                                wrap: true
                             }
                         ]
                     }
-                }
-            };
-            try { 
-                await liff.sendMessages([flexMessage]);
-                liff.closeWindow(); // ปิดหน้าต่าง LIFF
-                console.log("Flex message sent"); 
-            } catch (error) { 
-                console.error("Error sending Flex message:", error); 
+                ]
+            },
+            footer: {
+                type: "box",
+                layout: "horizontal",
+                contents: [
+                    {
+                        type: "button",
+                        style: "primary",
+                        color: "#1DB446",
+                        action: {
+                            type: "uri",
+                            label: "ดูเพิ่มเติม",
+                            uri: "https://example.com" // ลิงก์ไปยังข้อมูลเพิ่มเติม
+                        }
+                    }
+                ]
             }
         }
+    };
+    try {
+        await liff.sendMessages([flexMessage]);
+        liff.closeWindow(); // ปิดหน้าต่าง LIFF
+        console.log("Flex message sent");
+    } catch (error) {
+        console.error("Error sending Flex message:", error);
+    }
+}
 
         // ฟังก์ชันสำหรับรับวันที่ในรูปแบบ "YYYY-MM-DD"
         function getFormattedDate() {
