@@ -45,7 +45,7 @@
                     </div>
                     <!-- ฟิลด์สำหรับใส่วันเกิด -->
                     <div class="mb-4">
-                        <input type="date" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="birthdate" name="birthdate" required>
+                        <input type="date" class="input-field w-full border border-slate-300 p-4 text-md rounded-lg" id="birthdate" name="birthdate" required>
                     </div>
                     <!-- ฟิลด์สำหรับใส่ที่อยู่ -->
                     <div class="mb-4">
@@ -65,7 +65,7 @@
                     </div>
                     <!-- ฟิลด์สำหรับเลือกสถานภาพสมรส -->
                     <div class="mb-4">
-                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="maritalStatus" name="maritalStatus" required>
+                        <select class="input-field w-full border border-slate-300 p-4 text-md rounded-lg" id="maritalStatus" name="maritalStatus" required>
                             <option value="" disabled selected>เลือกสถานภาพสมรส</option>
                             <option value="โสด">โสด</option>
                             <option value="สมรส">สมรส</option>
@@ -135,20 +135,7 @@ async function sendFlexMessage() {
                     backgroundColor: '#ffffff'
                 }
             },
-            header: {
-                type: 'box',
-                layout: 'vertical',
-                contents: [
-                    {
-                        type: 'text',
-                        text: 'ข้อมูลลงทะเบียนสำเร็จ',
-                        weight: 'bold',
-                        size: 'lg',
-                        color: '#000000',
-                        align: 'center'
-                    }
-                ]
-            },
+           
             body: {
                 type: 'box',
                 layout: 'vertical',
