@@ -312,6 +312,8 @@
     document.addEventListener("DOMContentLoaded", function () {
         const video = document.getElementById("camera-preview");
         const startCameraBtn = document.getElementById("start-camera-btn");
+        const switchCameraBtn = document.getElementById("switch-camera-btn");
+
         const captureBtn = document.getElementById("capture-btn");
         const previewImage = document.getElementById("preview");
         const dataForm = document.getElementById("data-form");
@@ -353,19 +355,20 @@
         });
 
         // ฟังก์ชันเปิดกล้อง
-        function startCamera() {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (videoStream) {
-                    stream = videoStream;
-                    video.srcObject = videoStream;
-                    captureBtn.disabled = false; // ปลดล็อกปุ่มถ่ายรูป
-                    video.style.display = "block"; // แสดงกล้อง
-                })
-                .catch(function (error) {
-                    console.error("Error accessing the camera: ", error);
-                });
-        }
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "environment" } // กำหนดให้ใช้กล้องหลัง
+    })
+    .then(function (videoStream) {
+        stream = videoStream;
+        video.srcObject = videoStream; // ตั้งค่ากล้องหลังให้ video element
+        captureBtn.disabled = false; // ปลดล็อกปุ่มถ่ายรูป
+        video.style.display = "block"; // แสดงกล้อง
+    })
+    .catch(function (error) {
+        console.error("Error accessing the camera: ", error);
     });
+}
 
     // ตรวจสอบว่าถ่ายรูปแล้วหรือยัง ก่อนที่จะไปยังขั้นตอนถัดไป
     function checkPictureAndNextStep() {
@@ -642,7 +645,6 @@ function getFormattedDate() {
         }
     }
 
-let currentCamera = "user"; // เริ่มต้นด้วยกล้องหน้า
 const switchCameraBtn = document.getElementById("switch-camera-btn");
 
 switchCameraBtn.addEventListener("click", async () => {
