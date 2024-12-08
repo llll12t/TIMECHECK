@@ -51,6 +51,14 @@
         .blink {
             animation: blink 1s infinite;
         }
+        input[type="time"],
+        input[type="date"] {
+            appearance: none;
+            -webkit-appearance: none; /* Safari */
+            width: 100%;
+            box-sizing: border-box;
+        }
+
     </style>
 </head>
 
@@ -94,7 +102,7 @@
                                 class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
                     </div>
-                    <div class="flex justify-between space-x-4 mb-6">
+                    <div class="flex justify-between space-x-4">
                         <!-- เบอร์ติดต่อ -->
                         <div class="input flex flex-col w-full static mb-2">
                             <label for="columnCData"
@@ -143,30 +151,28 @@
           </div>
         <form>
             <div class="bg-indigo-200 p-2 rounded-lg">
-
-                      <div class="flex justify-between space-x-4">
-                        <!-- เบอร์ติดต่อ -->
-                        <div class="input flex flex-col w-full static mb-2">
-                            <label for="typeId"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white  w-fit">
-                                เตือนการทานยา:
-                            </label>
-                            <input id="typeId" type="time" name="typeId" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                        </div>
-
-                        <!-- สิทธิการรักษา -->
-                        <div class="input flex flex-col w-full static mb-2">
-                            <label for="startDateId"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white  w-fit">
-                                นัดหมายถัดไป:
-                            </label>
-                            <input id="startDateId" type="date" name="startDateId" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-white  border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                        </div>
-                    </div>
-        </div>
-    
+                <!-- กำหนดการทานยา -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="typeId"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-200 w-fit">
+                        กำหนดการทานยา:
+                    </label>
+                    <input type="time" id="typeId" name="typeId" required
+                        class="mt-1 p-4 w-full border bg-white rounded mb-2 appearance-none box-border" />
+                </div>
+            
+                <!-- นัดถัดไป -->
+                <div class="input flex flex-col w-full static mb-2">
+                    <label for="startDateId"
+                        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-indigo-100 w-fit">
+                        นัดถัดไป:
+                    </label>
+                    <input id="startDateId" type="date" name="startDateId" required
+                        class="border-indigo-500 input p-4 text-sm bg-indigo-100 border-2 rounded-lg w-full appearance-none box-border" />
+                </div>
+            </div>
+            
+    </div>
 
     <button type="button" id="submitBtn"
         class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-slate-600">บันทึกข้อมูล</button>
