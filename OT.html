@@ -220,12 +220,12 @@
         // ฟังก์ชันนี้ใช้ในการแสดงข้อมูลที่ได้จาก fetchData ลงในฟอร์ม
         function displayData(row) {
             document.getElementById('patientId').value = row.patientId || '';
-            document.getElementById('fullName').value = row.fullName || '';
-            document.getElementById('phoneNumber').value = row.phoneNumber || '';
-            document.getElementById('treatmentRights').value = row.treatmentRights || '';
-            document.getElementById('medicationSchedule').value = row.medicationSchedule ? formatDateInput(row.medicationSchedule) : '';
-            document.getElementById('nextAppointment').value = row.nextAppointment ? formatDateInput(row.nextAppointment) : '';
-            // หากต้องการแสดงข้อมูลอื่นๆ สามารถเพิ่มได้ที่นี่
+            document.getElementById('name').value = row.name || '';
+            document.getElementById('phone').value = row.phone || '';
+            document.getElementById('medicalRights').value = row.medicalRights || '';
+            document.getElementById('medicineSchedule').value = row.medicineSchedule || '';
+            document.getElementById('nextAppointment').value = row.nextAppointment || '';
+
         }
 
         // ฟังก์ชันสำหรับแปลงวันที่เป็นรูปแบบที่ต้องการสำหรับ input type="date"
