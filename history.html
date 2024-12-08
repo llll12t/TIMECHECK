@@ -35,7 +35,7 @@
             <div id="main-info" class="flex flex-col p-2 mb-4">
                 <div class="w-full mb-2">
                     <div class="mb-2"><strong>ชื่อ:</strong> <span id="name-info" class="font-medium text-md"></span></div>
-                    <div class="mb-2"><strong>เลขที:</strong> <span id="employee-id-info" class="font-medium text-md"></span></div>
+                    <div class="mb-2"><strong>เลขที่ผู้ป่วย:</strong> <span id="patient-id-info" class="font-medium text-md"></span></div>
                     <div class="mb-2"><strong>เบอร์โทร:</strong> <span id="phone-info" class="font-medium text-md"></span></div>
                     <div class="mb-2"><strong>สิทธิการรักษา:</strong> <span id="medical-rights-info" class="font-medium text-md"></span></div>
                     <div class="mb-2"><strong>กำหนดการทานยา:</strong> <span id="med-time-info" class="font-medium text-md"></span></div>
@@ -125,18 +125,19 @@
                 // เก็บข้อมูลทั้งหมดสำหรับการแบ่งหน้า
                 allData = filteredData;
 
-                // แสดงข้อมูลชื่อ, รหัสพนักงาน, เบอร์โทร, สิทธิการรักษา, กำหนดการทานยา, นัดถัดไป จากแถวสุดท้ายของข้อมูลที่กรอง
+                // แสดงข้อมูลชื่อ, รหัสผู้ป่วย, เบอร์โทร, สิทธิการรักษา, กำหนดการทานยา, นัดถัดไป จากแถวสุดท้ายของข้อมูลที่กรอง
                 if (filteredData.length > 0) {
                     const lastRow = filteredData[filteredData.length - 1];
+                    console.log('Last Row Data:', lastRow); // เพิ่มการล็อกข้อมูล
                     document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
-                    document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
+                    document.getElementById('patient-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
                     document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
                     document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
                     document.getElementById('med-time-info').textContent = lastRow['กำหนดการทานยา'] || 'N/A';
                     document.getElementById('next-appointment-info').textContent = lastRow['นัดถัดไป'] || 'N/A';
                 } else {
                     document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
-                    document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('patient-id-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('phone-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('medical-rights-info').textContent = 'ไม่มีข้อมูล';
                     document.getElementById('med-time-info').textContent = 'ไม่มีข้อมูล';
