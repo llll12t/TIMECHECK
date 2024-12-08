@@ -12,140 +12,77 @@
     <!-- นำเข้า LIFF SDK สำหรับการเชื่อมต่อกับ LINE -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 </head>
-<body class="bg-slate-100 min-h-screen flex items-center justify-center">
-    <div class="max-w-md w-full p-4">
-        <div class="bg-slate-800 text-white p-6 mb-4 rounded-lg shadow-xl">
-            <h1 class="text-2xl mb-2">ลงทะเบียนผู้ป่วย</h1>
-            <p class="text-sm">⚠️ บันทึกข้อมูลส่วนตัว แก้ไขโปรดติดต่อแอดมิน</p>
-        </div>
-        <form class="bg-white rounded-lg shadow-md p-6">
-            <div class="flex flex-col space-y-4">
-                <!-- ไอดีไลน์ -->
-                <div class="flex flex-col w-full static">
-                    <label for="userlineId" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        ไอดีไลน์:
-                    </label>
-                    <input id="userlineId" type="text" name="userlineId" readonly
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="ไอดีไลน์" />
+<body class="bg-slate-100 min-h-screen">
+<div class="max-w-md m-auto p-2">
+      <div class="bg-slate-800 text-white p-8 mb-2 rounded-lg shadow-xl w-full">
+                        <h1 class="text-xl mb-2">ลงทะเบียนผู้ป่วย</h1>
+                        <div class="text-sm">⚠️บันทึกข้อมูลส่วนตัวแก้ไขโปรดติดต่อแอดมิน</div>
+                    </div>
+        <form>
+            <div class="bg-white rounded-lg p-10">    
+                <input type="file" id="file" name="file" accept="image/*" class="hidden">
+                <div class="flex flex-col">
+                    <!-- ฟิลด์สำหรับใส่ Line ID -->
+                    <div class="mb-4">
+                        <input type="text" class="input-field w-full bg-slate-200 p-2 text-slate-500 text-sm text-center rounded-lg" id="userlineId" placeholder="ไอดีไลน์" name="userlineId" readonly>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่เลขประจำตัวผู้ป่วย -->
+                    <div class="mb-4">
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="patientId" placeholder="เลขประจำตัวผู้ป่วย" name="patientId" required>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่ชื่อ-สกุล -->
+                    <div class="mb-4">
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="name" placeholder="ชื่อ-สกุล" name="name" required>
+                    </div>
+                    <!-- ฟิลด์สำหรับเลือกเพศ -->
+                    <div class="mb-4">
+                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="gender" name="gender" required>
+                            <option value="" disabled selected>เลือกเพศ</option>
+                            <option value="ชาย">ชาย</option>
+                            <option value="หญิง">หญิง</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่วันเกิด -->
+                    <div class="mb-4">
+                        <input type="date" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="birthdate" name="birthdate" required>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่ที่อยู่ -->
+                    <div class="mb-4">
+                        <textarea class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="address" placeholder="ที่อยู่" name="address" required></textarea>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่เบอร์โทร -->
+                    <div class="mb-4">
+                        <input type="tel" pattern="[0-9]{10}" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="phone" placeholder="เบอร์โทร (10 หลัก)" name="phone" required>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่ระดับการศึกษา -->
+                    <div class="mb-4">
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="educationLevel" placeholder="ระดับการศึกษา" name="educationLevel" required>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่อาชีพ -->
+                    <div class="mb-4">
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="occupation" placeholder="อาชีพ" name="occupation" required>
+                    </div>
+                    <!-- ฟิลด์สำหรับเลือกสถานภาพสมรส -->
+                    <div class="mb-4">
+                        <select class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="maritalStatus" name="maritalStatus" required>
+                            <option value="" disabled selected>เลือกสถานภาพสมรส</option>
+                            <option value="โสด">โสด</option>
+                            <option value="สมรส">สมรส</option>
+                            <option value="หย่าร้าง">หย่าร้าง</option>
+                            <option value="อื่นๆ">อื่นๆ</option>
+                        </select>
+                    </div>
+                    <!-- ฟิลด์สำหรับใส่สิทธิการรักษา -->
+                    <div class="mb-6">
+                        <input type="text" class="input-field w-full border border-slate-300 p-2 text-md rounded-lg" id="medicalRights" placeholder="สิทธิการรักษา" name="medicalRights" required>
+                    </div>
                 </div>
-                
-                <!-- เลขประจำตัวผู้ป่วย -->
-                <div class="flex flex-col w-full static">
-                    <label for="patientId" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        เลขประจำตัวผู้ป่วย:
-                    </label>
-                    <input id="patientId" type="text" name="patientId" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="เลขประจำตัวผู้ป่วย" />
-                </div>
-                
-                <!-- ชื่อ-สกุล -->
-                <div class="flex flex-col w-full static">
-                    <label for="name" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        ชื่อ-สกุล:
-                    </label>
-                    <input id="name" type="text" name="name" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="ชื่อ-สกุล" />
-                </div>
-                
-                <!-- เพศ -->
-                <div class="flex flex-col w-full static">
-                    <label for="gender" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        เพศ:
-                    </label>
-                    <select id="gender" name="gender" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none">
-                        <option value="" disabled selected>เลือกเพศ</option>
-                        <option value="ชาย">ชาย</option>
-                        <option value="หญิง">หญิง</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
-                    </select>
-                </div>
-                
-                <!-- วันเกิด -->
-                <div class="flex flex-col w-full static">
-                    <label for="birthdate" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        วันเกิด:
-                    </label>
-                    <input id="birthdate" type="date" name="birthdate" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none" />
-                </div>
-                
-                <!-- ที่อยู่ -->
-                <div class="flex flex-col w-full static">
-                    <label for="address" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        ที่อยู่:
-                    </label>
-                    <textarea id="address" name="address" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="ที่อยู่"></textarea>
-                </div>
-                
-                <!-- เบอร์โทร -->
-                <div class="flex flex-col w-full static">
-                    <label for="phone" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        เบอร์โทร:
-                    </label>
-                    <input id="phone" type="tel" pattern="[0-9]{10}" name="phone" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="เบอร์โทร (10 หลัก)" />
-                </div>
-                
-                <!-- ระดับการศึกษา -->
-                <div class="flex flex-col w-full static">
-                    <label for="educationLevel" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        ระดับการศึกษา:
-                    </label>
-                    <input id="educationLevel" type="text" name="educationLevel" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="ระดับการศึกษา" />
-                </div>
-                
-                <!-- อาชีพ -->
-                <div class="flex flex-col w-full static">
-                    <label for="occupation" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        อาชีพ:
-                    </label>
-                    <input id="occupation" type="text" name="occupation" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="อาชีพ" />
-                </div>
-                
-                <!-- สถานภาพสมรส -->
-                <div class="flex flex-col w-full static">
-                    <label for="maritalStatus" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        สถานภาพสมรส:
-                    </label>
-                    <select id="maritalStatus" name="maritalStatus" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none">
-                        <option value="" disabled selected>เลือกสถานภาพสมรส</option>
-                        <option value="โสด">โสด</option>
-                        <option value="สมรส">สมรส</option>
-                        <option value="หย่าร้าง">หย่าร้าง</option>
-                        <option value="อื่นๆ">อื่นๆ</option>
-                    </select>
-                </div>
-                
-                <!-- สิทธิการรักษา -->
-                <div class="flex flex-col w-full static">
-                    <label for="medicalRights" class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-white w-fit">
-                        สิทธิการรักษา:
-                    </label>
-                    <input id="medicalRights" type="text" name="medicalRights" required
-                        class="border-slate-500 px-3 py-2 text-sm bg-white border-2 rounded-md w-full focus:outline-none placeholder:text-black/25" 
-                        placeholder="สิทธิการรักษา" />
-                </div>
-                
-                <!-- ปุ่มบันทึกข้อมูล -->
-                <button type="button" id="submitBtn"
-                    class="bg-slate-800 text-white py-2 px-4 rounded-md w-full hover:bg-blue-700 transition-colors">
-                    บันทึกข้อมูล
-                </button>
+                <!-- ปุ่มสำหรับบันทึกข้อมูล -->
+                <button type="button" id="submitBtn" class="bg-slate-800 text-center w-full text-white py-4 px-4 rounded-lg hover:bg-blue-700">บันทึกข้อมูล</button>
             </div>
         </form>
-    </div>
+</div>
 <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
 <script>
 
