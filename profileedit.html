@@ -108,24 +108,26 @@
                             <input id="columnDData" type="text" name="columnDData" required
                                 class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
                         </div>
-                           <!-- สิทธิการรักษา -->
-                           <div class="input flex flex-col w-full static mb-2">
-                            <label for="columnEData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                กำหนดการทานยา:
-                            </label>
-                            <input id="columnEData" type="time" name="columnEData" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                        </div>
-                           <!-- สิทธิการรักษา -->
-                           <div class="input flex flex-col w-full static mb-2">
-                            <label for="columnFData"
-                                class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
-                                นัดถัดไป:
-                            </label>
-                            <input id="columnFData" type="date" name="columnFData" required
-                                class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
-                        </div>
+                 <!-- กำหนดเวลา: medicineSchedule -->
+<div class="input flex flex-col w-full static mb-2">
+    <label for="columnEData"
+        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+        กำหนดการทานยา (HH:mm):
+    </label>
+    <input id="columnEData" type="time" name="columnEData" required
+        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+</div>
+
+<!-- กำหนดวันที่: nextAppointment -->
+<div class="input flex flex-col w-full static mb-2">
+    <label for="columnFData"
+        class="text-black text-xs font-semibold relative top-2 ml-[7px] px-[3px] bg-slate-100 w-fit">
+        นัดถัดไป (DD-MM-YYYY):
+    </label>
+    <input id="columnFData" type="date" name="columnFData" required
+        class="border-slate-500 input px-[10px] py-[11px] text-sm  bg-slate-100 border-2 rounded-[5px] w-full focus:outline-none placeholder:text-black/25" />
+</div>
+
                     </div>
                     <!-- ฟิลด์ที่ซ่อนอยู่สำหรับเก็บข้อมูลที่ไม่ต้องแสดงผล -->
                     <input type="hidden" id="userId" name="userId" />
