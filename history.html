@@ -97,7 +97,7 @@
             }
         }
 
-       async function fetchData(userId) {
+async function fetchData(userId) {
     document.getElementById('loading').style.display = 'block';
     try {
         const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
@@ -107,13 +107,13 @@
         const data = await response.json();
         const filteredData = data.filter(row => row['ไอดีไลน์'] === userId);
 
-        // เรียงข้อมูลตามวันที่จากล่าสุดไปหาเก่าสุด
+        // เรียงข้อมูลตามวันที่จากล่าสุดไปเก่าสุด
         const sortedData = sortDataByDateDescending(filteredData);
 
         allData = sortedData;
 
         if (sortedData.length > 0) {
-            const lastRow = sortedData[0]; 
+            const lastRow = sortedData[0];
             document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
             document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
             document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
@@ -143,23 +143,34 @@
 function getCurrentPageData() {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    // ไม่ต้อง reverse อีกแล้วเพราะข้อมูลถูก sort จากใหม่ไปเก่าอยู่แล้ว
+    // ข้อมูลถูกเรียงอยู่แล้ว ไม่ต้อง reverse
     return allData.slice(startIndex, endIndex);
 }
 
-        // ฟังก์ชันสำหรับจัดเรียงข้อมูลตามวันที่จากล่าสุดไปหาเก่าสุด
 function sortDataByDateDescending(data) {
     return data.sort((a, b) => {
-        // แยกวันที่ออกเป็นวัน เดือน ปี
-        const [dayA, monthA, yearA] = a['วันที่']?.split('-').map(Number) || [0,0,0];
-        const [dayB, monthB, yearB] = b['วันที่']?.split('-').map(Number) || [0,0,0];
+        const dateA = (a['วันที่'] || '').trim();
+        const dateB = (b['วันที่'] || '').trim();
 
-        // สร้างค่าเวลา timestamp เพื่อเปรียบเทียบง่าย
-        const dateA = new Date(yearA, monthA - 1, dayA);
-        const dateB = new Date(yearB, monthB - 1, dayB);
+        // แตกวันที่ออกเป็น [day, month, year]
+        const [dayA, monthA, yearA] = dateA.split('-').map(Number);
+        const [dayB, monthB, yearB] = dateB.split('-').map(Number);
 
-        // เรียงจากล่าสุดไปเก่าสุด
-        return dateB - dateA;
+        // ถ้ามีปัญหาเรื่องข้อมูลที่ไม่ครบ ให้เช็คก่อน
+        if (!dayA || !monthA || !yearA || !dayB || !monthB || !yearB) {
+            return 0; // ถ้าข้อมูลวันที่ไม่สมบูรณ์ จะไม่เปลี่ยนลำดับ
+        }
+
+        // เรียงจากปีใหม่มาก่อน
+        if (yearA !== yearB) {
+            return yearB - yearA;
+        }
+        // ถ้าปีเท่ากัน เรียงตามเดือน
+        if (monthA !== monthB) {
+            return monthB - monthA;
+        }
+        // ถ้าปีและเดือนเท่ากัน เรียงตามวัน
+        return dayB - dayA;
     });
 }
 
