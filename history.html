@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 
@@ -202,11 +203,15 @@
                 td.classList.add('py-2', 'px-4');
                 tr.appendChild(td);
 
-                // เพิ่มสถานะ
                 td = document.createElement('td');
-                td.textContent = row['สถานะ'] === 'ตรงเวลา' ? 'ตรงเวลา' : (row['สถานะ'] === 'ไม่ตรงเวลา' ? 'ไม่ตรงเวลา' : 'N/A');
+                td.textContent = 
+                row['สถานะ'] === 'ตรงเวลา' ? 'ตรงเวลา' :
+                (row['สถานะ'] === 'ไม่ตรงเวลา' ? 'ไม่ตรงเวลา' :
+                (row['สถานะ'] === 'ยังไม่ได้ทานยา' ? 'ยังไม่ได้ทานยา' : 'N/A'));
+
                 td.classList.add('py-2', 'px-4', getStatusClass(row['สถานะ']));
                 tr.appendChild(td);
+
 
                 table.appendChild(tr);
             });
