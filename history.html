@@ -175,11 +175,14 @@ function sortDataByDateDescending(data) {
 }
 
 
-        function formatDate(dateString) {
-            if (!dateString) return 'N/A';
-            const [day, month, year] = dateString.split('-').map(Number);
-            return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
-        }
+   // ฟังก์ชันสำหรับจัดรูปแบบวันที่ DD-MM-YYYY -> DD/MM/YYYY
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const [day, month, year] = dateString.split('-').map(Number);
+    // แปลง "-" เป็น "/"
+    return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+}
+
 
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
