@@ -5,8 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ประวัติการบันทึก</title>
+    <!-- นำเข้า Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- นำเข้า SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- นำเข้า LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <style>
         #loading {
@@ -61,8 +64,9 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec'; // เปลี่ยน URL ให้ถูกต้อง
-        const itemsPerPage = 10; // แสดงหน้าละ 10 ข้อมูล
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec'; // ใส่ URL ของ Web App
+        const LIFF_ID = '2005732932-gOr8yJdV'; // ใส่ LIFF ID ของคุณ
+        const itemsPerPage = 10; 
         let currentPage = 1;
         let allData = [];
 
@@ -71,7 +75,6 @@
         };
 
         async function initializeLiff() {
-            const LIFF_ID = '2005732932-gOr8yJdV';
             try {
                 await liff.init({ liffId: LIFF_ID });
                 if (liff.isLoggedIn()) {
@@ -97,92 +100,64 @@
             }
         }
 
-async function fetchData(userId) {
-    document.getElementById('loading').style.display = 'block';
-    try {
-        const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        const filteredData = data.filter(row => row['ไอดีไลน์'] === userId);
+        async function fetchData(userId) {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const response = await fetch(`${WEB_APP_URL}?action=fetchData`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                const filteredData = data.filter(row => row['ไอดีไลน์'] === userId);
 
-        // เรียงข้อมูลตามวันที่จากล่าสุดไปเก่าสุด
-        const sortedData = sortDataByDateDescending(filteredData);
+                // เรียงข้อมูลตามวันที่ล่าสุดก่อน
+                filteredData.sort((a, b) => {
+                    const dateA = parseDate(a['วันที่']);
+                    const dateB = parseDate(b['วันที่']);
+                    return dateB - dateA; // ให้ date ใหม่อยู่ข้างบน
+                });
 
-        allData = sortedData;
+                allData = filteredData;
 
-        if (sortedData.length > 0) {
-            const lastRow = sortedData[0];
-            document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
-            document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
-            document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
-            document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
-            document.getElementById('med-time-info').textContent = lastRow['กำหนดการทานยา'] || 'N/A';
-            document.getElementById('next-appointment-info').textContent = lastRow['นัดถัดไป'] || 'N/A';
-        } else {
-            document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
-            document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
-            document.getElementById('phone-info').textContent = 'ไม่มีข้อมูล';
-            document.getElementById('medical-rights-info').textContent = 'ไม่มีข้อมูล';
-            document.getElementById('med-time-info').textContent = 'ไม่มีข้อมูล';
-            document.getElementById('next-appointment-info').textContent = 'ไม่มีข้อมูล';
-        }
+                if (filteredData.length > 0) {
+                    const lastRow = filteredData[0]; // เนื่องจากเรียงแล้ว แถวแรกคือข้อมูลล่าสุด
+                    document.getElementById('name-info').textContent = lastRow['ชื่อ-สกุล'] || 'N/A';
+                    document.getElementById('employee-id-info').textContent = lastRow['เลขประจำตัวผู้ป่วย'] || 'N/A';
+                    document.getElementById('phone-info').textContent = lastRow['เบอร์โทร'] || 'N/A';
+                    document.getElementById('medical-rights-info').textContent = lastRow['สิทธิการรักษา'] || 'N/A';
+                    document.getElementById('med-time-info').textContent = lastRow['กำหนดการทานยา'] || 'N/A';
+                    document.getElementById('next-appointment-info').textContent = lastRow['นัดถัดไป'] || 'N/A';
+                } else {
+                    document.getElementById('name-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('employee-id-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('phone-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('medical-rights-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('med-time-info').textContent = 'ไม่มีข้อมูล';
+                    document.getElementById('next-appointment-info').textContent = 'ไม่มีข้อมูล';
+                }
 
-        buildTable('data-table', getCurrentPageData());
-        updatePaginationControls(allData.length);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล</td></tr>';
-        Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
-    } finally {
-        document.getElementById('loading').style.display = 'none';
-    }
-}
-
-function getCurrentPageData() {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    // ข้อมูลถูกเรียงอยู่แล้ว ไม่ต้อง reverse
-    return allData.slice(startIndex, endIndex);
-}
-
-function sortDataByDateDescending(data) {
-    return data.sort((a, b) => {
-        const dateA = (a['วันที่'] || '').trim();
-        const dateB = (b['วันที่'] || '').trim();
-
-        // แตกวันที่ออกเป็น [day, month, year]
-        const [dayA, monthA, yearA] = dateA.split('-').map(Number);
-        const [dayB, monthB, yearB] = dateB.split('-').map(Number);
-
-        // ถ้ามีปัญหาเรื่องข้อมูลที่ไม่ครบ ให้เช็คก่อน
-        if (!dayA || !monthA || !yearA || !dayB || !monthB || !yearB) {
-            return 0; // ถ้าข้อมูลวันที่ไม่สมบูรณ์ จะไม่เปลี่ยนลำดับ
+                buildTable('data-table', getCurrentPageData());
+                updatePaginationControls(allData.length);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('data-table').innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล</td></tr>';
+                Swal.fire('ข้อผิดพลาด', 'เกิดข้อผิดพลาดในการดึงข้อมูล', 'error');
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
         }
 
-        // เรียงจากปีใหม่มาก่อน
-        if (yearA !== yearB) {
-            return yearB - yearA;
+        function parseDate(dateStr) {
+            if (!dateStr) return new Date(0);
+            const [day, month, year] = dateStr.split('-').map(Number);
+            return new Date(year, month - 1, day);
         }
-        // ถ้าปีเท่ากัน เรียงตามเดือน
-        if (monthA !== monthB) {
-            return monthB - monthA;
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            const [day, month, year] = dateString.split('-').map(Number);
+            return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
         }
-        // ถ้าปีและเดือนเท่ากัน เรียงตามวัน
-        return dayB - dayA;
-    });
-}
-
-
-   // ฟังก์ชันสำหรับจัดรูปแบบวันที่ DD-MM-YYYY -> DD/MM/YYYY
-function formatDate(dateString) {
-    if (!dateString) return 'N/A';
-    const [day, month, year] = dateString.split('-').map(Number);
-    // แปลง "-" เป็น "/"
-    return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
-}
-
 
         function formatTime(timeString) {
             if (!timeString) return 'N/A';
@@ -241,7 +216,6 @@ function formatDate(dateString) {
             }
         }
 
-        // ฟังก์ชันอัปเดตตัวควบคุมการแบ่งหน้าให้แสดง 3 หน้า และมีปุ่มย้อนกลับ/หน้าถัดไป
         function updatePaginationControls(totalItems) {
             const totalPages = Math.ceil(totalItems / itemsPerPage);
             const paginationControls = document.getElementById('pagination-controls');
@@ -249,7 +223,6 @@ function formatDate(dateString) {
 
             if (totalPages <= 1) return; 
 
-            // คำนวณช่วงหน้าที่จะแสดง (3 หน้า)
             let startPage = currentPage - 1;
             let endPage = currentPage + 1;
 
@@ -263,7 +236,6 @@ function formatDate(dateString) {
                 startPage = endPage - 2 > 0 ? endPage - 2 : 1;
             }
 
-            // ปุ่มย้อนกลับ
             if (currentPage > 1) {
                 const prevButton = document.createElement('button');
                 prevButton.textContent = 'ย้อนกลับ';
@@ -276,8 +248,7 @@ function formatDate(dateString) {
                 paginationControls.appendChild(prevButton);
             }
 
-            // แสดงเลขหน้า 3 หน้า
-            for (let i = startPage; i <= endPage; i++) {
+            for (let i = startPage; i <= endPage && i <= totalPages; i++) {
                 const pageButton = document.createElement('button');
                 pageButton.textContent = i;
                 pageButton.addEventListener('click', () => {
@@ -286,17 +257,14 @@ function formatDate(dateString) {
                     updatePaginationControls(totalItems);
                 });
                 pageButton.classList.add('py-1', 'px-3', 'm-1', 'border', 'rounded');
-
                 if (i === currentPage) {
                     pageButton.classList.add('bg-black', 'text-white'); 
                 } else {
                     pageButton.classList.add('bg-white', 'text-black');
                 }
-
                 paginationControls.appendChild(pageButton);
             }
 
-            // ปุ่มหน้าถัดไป
             if (currentPage < totalPages) {
                 const nextButton = document.createElement('button');
                 nextButton.textContent = 'หน้าถัดไป';
@@ -313,8 +281,8 @@ function formatDate(dateString) {
         function getCurrentPageData() {
             const startIndex = (currentPage - 1) * itemsPerPage;
             const endIndex = startIndex + itemsPerPage;
-            const reversedValues = allData.slice().reverse();
-            return reversedValues.slice(startIndex, endIndex);
+            // เนื่องจากเราจัดเรียง filteredData ไว้แล้วให้วันล่าสุดอยู่ด้านบนสุด จึงไม่ต้อง reverse อีก
+            return allData.slice(startIndex, endIndex);
         }
     </script>
 </body>
