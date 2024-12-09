@@ -61,7 +61,7 @@
     </div>
 
     <script>
-        const WEB_APP_URL = 'YOUR_WEB_APP_URL_HERE'; // เปลี่ยน URL ให้ถูกต้อง
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwzGYhr3zyiITrBtijZFAOUX97PWImQFFK7CeE5l8mYa3vFrKENM2pgjBXssQXUM_hz/exec'; // เปลี่ยน URL ให้ถูกต้อง
         const itemsPerPage = 10; // แสดงหน้าละ 10 ข้อมูล
         let currentPage = 1;
         let allData = [];
@@ -71,7 +71,7 @@
         };
 
         async function initializeLiff() {
-            const LIFF_ID = 'YOUR_LIFF_ID';
+            const LIFF_ID = '2005732932-gOr8yJdV';
             try {
                 await liff.init({ liffId: LIFF_ID });
                 if (liff.isLoggedIn()) {
