@@ -356,10 +356,9 @@
                         confirmButtonText: 'ปิด',
                     }).then(async (result) => {
                         if (result.isConfirmed) {
-                            // Reset form
+                            liff.closeWindow(); // ปิดหน้าต่าง LIFF
                             document.querySelector('form').reset();
                             await sendFlexMessage(obj); // ส่งข้อความ Flex Message หลังจากการส่งข้อมูล
-                            liff.closeWindow(); // ปิดหน้าต่าง LIFF
 
                         }
                     });
